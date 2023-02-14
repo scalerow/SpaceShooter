@@ -12,7 +12,9 @@ typedef struct PlanePlayer
     Texture2D planeTexture;
 } PlanePlayer;
 
-int main()
+void UpdatePlane(PlanePlayer *player, float delta, int width, int height);
+
+int main(void)
 {
 
     float screenWidth = 1024.f;
@@ -42,14 +44,7 @@ int main()
         float deltaTime = GetFrameTime();
 
         // Move player around
-        if (IsKeyDown(KEY_RIGHT) && planePlayer.position.x <= background.width - 100)
-            planePlayer.position.x += PLAYER_HOR_SPD * deltaTime;
-        if (IsKeyDown(KEY_LEFT) && planePlayer.position.x >= 0)
-            planePlayer.position.x -= PLAYER_HOR_SPD * deltaTime;
-        if (IsKeyDown(KEY_DOWN) && planePlayer.position.y <= background.height - 100)
-            planePlayer.position.y += PLAYER_HOR_SPD * deltaTime;
-        if (IsKeyDown(KEY_UP) && planePlayer.position.y >= 0)
-            planePlayer.position.y -= PLAYER_HOR_SPD * deltaTime;
+        UpdatePlane(&planePlayer, deltaTime, background.width, background.height);
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -64,4 +59,16 @@ int main()
     CloseWindow();
 
     return 0;
+}
+
+void UpdatePlane(PlanePlayer *player, float delta, int width, int height)
+{
+    if (IsKeyDown(KEY_RIGHT) && player->position.x <= width - 100)
+        player->position.x += PLAYER_HOR_SPD * delta;
+    if (IsKeyDown(KEY_LEFT) && player->position.x >= 0)
+        player->position.x -= PLAYER_HOR_SPD * delta;
+    if (IsKeyDown(KEY_DOWN) && player->position.y <= height - 100)
+        player->position.y += PLAYER_HOR_SPD * delta;
+    if (IsKeyDown(KEY_UP) && player->position.y >= 0)
+        player->position.y -= PLAYER_HOR_SPD * delta;
 }
