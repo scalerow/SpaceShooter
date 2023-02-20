@@ -16,6 +16,7 @@
                 "/nologo",
                 "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "${file}",
+                "${fileDirname}\\Bullet.cpp",
                 "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib"
             ],
             "options": {

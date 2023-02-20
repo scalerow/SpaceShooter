@@ -1,6 +1,9 @@
 #include <raylib.h>
 #include <iostream>
-#include "bullet.h"
+#include "Bullet.h"
+#include <vector>
+
+using namespace std;
 
 #define PLAYER_HOR_SPD 350.0f
 #define PLAYER_MAX_SHOTS 8
@@ -14,24 +17,14 @@ typedef struct PlanePlayer
     Texture2D planeTexture;
 } PlanePlayer;
 
-typedef struct BulletPlayer
-{
-    Vector2 position;
-    float speed;
-    bool active;
-    Color color;
-} BulletPlayer;
-
 void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea);
-void UpdateLeftBullet(BulletPlayer (*bullet)[PLAYER_MAX_SHOTS], Vector2 position);
-void UpdateRightBullet(BulletPlayer &bullet, Vector2 position);
-void ResetBullet(BulletPlayer &bullet, Vector2 position, int number);
+void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
+void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
 
 int main(void)
 {
-    static BulletPlayer bulletLeft[PLAYER_MAX_SHOTS] = {0};
-    static BulletPlayer bulletRight[PLAYER_MAX_SHOTS] = {0};
-    static Bullet *bullet[PLAYER_MAX_SHOTS] = {};
+    static vector<Bullet> bulletsRight;
+    static vector<Bullet> bulletsLeft;
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
@@ -43,6 +36,10 @@ int main(void)
     Vector2 backgroundPos = {(screenWidth - backgroundTexture.width) / 2, 0};
     UnloadImage(background);
 
+    Image bulletImg = LoadImage("../mymedia/bullet_0.png");
+    Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
+    UnloadImage(bulletImg);
+
     Image planeImg = LoadImage("../mymedia/plane_100_0.png");
     Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
     PlanePlayer planePlayer = {0};
@@ -52,37 +49,13 @@ int main(void)
     planePlayer.canShoot = true;
     UnloadImage(planeImg);
 
-    // Starting positions of bullets
-    Vector2 bulletLeftStartPos = {planePosition.x + 16, planePosition.y + 4};
-    Vector2 bulletRightStartPos = {planePosition.x + 80, planePosition.y + 4};
-    //
-    for (int i = 0; i < PLAYER_MAX_SHOTS; i++)
-    {
-        bulletLeft[i].active = false;
-        bulletLeft[i].color = RED;
-        bulletLeft[i].position = bulletLeftStartPos;
-        bulletLeft[i].speed = 1000;
-
-        bulletRight[i].active = false;
-        bulletRight[i].color = RED;
-        bulletRight[i].position = bulletRightStartPos;
-        bulletRight[i].speed = 8;
-    }
-
-    for (int x = 0; x < PLAYER_MAX_SHOTS; x++)
-    {
-        bullet[x] = new Bullet();
-        bullet[x]->height = 20;
-        bullet[x]->width = 5;
-        bullet[x]->speed = 10;
-        bullet[x]->x = planePosition.x + 80;
-        bullet[x]->y = planePosition.y;
-    }
     Vector4 flightArea = {
         backgroundPos.x,
         backgroundPos.y,
         backgroundPos.x + backgroundTexture.width,
         backgroundPos.y + backgroundTexture.height};
+
+    int shotTimer = 0;
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -97,14 +70,9 @@ int main(void)
         DrawTexture(planePlayer.planeTexture, planePlayer.position.x, planePlayer.position.y, WHITE);
 
         // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-
-        for (int i = 0; i <= PLAYER_MAX_SHOTS; i++)
-        {
-
-            bullet[i]->update();
-            // UpdateRightBullet(bulletRight[i], planePlayer.position);
-        }
-
+        UpdateLeftBullet(bulletsLeft, bulletTexture, planePlayer.position, shotTimer);
+        // UpdateRightBullet(bulletRight[i], planePlayer.position);
+        UpdateRightBullet(bulletsRight, bulletTexture, planePlayer.position, shotTimer);
         // DrawText("Dette er ett spill", screenWidth / 2, screenHeight / 2, 45, GREEN);
         EndDrawing();
     }
@@ -127,62 +95,66 @@ void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea)
         player->position.y -= PLAYER_HOR_SPD * delta;
 }
 
-void UpdateLeftBullet(BulletPlayer (*bullet)[PLAYER_MAX_SHOTS], Vector2 position)
+void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    for (int i = 0; i < PLAYER_MAX_SHOTS; i++)
+    if (shotTimer < 7)
     {
-
-        if (!bullet[i]->active)
-        {
-            bullet[i]->position = Vector2{position.x + 16, position.y};
-            bullet[i]->active = true;
-            break;
-        }
+        shotTimer++;
     }
 
-    for (int i = 0; i < PLAYER_MAX_SHOTS; i++)
+    if (shotTimer >= 7)
     {
-        if (bullet[i]->active)
+        Bullet bullet = {};
+        bullet.speed = 10;
+        bullet.texture = texture;
+        bullet.x = position.x + 16;
+        bullet.y = position.y;
+        bullets.push_back(bullet);
+        shotTimer = 0;
+    }
+
+    for (int i = 0; i < bullets.size(); i++)
+    {
+        if (!bullets[i].collidesWidth())
         {
-            bullet[i]->position.y -= bullet[i]->speed * GetFrameTime();
-
-            if (bullet[i]->position.y < 0)
-                bullet[i]->active = false;
-
-            if (bullet[i]->active)
-                DrawRectangle(bullet[i]->position.x, bullet[i]->position.y, 5, 20, bullet[i]->color);
+            bullets[i].update();
+            DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
+        }
+        else
+        {
+            bullets.erase(bullets.begin() + i);
         }
     }
 }
 
-void UpdateRightBullet(BulletPlayer &bullet, Vector2 position)
+void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    float planeX = position.x + 80;
-
-    if (!bullet.active)
+    if (shotTimer < 7)
     {
-        bullet.active = true;
-        // printf("frameTime: %f", GetFrameTime());
-        bullet.position.y -= bullet.speed;
-        DrawRectangle(planeX, bullet.position.y, 5, 20, bullet.color);
+        shotTimer++;
     }
 
-    if (bullet.position.y < 0)
+    if (shotTimer >= 7)
     {
-        bullet.active = false;
+        Bullet bullet = {};
+        bullet.speed = 10;
+        bullet.texture = texture;
+        bullet.x = position.x + 80;
+        bullet.y = position.y;
+        bullets.push_back(bullet);
+        shotTimer = 0;
     }
 
-    if (bullet.active)
+    for (int i = 0; i < bullets.size(); i++)
     {
-        ResetBullet(bullet, {planeX, position.y}, 1);
+        if (!bullets[i].collidesWidth())
+        {
+            bullets[i].update();
+            DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
+        }
+        else
+        {
+            bullets.erase(bullets.begin() + i);
+        }
     }
-}
-
-void ResetBullet(BulletPlayer &bullet, Vector2 position, int number)
-{
-    Vector2 bulletPosition = {position.x, position.y - 20};
-    bullet.position = bulletPosition;
-    bullet.speed = 8;
-    bullet.color = RED;
-    bullet.active = false;
 }

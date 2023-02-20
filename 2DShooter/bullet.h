@@ -1,34 +1,21 @@
+#ifndef BULLET_H
+#define BULLET_H
 
+#include <raylib.h>
 
 class Bullet
 {
 public:
     int x;
     int y;
-    int width;
-    int height;
+    Texture2D texture;
     int speed;
 
-    Bullet()
-    {
-        x = 0;
-        y = 0;
-        width = width;
-        height = height;
-        speed = 0;
-    }
+    Bullet();
 
-    void update()
-    {
-        if (this->y < 0)
-        {
-            this->y -= speed;
-        }
-    }
+    void update();
 
-    // bool collidesWidth(Bullet *o)
-    // {
-    //     // Test if the bullet collides with Enemy.
-    //     // If it does, make it invisible and return true
-    // }
+    bool collidesWidth();
 };
+
+#endif
