@@ -107,7 +107,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
         Bullet bullet = {};
         bullet.speed = 10;
         bullet.texture = texture;
-        bullet.x = position.x + 16;
+        bullet.x = position.x + 13;
         bullet.y = position.y;
         bullets.push_back(bullet);
         shotTimer = 0;
@@ -119,7 +119,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
         {
             bullets[i].update();
             DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
-        }
+                }
         else
         {
             bullets.erase(bullets.begin() + i);
@@ -139,7 +139,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
         Bullet bullet = {};
         bullet.speed = 10;
         bullet.texture = texture;
-        bullet.x = position.x + 80;
+        bullet.x = position.x + 78;
         bullet.y = position.y;
         bullets.push_back(bullet);
         shotTimer = 0;
