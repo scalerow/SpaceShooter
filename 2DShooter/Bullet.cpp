@@ -6,7 +6,7 @@ Bullet::Bullet()
     x = 0;
     y = 0;
     speed = 0;
-    Texture2D texture = {};
+    texture = {};
 }
 
 void Bullet::update()

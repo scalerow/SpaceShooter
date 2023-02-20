@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <iostream>
-#include "Bullet.h"
+#include "bullet.h"
+#include "enemy.h"
 #include <vector>
 
 using namespace std;
@@ -25,10 +26,14 @@ int main(void)
 {
     static vector<Bullet> bulletsRight;
     static vector<Bullet> bulletsLeft;
+    static vector<Enemy> defaultEnemy;
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
-    InitWindow(screenWidth, screenHeight, "Ett program");
+    InitWindow(screenWidth, screenHeight, "DesertSpaceShooter");
+    Image icon = LoadImage("../myymedia/icon.ico");
+    SetWindowIcon(icon);
+    UnloadImage(icon);
 
     Image background = LoadImage("../mymedia/2d_desert_sprite.png");
     ImageResize(&background, background.width, screenHeight);
@@ -37,6 +42,10 @@ int main(void)
     UnloadImage(background);
 
     Image bulletImg = LoadImage("../mymedia/bullet_0.png");
+    Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
+    UnloadImage(bulletImg);
+
+Image bulletImg = LoadImage("../mymedia/bullet_0.png");
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
     UnloadImage(bulletImg);
 
@@ -65,7 +74,8 @@ int main(void)
         UpdatePlane(&planePlayer, deltaTime, flightArea);
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(BLACK);
+
         DrawTexture(backgroundTexture, backgroundPos.x, backgroundPos.y, RAYWHITE);
         DrawTexture(planePlayer.planeTexture, planePlayer.position.x, planePlayer.position.y, WHITE);
 

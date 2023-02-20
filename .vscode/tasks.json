@@ -17,6 +17,7 @@
                 "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "${file}",
                 "${fileDirname}\\Bullet.cpp",
+                "${fileDirname}\\Enemy.cpp",
                 "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib"
             ],
             "options": {
