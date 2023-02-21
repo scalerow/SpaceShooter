@@ -18,12 +18,14 @@ public:
     int enemyCounter;
     Texture2D backgroundTexture;
     Vector2 backgroudPosition;
+    Color playButtonColor;
     Game(/* args */);
     ~Game();
 
     void load(float screenHeight, float screenWidth);
     void InitGame(float screenWidth, float screenHeight);
-    void InitMenu();
+    void InitMenu(float screenWidth, float screenHeight);
+    void PlayAction(Vector2 mousePoint, Rectangle btnBounds);
 };
 
 #endif

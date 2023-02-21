@@ -53,7 +53,8 @@ int main(void)
     int enemyShotTimer = 0;
     Vector2 pos = {50, 50};
     Game game;
-    game.gameActive = true;
+    game.gameActive = false;
+    game.menuActive = true;
     game.load(screenHeight, screenWidth);
 
     Vector4 flightArea = {
@@ -64,6 +65,8 @@ int main(void)
 
     Player player;
     player.InitPlayer({screenWidth, screenHeight});
+
+    Vector2 mousePoint = { 0.0f, 0.0f };
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -76,25 +79,43 @@ int main(void)
         BeginDrawing();
         ClearBackground(BLACK);
 
+        if(game.menuActive) 
+        {
+                Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
+
+                BeginBlendMode(BLEND_ALPHA);
+                            DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, DARKGRAY);
+                EndBlendMode();
+                Rectangle rect = Rectangle{(screenWidth/2.f)-250, screenHeight/ 2.f,500, 125};
+                DrawRectangleLinesEx(rect,10, game.playButtonColor);
+                DrawText("PLAY", (screenWidth/2.f) - 125,(screenHeight/2.f) + 15, 96,game.playButtonColor );
+                game.PlayAction(mousePoint,rect);
+
+
+        }
+        else if(game.gameActive)
+        {
+            DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
+            DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+
+            // UpdateLeftBullet(&bulletLeft, planePlayer.position);
+            UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, game.shotTimerLeft);
+            // UpdateRightBullet(bulletRight[i], planePlayer.position);
+            UpdateRightBullet(bulletsRight, bulletTexture, player.position, game.shotTimerRight);
+
+            // UpdateEnemies
+            UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+        }
         
-        DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
-        DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
-
-        // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-        UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, game.shotTimerLeft);
-        // UpdateRightBullet(bulletRight[i], planePlayer.position);
-        UpdateRightBullet(bulletsRight, bulletTexture, player.position, game.shotTimerRight);
-
-        // UpdateEnemies
-        UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+        
 
         // Update enemy bullets
         // UpdateDefaultEnemyBullet(defaultEnemyBullets, defaultenemyBulletTexture, enemyPositions, enemyShotTimer);
 
         EndDrawing();
     }
-    // UnloadTexture(planePlayer.planeTexture);
-    // UnloadTexture(backgroundTexture);
+    UnloadTexture(player.planeTexture);
+    UnloadTexture(game.backgroundTexture);
     CloseWindow();
 
     return 0;
