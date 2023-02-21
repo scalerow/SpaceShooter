@@ -12,6 +12,7 @@ public:
     int speed;
 
     Bullet();
+    ~Bullet();
 
     void updatePlayer();
     void updateEnemy();

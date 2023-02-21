@@ -1,4 +1,4 @@
-#include "Bullet.h"
+#include "bullet.h"
 #include <raylib.h>
 
 Bullet::Bullet()
@@ -8,6 +8,8 @@ Bullet::Bullet()
     speed = 0;
     texture = {};
 }
+
+Bullet::~Bullet() {}
 
 void Bullet::updatePlayer()
 {
@@ -33,7 +35,7 @@ bool Bullet::playerBulletCollides()
 
 bool Bullet::enemyBulletCollides()
 {
-    if (y <= 0)
+    if (y >= 1080)
     {
         return true;
     }

@@ -13,21 +13,18 @@ public:
     int speed;
     bool isBoss;
     Texture2D texture;
-    
-    Enemy();
 
+    Enemy();
+    ~Enemy();
     void update();
 
     void hover(int position, int hoverRange);
 
     void isHit(int bulletDamage);
 
-    void shoot(vector<Bullet> &bullets, int shotTimer, Texture2D &texture);
-
-private: 
+private:
     bool leftHover;
     bool rightHover;
 };
-
 
 #endif

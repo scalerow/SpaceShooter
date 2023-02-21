@@ -2,13 +2,11 @@
 #include <iostream>
 #include "bullet.h"
 #include "enemy.h"
+#include "player.h"
+#include "game.h"
 #include <vector>
 
 using namespace std;
-
-#define PLAYER_HOR_SPD 350.0f
-#define PLAYER_MAX_SHOTS 8
-#define MAX_ENEMIES 4
 
 typedef struct PlanePlayer
 {
@@ -19,18 +17,17 @@ typedef struct PlanePlayer
     Texture2D planeTexture;
 } PlanePlayer;
 
-void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea);
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
 void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
+// void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer);
 
 int main(void)
 {
     static vector<Bullet> bulletsRight;
     static vector<Bullet> bulletsLeft;
     static vector<Enemy> defaultEnemy;
-    static vector<Bullet> defaultEnemyBullet;
-
+    static vector<Bullet> defaultEnemyBullets;
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
@@ -38,12 +35,6 @@ int main(void)
     Image icon = LoadImage("../myymedia/icon.ico");
     SetWindowIcon(icon);
     UnloadImage(icon);
-
-    Image background = LoadImage("../mymedia/2d_desert_sprite.png");
-    ImageResize(&background, background.width, screenHeight);
-    Texture2D backgroundTexture = LoadTextureFromImage(background);
-    Vector2 backgroundPos = {(screenWidth - backgroundTexture.width) / 2, 0};
-    UnloadImage(background);
 
     Image bulletImg = LoadImage("../mymedia/bullet_0.png");
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
@@ -54,72 +45,58 @@ int main(void)
     UnloadImage(defaultEnemyImg);
 
     Image defaultEnemyBulletImg = LoadImage("../mymedia/bullet_enemy_0.png");
-    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg );
+    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
 
-    Image planeImg = LoadImage("../mymedia/plane_100_0.png");
-    Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
-    PlanePlayer planePlayer = {0};
-    planePlayer.planeTexture = LoadTextureFromImage(planeImg);
-    planePlayer.position = planePosition;
-    planePlayer.speed = 8.f;
-    planePlayer.canShoot = true;
-    UnloadImage(planeImg);
+    int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
+
+    int enemyShotTimer = 0;
+    Vector2 pos = {50, 50};
+    Game game = {};
+
+    game.gameActive = true;
+    game.load(screenHeight, screenWidth);
 
     Vector4 flightArea = {
-        backgroundPos.x,
-        backgroundPos.y,
-        backgroundPos.x + backgroundTexture.width,
-        backgroundPos.y + backgroundTexture.height};
+        game.backgroudPosition.x,
+        game.backgroudPosition.y,
+        game.backgroudPosition.x + game.backgroundTexture.width,
+        screenHeight};
 
-    int enemyPositions[] = {400 + 204, 400 +  408, 400 + 612, 400 +  816};
-    
-
-    int shotTimerRight = 0;
-    int shotTimerLeft = 0;
-    int enemyShotTimer = 0;
-    int enemyCounter = 0;
+    Player player;
+    player.InitPlayer({screenWidth, screenHeight});
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
-        float deltaTime = GetFrameTime();
         // Move player around
-        UpdatePlane(&planePlayer, deltaTime, flightArea);
+        float deltaTime = GetFrameTime();
+
+        player.UpdatePlayer(deltaTime, flightArea);
 
         BeginDrawing();
         ClearBackground(BLACK);
-
-        DrawTexture(backgroundTexture, backgroundPos.x, backgroundPos.y, RAYWHITE);
-        DrawTexture(planePlayer.planeTexture, planePlayer.position.x, planePlayer.position.y, WHITE);
+        DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
+        DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
 
         // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-        UpdateLeftBullet(bulletsLeft, bulletTexture, planePlayer.position, shotTimerLeft);
+        UpdateLeftBullet(bulletsLeft, bulletTexture, pos, game.shotTimerLeft);
         // UpdateRightBullet(bulletRight[i], planePlayer.position);
-        UpdateRightBullet(bulletsRight, bulletTexture, planePlayer.position, shotTimerRight);
-        
-        //UpdateEnemies
+        UpdateRightBullet(bulletsRight, bulletTexture, pos, game.shotTimerRight);
+
+        // UpdateEnemies
         UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+
+        // Update enemy bullets
+        // UpdateDefaultEnemyBullet(defaultEnemyBullets, defaultenemyBulletTexture, enemyPositions, enemyShotTimer);
 
         EndDrawing();
     }
-    UnloadTexture(planePlayer.planeTexture);
-    UnloadTexture(backgroundTexture);
+    // UnloadTexture(planePlayer.planeTexture);
+    // UnloadTexture(backgroundTexture);
     CloseWindow();
 
     return 0;
-}
-
-void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea)
-{
-    if (IsKeyDown(KEY_RIGHT) && player->position.x <= flightArea.z - 100)
-        player->position.x += PLAYER_HOR_SPD * delta;
-    if (IsKeyDown(KEY_LEFT) && player->position.x >= flightArea.x)
-        player->position.x -= PLAYER_HOR_SPD * delta;
-    if (IsKeyDown(KEY_DOWN) && player->position.y <= flightArea.w - 100)
-        player->position.y += PLAYER_HOR_SPD * delta;
-    if (IsKeyDown(KEY_UP) && player->position.y >= flightArea.y)
-        player->position.y -= PLAYER_HOR_SPD * delta;
 }
 
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
@@ -146,7 +123,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
         {
             bullets[i].updatePlayer();
             DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
-                }
+        }
         else
         {
             bullets.erase(bullets.begin() + i);
@@ -186,10 +163,17 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
     }
 }
 
-void UpdateDefaultEnemies(vector<Enemy> &enemies, vector<Bullet> &bullets,Texture &enemyBullets,  Texture2D &enemyTexture, int xPositions[4]) 
+void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int xPositions[4])
 {
-    for(int i = 0; i < MAX_ENEMIES; i++) {
-        if(enemies.size() < MAX_ENEMIES) 
+
+    if (IsKeyPressed(KEY_SPACE) && enemies.size() > 1)
+    {
+        enemies[0].health = 0;
+    }
+
+    for (int i = 0; i < MAX_ENEMIES; i++)
+    {
+        if (enemies.size() < MAX_ENEMIES)
         {
             Enemy defEnemy = {};
             defEnemy.active = false;
@@ -197,18 +181,57 @@ void UpdateDefaultEnemies(vector<Enemy> &enemies, vector<Bullet> &bullets,Textur
             defEnemy.isBoss = false;
             defEnemy.texture = enemyTexture;
             defEnemy.x = xPositions[i];
-            defEnemy.y = 150;
+            defEnemy.y = -100;
             enemies.push_back(defEnemy);
         }
-        
-        if(!enemies[i].active && enemies[i].health >= 0) enemies[i].active = true;
 
-        if(enemies[i].active && enemies[i].health >= 0) 
+        if (!enemies[i].active && enemies[i].health >= 0)
+            enemies[i].active = true;
+
+        if (enemies[i].health == 0)
+        {
+            enemies.erase(enemies.begin() + i);
+        }
+
+        if (enemies[i].active && enemies[i].health >= 0)
         {
             enemies[i].active = true;
-            enemies[i].hover(xPositions[i], 50);
+            if (enemies[i].y < 150)
+                enemies[i].y += enemies[i].speed;
+            else
+                enemies[i].hover(xPositions[i], 50);
             DrawTexture(enemies[i].texture, enemies[i].x, enemies[i].y, WHITE);
         }
     }
-
 }
+
+// void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer)
+// {
+//     if (shotTimer < 5)
+//     {
+//         shotTimer++;
+//     }
+
+//     if (shotTimer >= 5)
+//     {
+//         Bullet bullet = {};
+//         bullet.speed = 10;
+//         bullet.texture = texture;
+//         bullet.y = 250;
+//         bullets.push_back(bullet);
+//         shotTimer = 0;
+//     }
+
+//     for (int i = 0; i < bullets.size(); i++)
+//     {
+//         if (!bullets[i].enemyBulletCollides())
+//         {
+//             bullets[i].updateEnemy();
+//             DrawTexture(bullets[i].texture, 100, bullets[i].y, WHITE);
+//         }
+//         else
+//         {
+//             bullets.erase(bullets.begin() + i);
+//         }
+//     }
+// }

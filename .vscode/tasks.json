@@ -16,8 +16,10 @@
                 "/nologo",
                 "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "${file}",
-                "${fileDirname}\\Bullet.cpp",
-                "${fileDirname}\\Enemy.cpp",
+                "${fileDirname}\\bullet.cpp",
+                "${fileDirname}\\enemy.cpp",
+                "${fileDirname}\\player.cpp",
+                "${fileDirname}\\game.cpp",
                 "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib"
             ],
             "options": {
