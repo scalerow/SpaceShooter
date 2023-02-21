@@ -18,7 +18,13 @@ public:
 
     void update();
 
+    void hover(int position, int hoverRange);
+
     void isHit(int bulletDamage);
+
+private: 
+    bool leftHover;
+    bool rightHover;
 };
 
 

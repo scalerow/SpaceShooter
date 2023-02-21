@@ -8,6 +8,7 @@ using namespace std;
 
 #define PLAYER_HOR_SPD 350.0f
 #define PLAYER_MAX_SHOTS 8
+#define MAX_ENEMIES 4
 
 typedef struct PlanePlayer
 {
@@ -21,6 +22,7 @@ typedef struct PlanePlayer
 void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea);
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
+void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
 
 int main(void)
 {
@@ -45,9 +47,9 @@ int main(void)
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
     UnloadImage(bulletImg);
 
-Image bulletImg = LoadImage("../mymedia/bullet_0.png");
-    Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
-    UnloadImage(bulletImg);
+    Image defaultEnemyImg = LoadImage("../mymedia/default_enemy_0.png");
+    Texture2D defaultEnemyTexture = LoadTextureFromImage(defaultEnemyImg);
+    UnloadImage(defaultEnemyImg);
 
     Image planeImg = LoadImage("../mymedia/plane_100_0.png");
     Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
@@ -64,7 +66,12 @@ Image bulletImg = LoadImage("../mymedia/bullet_0.png");
         backgroundPos.x + backgroundTexture.width,
         backgroundPos.y + backgroundTexture.height};
 
-    int shotTimer = 0;
+    int enemyPositions[] = {400 + 204, 400 +  408, 400 + 612, 400 +  816};
+    
+
+    int shotTimerRight = 0;
+    int shotTimerLeft = 0;
+    int enemyCounter = 0;
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -80,10 +87,13 @@ Image bulletImg = LoadImage("../mymedia/bullet_0.png");
         DrawTexture(planePlayer.planeTexture, planePlayer.position.x, planePlayer.position.y, WHITE);
 
         // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-        UpdateLeftBullet(bulletsLeft, bulletTexture, planePlayer.position, shotTimer);
+        UpdateLeftBullet(bulletsLeft, bulletTexture, planePlayer.position, shotTimerLeft);
         // UpdateRightBullet(bulletRight[i], planePlayer.position);
-        UpdateRightBullet(bulletsRight, bulletTexture, planePlayer.position, shotTimer);
-        // DrawText("Dette er ett spill", screenWidth / 2, screenHeight / 2, 45, GREEN);
+        UpdateRightBullet(bulletsRight, bulletTexture, planePlayer.position, shotTimerRight);
+        
+        //UpdateEnemies
+        UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+
         EndDrawing();
     }
     UnloadTexture(planePlayer.planeTexture);
@@ -107,12 +117,12 @@ void UpdatePlane(PlanePlayer *player, float delta, Vector4 flightArea)
 
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    if (shotTimer < 7)
+    if (shotTimer < 12)
     {
         shotTimer++;
     }
 
-    if (shotTimer >= 7)
+    if (shotTimer >= 12)
     {
         Bullet bullet = {};
         bullet.speed = 10;
@@ -139,12 +149,12 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
 
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    if (shotTimer < 7)
+    if (shotTimer < 12)
     {
         shotTimer++;
     }
 
-    if (shotTimer >= 7)
+    if (shotTimer >= 12)
     {
         Bullet bullet = {};
         bullet.speed = 10;
@@ -167,4 +177,31 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
             bullets.erase(bullets.begin() + i);
         }
     }
+}
+
+void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]) 
+{
+    for(int i = 0; i < MAX_ENEMIES; i++) {
+        if(enemies.size() < MAX_ENEMIES) 
+        {
+            Enemy defEnemy = {};
+            defEnemy.active = false;
+            defEnemy.speed = 2;
+            defEnemy.isBoss = false;
+            defEnemy.texture = texture;
+            defEnemy.x = xPositions[i];
+            defEnemy.y = 150;
+            enemies.push_back(defEnemy);
+        }
+        
+        if(!enemies[i].active && enemies[i].health >= 0) enemies[i].active = true;
+
+        if(enemies[i].active && enemies[i].health >= 0) 
+        {
+            enemies[i].active = true;
+            enemies[i].hover(xPositions[i], 50);
+            DrawTexture(enemies[i].texture, enemies[i].x, enemies[i].y, WHITE);
+        }
+    }
+
 }

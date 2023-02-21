@@ -10,18 +10,41 @@ Enemy::Enemy()
     texture = {};
     speed = 0;
     active = false;
+    leftHover=false,
+    rightHover=true;
 }
     
 
 void Enemy::update() 
 {
-    Vector2 windowsScale = GetWindowScaleDPI();
-    if(y < windowsScale.y) {
         y += speed;
+ 
+}
+
+void Enemy::hover(int position, int hoverRange) 
+{
+    int range[] = {position - hoverRange, position + hoverRange};
+    
+    if(leftHover && x > range[0]) 
+    {
+        x-=speed;
+        
+        if(x == range[0]) {
+            rightHover = true;
+            leftHover=false;
+        }
     }
-    else {
-        active = false;
+    
+    if(rightHover && x <= range[1])
+    {
+        x+=speed;
+
+        if(x == range[1]) {
+            rightHover = false;
+            leftHover=true;
+        }
     }
+ 
 }
 
 void Enemy::isHit(int bulletDamage) {
