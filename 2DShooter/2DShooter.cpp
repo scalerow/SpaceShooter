@@ -81,6 +81,8 @@ int main(void)
 
         if(game.menuActive) 
         {
+
+            //Need to unload game texture
                 Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
 
                 BeginBlendMode(BLEND_ALPHA);
@@ -95,6 +97,7 @@ int main(void)
         }
         else if(game.gameActive)
         {
+            //Need to unload menutexture
             DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
             DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
 
