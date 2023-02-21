@@ -179,7 +179,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
     }
 }
 
-void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]) 
+void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int xPositions[4]) 
 {
     for(int i = 0; i < MAX_ENEMIES; i++) {
         if(enemies.size() < MAX_ENEMIES) 
@@ -188,7 +188,7 @@ void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPosit
             defEnemy.active = false;
             defEnemy.speed = 2;
             defEnemy.isBoss = false;
-            defEnemy.texture = texture;
+            defEnemy.texture = enemyTexture;
             defEnemy.x = xPositions[i];
             defEnemy.y = 150;
             enemies.push_back(defEnemy);
