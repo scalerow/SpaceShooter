@@ -52,8 +52,7 @@ int main(void)
 
     int enemyShotTimer = 0;
     Vector2 pos = {50, 50};
-    Game game = {};
-
+    Game game;
     game.gameActive = true;
     game.load(screenHeight, screenWidth);
 
@@ -76,13 +75,15 @@ int main(void)
 
         BeginDrawing();
         ClearBackground(BLACK);
+
+        
         DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
         DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
 
         // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-        UpdateLeftBullet(bulletsLeft, bulletTexture, pos, game.shotTimerLeft);
+        UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, game.shotTimerLeft);
         // UpdateRightBullet(bulletRight[i], planePlayer.position);
-        UpdateRightBullet(bulletsRight, bulletTexture, pos, game.shotTimerRight);
+        UpdateRightBullet(bulletsRight, bulletTexture, player.position, game.shotTimerRight);
 
         // UpdateEnemies
         UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);

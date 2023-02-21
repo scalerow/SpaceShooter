@@ -4,35 +4,31 @@
 
 Game::Game()
 {
-    menuActive;
-    gameActive;
-    shotTimerRight;
-    shotTimerLeft;
-    enemyShotTimer;
-    enemyCounter;
-    backgroundTexture;
-    backgroudPosition;
+    menuActive = false;
+    gameActive = false;
+    shotTimerRight = 0;
+    shotTimerLeft = 0;
+    enemyShotTimer = 0;
+    enemyCounter = 0;
 }
 
 Game::~Game()
 {
 }
 
-void Game::load(float &screenHeight, float &screenWidth)
+void Game::load(float screenHeight, float screenWidth)
 {
-    Game game;
-
-    if (game.gameActive)
+    if (gameActive)
     {
-        game.InitGame(screenWidth, screenHeight);
+        InitGame(screenWidth, screenHeight);
     }
-    else if (game.menuActive)
+    else if (menuActive)
     {
-        game.InitMenu();
+        InitMenu();
     }
 }
 
-void Game::InitGame(float &screenWidth, float &screenHeight)
+void Game::InitGame(float screenWidth, float screenHeight)
 {
     Image background = LoadImage("../mymedia/2d_desert_sprite.png");
     ImageResize(&background, background.width, screenHeight);

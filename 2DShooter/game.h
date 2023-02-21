@@ -10,19 +10,19 @@ class Game
 {
 private:
 public:
-    bool menuActive = !gameActive;
-    bool gameActive = !menuActive;
-    int shotTimerRight = 0;
-    int shotTimerLeft = 0;
-    int enemyShotTimer = 0;
-    int enemyCounter = 0;
+    bool menuActive;
+    bool gameActive;
+    int shotTimerRight;
+    int shotTimerLeft;
+    int enemyShotTimer;
+    int enemyCounter;
     Texture2D backgroundTexture;
     Vector2 backgroudPosition;
     Game(/* args */);
     ~Game();
 
-    void load(float &screenHeight, float &screenWidth);
-    void InitGame(float &screenWidth, float &screenHeight);
+    void load(float screenHeight, float screenWidth);
+    void InitGame(float screenWidth, float screenHeight);
     void InitMenu();
 };
 
