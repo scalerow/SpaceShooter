@@ -22,6 +22,8 @@ public:
 
     void isHit(int bulletDamage);
 
+    void shoot(vector<Bullet> &bullets, int shotTimer, Texture2D &texture);
+
 private: 
     bool leftHover;
     bool rightHover;

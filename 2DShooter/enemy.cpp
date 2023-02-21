@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include "enemy.h"
+#include "bullet.h"
 
 Enemy::Enemy() 
 {
@@ -45,6 +46,38 @@ void Enemy::hover(int position, int hoverRange)
         }
     }
  
+}
+
+void Enemy::shoot(vector<Bullet> &bullets, int shotTimer, Texture2D &texture) 
+{
+    if (shotTimer < 12)
+    {
+        shotTimer++;
+    }
+
+    if (shotTimer >= 12)
+    {
+        Bullet bullet = {};
+        bullet.speed = 10;
+        bullet.texture = texture;
+        bullet.x = x;
+        bullet.y = y + 10;
+        bullets.push_back(bullet);
+        shotTimer = 0;
+    }
+
+    for (int i = 0; i < bullets.size(); i++)
+    {
+        if (!bullets[i].collidesWidth())
+        {
+            bullets[i].update();
+            DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
+        }
+        else
+        {
+            bullets.erase(bullets.begin() + i);
+        }
+    }
 }
 
 void Enemy::isHit(int bulletDamage) {

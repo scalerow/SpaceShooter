@@ -29,6 +29,8 @@ int main(void)
     static vector<Bullet> bulletsRight;
     static vector<Bullet> bulletsLeft;
     static vector<Enemy> defaultEnemy;
+    static vector<Bullet> defaultEnemyBullet;
+
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
@@ -51,6 +53,10 @@ int main(void)
     Texture2D defaultEnemyTexture = LoadTextureFromImage(defaultEnemyImg);
     UnloadImage(defaultEnemyImg);
 
+    Image defaultEnemyBulletImg = LoadImage("../mymedia/bullet_enemy_0.png");
+    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg );
+    UnloadImage(defaultEnemyBulletImg);
+
     Image planeImg = LoadImage("../mymedia/plane_100_0.png");
     Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
     PlanePlayer planePlayer = {0};
@@ -71,6 +77,7 @@ int main(void)
 
     int shotTimerRight = 0;
     int shotTimerLeft = 0;
+    int enemyShotTimer = 0;
     int enemyCounter = 0;
 
     SetTargetFPS(60);
@@ -135,9 +142,9 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
 
     for (int i = 0; i < bullets.size(); i++)
     {
-        if (!bullets[i].collidesWidth())
+        if (!bullets[i].playerBulletCollides())
         {
-            bullets[i].update();
+            bullets[i].updatePlayer();
             DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
                 }
         else
@@ -167,9 +174,9 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
 
     for (int i = 0; i < bullets.size(); i++)
     {
-        if (!bullets[i].collidesWidth())
+        if (!bullets[i].playerBulletCollides())
         {
-            bullets[i].update();
+            bullets[i].updatePlayer();
             DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
         }
         else
@@ -179,7 +186,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
     }
 }
 
-void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int xPositions[4]) 
+void UpdateDefaultEnemies(vector<Enemy> &enemies, vector<Bullet> &bullets,Texture &enemyBullets,  Texture2D &enemyTexture, int xPositions[4]) 
 {
     for(int i = 0; i < MAX_ENEMIES; i++) {
         if(enemies.size() < MAX_ENEMIES) 

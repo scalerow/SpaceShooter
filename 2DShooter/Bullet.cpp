@@ -9,13 +9,29 @@ Bullet::Bullet()
     texture = {};
 }
 
-void Bullet::update()
+void Bullet::updatePlayer()
 {
 
     y -= speed;
 }
 
-bool Bullet::collidesWidth()
+void Bullet::updateEnemy()
+{
+
+    y += speed;
+}
+
+bool Bullet::playerBulletCollides()
+{
+    if (y <= 0)
+    {
+        return true;
+    }
+    else
+        return false;
+}
+
+bool Bullet::enemyBulletCollides()
 {
     if (y <= 0)
     {

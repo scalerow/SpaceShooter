@@ -13,9 +13,11 @@ public:
 
     Bullet();
 
-    void update();
+    void updatePlayer();
+    void updateEnemy();
 
-    bool collidesWidth();
+    bool playerBulletCollides();
+    bool enemyBulletCollides();
 };
 
 #endif
