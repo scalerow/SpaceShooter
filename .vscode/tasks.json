@@ -14,15 +14,18 @@
                 "/Zi",
                 "/EHsc",
                 "/nologo",
-                "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "/Fe${fileDirname}\\build\\${fileBasenameNoExtension}.exe",
                 "${file}",
+                "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib",
+                "/Fobuild\\",
                 "${fileDirname}\\bullet.cpp",
                 "${fileDirname}\\enemy.cpp",
                 "${fileDirname}\\player.cpp",
                 "${fileDirname}\\game.cpp",
                 "${fileDirname}\\mainmenu.cpp",
                 "${fileDirname}\\home.cpp",
-                "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib"
+
+
             ],
             "options": {
                 "cwd": "${fileDirname}"

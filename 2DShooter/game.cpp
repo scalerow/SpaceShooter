@@ -1,25 +1,22 @@
 #include <raylib.h>
 #include "game.h"
-#include "player.h"
 
-Game::Game()
+Game::Game(float heightP, float widthP) : MainMenu{heightP, widthP}
 {
-    Home();
     shotTimerRight = 0;
     shotTimerLeft = 0;
     enemyShotTimer = 0;
     enemyCounter = 0;
+    isGameActive = false;
 }
 
 Game::~Game()
 {
 }
 
-
-
 void Game::InitGame()
 {
-    active = true;
+    isGameActive = true;
 
     Image background = LoadImage("../mymedia/2d_desert_sprite.png");
     ImageResize(&background, background.width, screenHeight);
@@ -27,12 +24,7 @@ void Game::InitGame()
     Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};
     UnloadImage(background);
 
-    backgroudPosition = {(screenWidth - backgroundTxr.width) / 2,0};
-    flightArea= {backgroudPosition.x,backgroudPosition.y,backgroudPosition.x + backgroundTxr.width,screenHeight};
-    backgroundTexture = backgroundTxr;
-    backgroudPosition = {backgroundPos.x, backgroundPos.y};
+    flightArea = {backgroundPos.x, backgroundPos.y, backgroundPos.x + backgroundTxr.width, screenHeight};
+    gameTexture = backgroundTxr;
+    gameBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
-
-
-
-

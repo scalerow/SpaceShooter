@@ -4,7 +4,6 @@
 class Home
 {
 private:
-    
 public:
     float screenWidth;
     float screenHeight;
@@ -12,7 +11,6 @@ public:
     bool activateGame = false;
     bool activateSettings = false;
 
-    Home() = default;
     Home(float height, float width);
     ~Home();
 

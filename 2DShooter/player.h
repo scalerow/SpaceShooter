@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include "game.h"
 
-class Player : public Game
+class Player
 {
 private:
     /* data */
@@ -15,11 +15,11 @@ public:
     float health;
     Texture2D planeTexture;
 
-    Player() : Game() {};
+    Player();
     ~Player();
 
-    void InitPlayer();
-    void UpdatePlayer(float delta);
+    void InitPlayer(float screenHeight, float screenWidth);
+    void UpdatePlayer(float delta, Vector4 flightArea);
 };
 
 #endif

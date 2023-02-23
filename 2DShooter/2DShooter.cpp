@@ -53,16 +53,10 @@ int main(void)
     int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
 
     int enemyShotTimer = 0;
-    Vector2 pos = {50, 50};
-    Home home(screenHeight, screenWidth);
-    home.LoadMenu();
-
-    MainMenu mainMenu;
-    Game game;
+    Game game = Game(screenHeight, screenWidth);
+    game.LoadMenu();
     Player player;
-    player.InitPlayer();
-
-    Vector2 mousePoint = { 0.0f, 0.0f };
+    Vector2 mousePoint = {0.0f, 0.0f};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -70,36 +64,37 @@ int main(void)
         // Move player around
         float deltaTime = GetFrameTime();
 
-        player.UpdatePlayer(deltaTime);
-
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if(home.activateMenu) 
+        if (game.activateMenu)
         {
-            if(!mainMenu.active) {
-                mainMenu.InitMenu();
+            if (!game.isMenuActive)
+            {
+                game.InitMenu();
             }
-            
-            //Need to unload game texture
-                Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
 
-                BeginBlendMode(BLEND_ALPHA);
-                            DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, DARKGRAY);
-                EndBlendMode();
-                Rectangle rect = Rectangle{(screenWidth/2.f)-250, screenHeight/ 2.f,500, 125};
-                DrawRectangleLinesEx(rect,10, mainMenu.playButtonColor);
-                DrawText("PLAY", (screenWidth/2.f) - 125,(screenHeight/2.f) + 15, 96,mainMenu.playButtonColor );
-                mainMenu.PlayAction(mousePoint,rect);
+            // Need to unload game texture
+            Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
+
+            BeginBlendMode(BLEND_ALPHA);
+            DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
+            EndBlendMode();
+            Rectangle rect = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 125};
+            DrawRectangleLinesEx(rect, 10, game.playButtonColor);
+            DrawText("PLAY", (screenWidth / 2.f) - 125, (screenHeight / 2.f) + 15, 96, game.playButtonColor);
+            game.PlayAction(mousePoint, rect);
         }
-        else if(game.activateGame)
+        else if (game.activateGame)
         {
-            if(!game.active) 
+            if (!game.isGameActive)
             {
                 game.InitGame();
+                player.InitPlayer(screenHeight, screenWidth);
             }
-            //Need to unload menutexture
-            DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
+            player.UpdatePlayer(deltaTime, game.flightArea);
+            // Need to unload menutexture
+            DrawTexture(game.gameTexture, game.gameBackgroudPosition.x, game.gameBackgroudPosition.y, RAYWHITE);
             DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
 
             // UpdateLeftBullet(&bulletLeft, planePlayer.position);
@@ -110,8 +105,6 @@ int main(void)
             // UpdateEnemies
             UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
         }
-        
-        
 
         // Update enemy bullets
         // UpdateDefaultEnemyBullet(defaultEnemyBullets, defaultenemyBulletTexture, enemyPositions, enemyShotTimer);
@@ -119,7 +112,11 @@ int main(void)
         EndDrawing();
     }
     UnloadTexture(player.planeTexture);
-    UnloadTexture(game.backgroundTexture);
+    UnloadTexture(game.gameTexture);
+    UnloadTexture(game.menuTexture);
+    UnloadTexture(player.planeTexture);
+    UnloadTexture(bulletTexture);
+
     CloseWindow();
 
     return 0;
@@ -197,9 +194,9 @@ void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int x
         enemies[0].health = 0;
     }
 
-    for (int i = 0; i < MAX_ENEMIES; i++)
+    for (int i = 0; i < 4; i++)
     {
-        if (enemies.size() < MAX_ENEMIES)
+        if (enemies.size() < 4)
         {
             Enemy defEnemy = {};
             defEnemy.active = false;

@@ -1,18 +1,16 @@
 #include "home.h"
-#include "game.h"
 #include "mainmenu.h"
 
-Home::Home(float height, float width)
+Home::Home(float height, float width) : screenHeight{height}, screenWidth{width}
 {
-    screenHeight = height;
-    screenWidth = width;
 }
 
 Home::~Home()
 {
 }
 
-void Home::LoadMenu() {
+void Home::LoadMenu()
+{
     activateGame = false;
     activateSettings = false;
     activateMenu = true;

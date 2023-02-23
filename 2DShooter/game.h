@@ -1,28 +1,24 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define MAX_ENEMIES 4
-
 #include "raylib.h"
-#include "player.h"
-#include "home.h"
+#include "MainMenu.h"
 
-class Game : public Home
+class Game : public MainMenu
 {
 private:
 public:
-    
     int shotTimerRight;
     int shotTimerLeft;
     int enemyShotTimer;
     int enemyCounter;
-    Texture2D backgroundTexture;
-    Vector2 backgroudPosition;
+    Texture2D gameTexture;
+    Vector2 gameBackgroudPosition;
     Vector4 flightArea;
-    bool active;
+    bool isGameActive;
 
-    Game() : Home() {};
-    ~Game();
+    Game(float heightP, float widthP);
+    virtual ~Game();
 
     void InitGame();
 };

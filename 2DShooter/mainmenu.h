@@ -4,21 +4,20 @@
 #include "home.h"
 #include "raylib.h"
 
-class MainMenu :  public Home
+class MainMenu : public Home
 {
 private:
     /* data */
 public:
-    Texture2D backgroundTexture;
-    Vector2 backgroudPosition;
+    Texture2D menuTexture;
+    Vector2 menuBackgroudPosition;
     Color playButtonColor;
-    bool active;
+    bool isMenuActive;
 
-    MainMenu() : Home(){};
+    MainMenu(float height, float width);
     ~MainMenu();
     void InitMenu();
     void PlayAction(Vector2 mousePoint, Rectangle btnBounds);
-
 };
 
 #endif
