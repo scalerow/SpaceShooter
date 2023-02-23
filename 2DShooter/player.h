@@ -20,6 +20,7 @@ public:
 
     void InitPlayer(float screenHeight, float screenWidth);
     void UpdatePlayer(float delta, Vector4 flightArea);
+    void UnloadPlayer();
 };
 
 #endif

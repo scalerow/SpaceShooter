@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "MainMenu.h"
+#include "player.h"
 
 class Game : public MainMenu
 {
@@ -21,6 +22,7 @@ public:
     virtual ~Game();
 
     void InitGame();
+    void UnloadGame();
 };
 
 #endif

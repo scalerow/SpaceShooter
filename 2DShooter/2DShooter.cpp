@@ -56,7 +56,6 @@ int main(void)
     Game game = Game(screenHeight, screenWidth);
     game.LoadMenu();
     Player player;
-    Vector2 mousePoint = {0.0f, 0.0f};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -71,6 +70,10 @@ int main(void)
         {
             if (!game.isMenuActive)
             {
+                // Clear remenants of texture from memory
+                player.UnloadPlayer();
+                game.UnloadGame();
+
                 game.InitMenu();
             }
 
@@ -80,20 +83,39 @@ int main(void)
             BeginBlendMode(BLEND_ALPHA);
             DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
             EndBlendMode();
-            Rectangle rect = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 125};
-            DrawRectangleLinesEx(rect, 10, game.playButtonColor);
+
+            // Play button
+            Rectangle rectPlay = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 120};
+            DrawRectangleLinesEx(rectPlay, 10, game.playButtonColor);
             DrawText("PLAY", (screenWidth / 2.f) - 125, (screenHeight / 2.f) + 15, 96, game.playButtonColor);
-            game.PlayAction(mousePoint, rect);
+
+            // Settings button
+            float settingsWidth = MeasureText("SETTINGS", 72);
+            Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + 300.f, settingsWidth, 72};
+            Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y - 40, rectSettings.width, rectSettings.height};
+            DrawText("SETTINGS", rectSettings.x, rectSettings.y, 72, game.settingsButtonColor);
+
+            // Exit button
+            float exitWidth = MeasureText("EXIT", 72);
+            Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + 400.f, exitWidth, 72};
+            Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y - 40, rectExit.width, rectExit.height};
+            DrawText("EXIT", rectExit.x, rectExit.y, 72, game.exitButtonColor);
+
+            game.SettingsAction(settingsHitbox);
+            game.PlayAction(rectPlay);
+            game.ExitAction(exitHitbox);
         }
         else if (game.activateGame)
         {
             if (!game.isGameActive)
             {
+                game.UnloadMenu();
+
                 game.InitGame();
                 player.InitPlayer(screenHeight, screenWidth);
             }
             player.UpdatePlayer(deltaTime, game.flightArea);
-            // Need to unload menutexture
+
             DrawTexture(game.gameTexture, game.gameBackgroudPosition.x, game.gameBackgroudPosition.y, RAYWHITE);
             DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
 
@@ -104,6 +126,9 @@ int main(void)
 
             // UpdateEnemies
             UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+        }
+        else if (game.activateSettings)
+        {
         }
 
         // Update enemy bullets

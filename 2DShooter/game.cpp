@@ -14,6 +14,7 @@ Game::~Game()
 {
 }
 
+// Initialize the game
 void Game::InitGame()
 {
     isGameActive = true;
@@ -27,4 +28,10 @@ void Game::InitGame()
     flightArea = {backgroundPos.x, backgroundPos.y, backgroundPos.x + backgroundTxr.width, screenHeight};
     gameTexture = backgroundTxr;
     gameBackgroudPosition = {backgroundPos.x, backgroundPos.y};
+}
+
+// Clear remenants of texture from memory
+void Game::UnloadGame()
+{
+    UnloadTexture(gameTexture);
 }

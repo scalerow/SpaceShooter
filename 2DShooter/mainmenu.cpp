@@ -10,6 +10,7 @@ MainMenu::~MainMenu()
 {
 }
 
+// Initialize mainmenu
 void MainMenu::InitMenu()
 {
     isMenuActive = true;
@@ -20,13 +21,16 @@ void MainMenu::InitMenu()
     Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};
     UnloadImage(background);
 
+    playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     menuTexture = backgroundTxr;
     menuBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
 
-void MainMenu::PlayAction(Vector2 mousePoint, Rectangle btnBounds)
+// Initialize the playbutton and its actions
+void MainMenu::PlayAction(Rectangle btnBounds)
 {
-    mousePoint = GetMousePosition();
+    Vector2 mousePoint = GetMousePosition();
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
@@ -34,7 +38,7 @@ void MainMenu::PlayAction(Vector2 mousePoint, Rectangle btnBounds)
             playButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         else
         {
-            playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+            playButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         }
 
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
@@ -43,4 +47,62 @@ void MainMenu::PlayAction(Vector2 mousePoint, Rectangle btnBounds)
             LoadGame();
         }
     }
+    else
+    {
+        playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+void MainMenu::SettingsAction(Rectangle btnBounds)
+{
+    Vector2 mousePoint = GetMousePosition();
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        else
+        {
+            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, RED);
+        }
+    }
+    else
+    {
+        settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+void MainMenu::ExitAction(Rectangle btnBounds)
+{
+    Vector2 mousePoint = GetMousePosition();
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        else
+        {
+            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            CloseWindow();
+        }
+    }
+    else
+    {
+        exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+// Clear remenants of texture from memory
+void MainMenu::UnloadMenu()
+{
+    UnloadTexture(menuTexture);
 }

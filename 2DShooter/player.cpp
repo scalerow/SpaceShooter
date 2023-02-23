@@ -9,6 +9,7 @@ Player::~Player()
 {
 }
 
+// Initialize the plane for the game
 void Player::InitPlayer(float screenHeight, float screenWidth)
 {
 
@@ -21,6 +22,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     UnloadImage(planeImg);
 }
 
+// Update the planes position with keyboard keys
 void Player::UpdatePlayer(float delta, Vector4 flightArea)
 {
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - 100)
@@ -31,4 +33,10 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
         position.y += 350.f * delta;
     if (IsKeyDown(KEY_UP) && position.y >= flightArea.y)
         position.y -= 350.f * delta;
+}
+
+// Clear remenants of texture from memory
+void Player::UnloadPlayer()
+{
+    UnloadTexture(planeTexture);
 }
