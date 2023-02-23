@@ -4,6 +4,8 @@
 #include "enemy.h"
 #include "player.h"
 #include "game.h"
+#include "home.h"
+#include "mainmenu.h"
 #include <vector>
 
 using namespace std;
@@ -52,19 +54,13 @@ int main(void)
 
     int enemyShotTimer = 0;
     Vector2 pos = {50, 50};
+    Home home(screenHeight, screenWidth);
+    home.LoadMenu();
+
+    MainMenu mainMenu;
     Game game;
-    game.gameActive = false;
-    game.menuActive = true;
-    game.load(screenHeight, screenWidth);
-
-    Vector4 flightArea = {
-        game.backgroudPosition.x,
-        game.backgroudPosition.y,
-        game.backgroudPosition.x + game.backgroundTexture.width,
-        screenHeight};
-
     Player player;
-    player.InitPlayer({screenWidth, screenHeight});
+    player.InitPlayer();
 
     Vector2 mousePoint = { 0.0f, 0.0f };
 
@@ -74,14 +70,17 @@ int main(void)
         // Move player around
         float deltaTime = GetFrameTime();
 
-        player.UpdatePlayer(deltaTime, flightArea);
+        player.UpdatePlayer(deltaTime);
 
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if(game.menuActive) 
+        if(home.activateMenu) 
         {
-
+            if(!mainMenu.active) {
+                mainMenu.InitMenu();
+            }
+            
             //Need to unload game texture
                 Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
 
@@ -89,14 +88,16 @@ int main(void)
                             DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, DARKGRAY);
                 EndBlendMode();
                 Rectangle rect = Rectangle{(screenWidth/2.f)-250, screenHeight/ 2.f,500, 125};
-                DrawRectangleLinesEx(rect,10, game.playButtonColor);
-                DrawText("PLAY", (screenWidth/2.f) - 125,(screenHeight/2.f) + 15, 96,game.playButtonColor );
-                game.PlayAction(mousePoint,rect);
-
-
+                DrawRectangleLinesEx(rect,10, mainMenu.playButtonColor);
+                DrawText("PLAY", (screenWidth/2.f) - 125,(screenHeight/2.f) + 15, 96,mainMenu.playButtonColor );
+                mainMenu.PlayAction(mousePoint,rect);
         }
-        else if(game.gameActive)
+        else if(game.activateGame)
         {
+            if(!game.active) 
+            {
+                game.InitGame();
+            }
             //Need to unload menutexture
             DrawTexture(game.backgroundTexture, game.backgroudPosition.x, game.backgroudPosition.y, RAYWHITE);
             DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);

@@ -5,27 +5,26 @@
 
 #include "raylib.h"
 #include "player.h"
+#include "home.h"
 
-class Game
+class Game : public Home
 {
 private:
 public:
-    bool menuActive;
-    bool gameActive;
+    
     int shotTimerRight;
     int shotTimerLeft;
     int enemyShotTimer;
     int enemyCounter;
     Texture2D backgroundTexture;
     Vector2 backgroudPosition;
-    Color playButtonColor;
-    Game(/* args */);
+    Vector4 flightArea;
+    bool active;
+
+    Game() : Home() {};
     ~Game();
 
-    void load(float screenHeight, float screenWidth);
-    void InitGame(float screenWidth, float screenHeight);
-    void InitMenu(float screenWidth, float screenHeight);
-    void PlayAction(Vector2 mousePoint, Rectangle btnBounds);
+    void InitGame();
 };
 
 #endif

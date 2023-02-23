@@ -14,11 +14,11 @@ Player::~Player()
 {
 }
 
-void Player::InitPlayer(Vector2 screenSize)
+void Player::InitPlayer()
 {
-
+    
     Image planeImg = LoadImage("../mymedia/plane_100_0.png");
-    Vector2 planePosition = {screenSize.x / 2, screenSize.y - 100};
+    Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
     planeTexture = LoadTextureFromImage(planeImg);
     position = planePosition;
     speed = 8.f;
@@ -26,7 +26,7 @@ void Player::InitPlayer(Vector2 screenSize)
     UnloadImage(planeImg);
 }
 
-void Player::UpdatePlayer(float delta, Vector4 flightArea)
+void Player::UpdatePlayer(float delta)
 {
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - 100)
         position.x += 350.f * delta;

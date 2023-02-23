@@ -20,6 +20,8 @@
                 "${fileDirname}\\enemy.cpp",
                 "${fileDirname}\\player.cpp",
                 "${fileDirname}\\game.cpp",
+                "${fileDirname}\\mainmenu.cpp",
+                "${fileDirname}\\home.cpp",
                 "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\lib\\raylib.lib"
             ],
             "options": {
