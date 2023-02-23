@@ -4,6 +4,7 @@
 MainMenu::MainMenu(float height, float width) : Home{height, width}
 {
     isMenuActive = false;
+    shouldExit = false;
 }
 
 MainMenu::~MainMenu()
@@ -92,7 +93,7 @@ void MainMenu::ExitAction(Rectangle btnBounds)
 
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
-            CloseWindow();
+            shouldExit = true;
         }
     }
     else

@@ -58,7 +58,7 @@ int main(void)
     Player player;
 
     SetTargetFPS(60);
-    while (!WindowShouldClose())
+    while (!game.shouldExit && !WindowShouldClose())
     {
         // Move player around
         float deltaTime = GetFrameTime();

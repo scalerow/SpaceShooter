@@ -7,10 +7,8 @@
             "args": [
                 "/I",
                 "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\include",
-                "/I",
-                "C:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\bin",
-                "/I",
-                "C:\\Development\\C++\\raylib_test\\mymedia",
+                "/IC:\\Development\\C++\\raylib_test\\vcpkg\\installed\\x86-windows\\bin",
+                "/IC:\\Development\\C++\\raylib_test\\mymedia",
                 "/Zi",
                 "/EHsc",
                 "/nologo",

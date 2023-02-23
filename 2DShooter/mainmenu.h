@@ -14,6 +14,7 @@ public:
     Color playButtonColor;
     Color exitButtonColor;
     Color settingsButtonColor;
+    bool shouldExit;
     bool isMenuActive;
 
     MainMenu(float height, float width);
