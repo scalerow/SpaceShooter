@@ -1,7 +1,10 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include <vector>
 #include <raylib.h>
+
+using namespace std;
 
 class Enemy
 {
@@ -12,7 +15,8 @@ public:
     bool active;
     int speed;
     bool isBoss;
-    Texture2D texture;
+    Texture2D enemyTexture;
+    Vector2 position;
 
     Enemy();
     ~Enemy();
@@ -20,7 +24,11 @@ public:
 
     void hover(int position, int hoverRange);
 
-    void isHit(int bulletDamage);
+    void InitEnemy();
+    void CreateEnemies(float delta, Vector4 flightArea);
+    void UnloadEnemy();
+
+    void isHit(Rectangle enemyBndBox, Rectangle bulletBndBox);
 
 private:
     bool leftHover;

@@ -2,8 +2,10 @@
 #define BULLET_H
 
 #include <raylib.h>
+#include "player.h"
+#include "enemy.h"
 
-class Bullet
+class Bullet : public Player, public Enemy
 {
 public:
     int x;

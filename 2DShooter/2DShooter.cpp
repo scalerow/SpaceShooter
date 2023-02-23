@@ -7,6 +7,7 @@
 #include "home.h"
 #include "mainmenu.h"
 #include <vector>
+#include "tools.h"
 
 using namespace std;
 
@@ -21,14 +22,15 @@ typedef struct PlanePlayer
 
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
-void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
-// void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer);
+// void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
+//  void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer);
 
 int main(void)
 {
+    Tools tools;
     static vector<Bullet> bulletsRight;
     static vector<Bullet> bulletsLeft;
-    static vector<Enemy> defaultEnemy;
+
     static vector<Bullet> defaultEnemyBullets;
 
     float screenWidth = 1920.f;
@@ -41,16 +43,13 @@ int main(void)
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
     UnloadImage(bulletImg);
 
-    Image defaultEnemyImg = LoadImage("../mymedia/default_enemy_0.png");
-    Texture2D defaultEnemyTexture = LoadTextureFromImage(defaultEnemyImg);
-    UnloadImage(defaultEnemyImg);
-
     Image defaultEnemyBulletImg = LoadImage("../mymedia/bullet_enemy_0.png");
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
 
+    static vector<Enemy> defaultEnemies;
     int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
-
+    int enemyCounter = 0;
     int enemyShotTimer = 0;
     Game game = Game(screenHeight, screenWidth);
     game.LoadMenu();
@@ -123,8 +122,30 @@ int main(void)
             // UpdateRightBullet(bulletRight[i], planePlayer.position);
             UpdateRightBullet(bulletsRight, bulletTexture, player.position, game.shotTimerRight);
 
+            tools.CreateMultipleEnemies(enemyPositions);
+
+            for (int i = 0; i < tools.enemies.size(); i++)
+            {
+
+                Vector2 enemyPos = {tools.enemies[i].x, tools.enemies[i].y};
+                Vector2 enemySize = {(float)tools.enemies[i].enemyTexture.width, (float)tools.enemies[i].enemyTexture.height};
+
+                Rectangle enemyRect = {enemyPos.x, enemyPos.y, enemySize.x, enemySize.y};
+
+                for (int x = 0; x < bulletsRight.size(); x++)
+                {
+                    Vector2 bulletRightPos = {(float)bulletsRight[x].x, (float)bulletsRight[x].y};
+                    Vector2 bulletRightSize = {(float)bulletsRight[x].texture.width, (float)bulletsRight[x].texture.height};
+                    Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
+                    if (CheckCollisionRecs(enemyRect, bulletRect))
+                    {
+                        tools.enemies[i].health -= 10;
+                        bulletsRight.erase(bulletsRight.begin() + x);
+                    }
+                }
+            }
             // UpdateEnemies
-            UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
+            // UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
         }
         else if (game.activateSettings)
         {
@@ -210,47 +231,46 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
     }
 }
 
-void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int xPositions[4])
-{
+// void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &enemyTexture, int xPositions[4])
+// {
+//     if (IsKeyPressed(KEY_SPACE) && enemies.size() > 1)
+//     {
+//         enemies[0].health = 0;
+//     }
 
-    if (IsKeyPressed(KEY_SPACE) && enemies.size() > 1)
-    {
-        enemies[0].health = 0;
-    }
+//     for (int i = 0; i < 4; i++)
+//     {
+//         if (enemies.size() < 4)
+//         {
+//             Enemy defEnemy = {};
+//             defEnemy.active = false;
+//             defEnemy.speed = 2;
+//             defEnemy.isBoss = false;
+//             defEnemy.enemyTexture = enemyTexture;
+//             defEnemy.x = xPositions[i];
+//             defEnemy.y = -100;
+//             enemies.push_back(defEnemy);
+//         }
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (enemies.size() < 4)
-        {
-            Enemy defEnemy = {};
-            defEnemy.active = false;
-            defEnemy.speed = 2;
-            defEnemy.isBoss = false;
-            defEnemy.texture = enemyTexture;
-            defEnemy.x = xPositions[i];
-            defEnemy.y = -100;
-            enemies.push_back(defEnemy);
-        }
+//         if (!enemies[i].active && enemies[i].health >= 0)
+//             enemies[i].active = true;
 
-        if (!enemies[i].active && enemies[i].health >= 0)
-            enemies[i].active = true;
+//         if (enemies[i].health == 0)
+//         {
+//             enemies.erase(enemies.begin() + i);
+//         }
 
-        if (enemies[i].health == 0)
-        {
-            enemies.erase(enemies.begin() + i);
-        }
-
-        if (enemies[i].active && enemies[i].health >= 0)
-        {
-            enemies[i].active = true;
-            if (enemies[i].y < 150)
-                enemies[i].y += enemies[i].speed;
-            else
-                enemies[i].hover(xPositions[i], 50);
-            DrawTexture(enemies[i].texture, enemies[i].x, enemies[i].y, WHITE);
-        }
-    }
-}
+//         if (enemies[i].active && enemies[i].health >= 0)
+//         {
+//             enemies[i].active = true;
+//             if (enemies[i].y < 150)
+//                 enemies[i].y += enemies[i].speed;
+//             else
+//                 enemies[i].hover(xPositions[i], 50);
+//             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
+//         }
+//     }
+// }
 
 // void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer)
 // {

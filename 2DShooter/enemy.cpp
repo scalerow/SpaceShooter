@@ -3,12 +3,8 @@
 
 Enemy::Enemy()
 {
-    x = 0;
-    y = 0;
     health = 100;
     isBoss = false;
-    texture = {};
-    speed = 0;
     active = false;
     leftHover = false,
     rightHover = true;
@@ -48,7 +44,28 @@ void Enemy::hover(int position, int hoverRange)
     }
 }
 
-void Enemy::isHit(int bulletDamage)
+// Initialize the plane for the game
+void Enemy::InitEnemy()
 {
-    health -= bulletDamage;
+
+    Image defaultEnemyImg = LoadImage("../mymedia/default_enemy_0.png");
+    enemyTexture = LoadTextureFromImage(defaultEnemyImg);
+    speed = 2.f;
+    UnloadImage(defaultEnemyImg);
+}
+
+// Update the planes position with keyboard keys
+void CreateDefaultEnemies(int xPositions[4])
+{
+}
+
+// Clear remenants of texture from memory
+void Enemy::UnloadEnemy()
+{
+    UnloadTexture(enemyTexture);
+}
+
+void Enemy::isHit(Rectangle enemyBndBox, Rectangle bulletBndBox)
+{
+    CheckCollisionRecs(enemyBndBox, bulletBndBox);
 }
