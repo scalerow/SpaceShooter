@@ -36,7 +36,6 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "DesertSpaceShooter");
     Image icon = LoadImage("../myymedia/icon.ico");
     SetWindowIcon(icon);
-    UnloadImage(icon);
 
     Image bulletImg = LoadImage("../mymedia/bullet_0.png");
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
@@ -92,13 +91,13 @@ int main(void)
             // Settings button
             float settingsWidth = MeasureText("SETTINGS", 72);
             Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + 300.f, settingsWidth, 72};
-            Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y - 40, rectSettings.width, rectSettings.height};
+            Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y, rectSettings.width, rectSettings.height};
             DrawText("SETTINGS", rectSettings.x, rectSettings.y, 72, game.settingsButtonColor);
 
             // Exit button
             float exitWidth = MeasureText("EXIT", 72);
             Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + 400.f, exitWidth, 72};
-            Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y - 40, rectExit.width, rectExit.height};
+            Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y, rectExit.width, rectExit.height};
             DrawText("EXIT", rectExit.x, rectExit.y, 72, game.exitButtonColor);
 
             game.SettingsAction(settingsHitbox);
