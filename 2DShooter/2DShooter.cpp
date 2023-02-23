@@ -143,6 +143,17 @@ int main(void)
                         bulletsRight.erase(bulletsRight.begin() + x);
                     }
                 }
+                for (int x = 0; x < bulletsLeft.size(); x++)
+                {
+                    Vector2 bulletLeftPos = {(float)bulletsLeft[x].x, (float)bulletsLeft[x].y};
+                    Vector2 bulletLeftSize = {(float)bulletsLeft[x].texture.width, (float)bulletsLeft[x].texture.height};
+                    Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y, bulletLeftSize.x, bulletLeftSize.y};
+                    if (CheckCollisionRecs(enemyRect, bulletRect))
+                    {
+                        tools.enemies[i].health -= 10;
+                        bulletsLeft.erase(bulletsLeft.begin() + x);
+                    }
+                }
             }
             // UpdateEnemies
             // UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
