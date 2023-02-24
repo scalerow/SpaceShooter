@@ -61,12 +61,12 @@ void Enemy::UnloadEnemy()
 
 void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
 {
-    if(leftBullets.size()> 0 && rightBullets.size() > 0)
-    {       
+    if (leftBullets.size() > 0 && rightBullets.size() > 0)
+    {
         Vector2 enemyPos = {(float)x, (float)y};
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
 
-        Rectangle enemyRect = {enemyPos.x, enemyPos.y-50, enemySize.x, enemySize.y};
+        Rectangle enemyRect = {enemyPos.x, enemyPos.y - 50, enemySize.x, enemySize.y};
 
         for (int x = 0; x < rightBullets.size(); x++)
         {
@@ -75,8 +75,8 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
             if (CheckCollisionRecs(enemyRect, bulletRect))
             {
-                if(y >= 150)
-                { 
+                if (y >= 150)
+                {
                     health -= rightBullets[x].damage;
                     rightBullets[x].active = false;
                 }
@@ -87,10 +87,10 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
         {
             Vector2 bulletLeftPos = {(float)leftBullets[x].x, (float)leftBullets[x].y};
             Vector2 bulletLeftSize = {(float)leftBullets[x].texture.width, (float)leftBullets[x].texture.height};
-            Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y-16, bulletLeftSize.x, bulletLeftSize.y};
+            Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y - 16, bulletLeftSize.x, bulletLeftSize.y};
             if (CheckCollisionRecs(enemyRect, bulletRect))
             {
-                if(y >= 150) 
+                if (y >= 150)
                 {
                     health -= leftBullets[x].damage;
                     leftBullets[x].active = false;
@@ -101,11 +101,11 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
     }
 }
 
-void Enemy::ResetDefaultEnenmy(int spawnPositionX) 
+void Enemy::ResetDefaultEnenmy(int spawnPositionX)
 {
-            speed = 2;
-            health = 100;
-            active = false;
-            x = spawnPositionX;
-            y = -100;
+    speed = 2;
+    health = 100;
+    active = false;
+    x = spawnPositionX;
+    y = -100;
 }

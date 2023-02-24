@@ -5,7 +5,7 @@ Bullet::Bullet()
     x = 0;
     y = 0;
     speed = 0;
-    damage=1;
+    damage = 5;
 }
 
 Bullet::~Bullet() {}
