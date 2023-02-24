@@ -1,4 +1,3 @@
-#include <raylib.h>
 #include "enemy.h"
 
 Enemy::Enemy()
@@ -54,18 +53,59 @@ void Enemy::InitEnemy()
     UnloadImage(defaultEnemyImg);
 }
 
-// Update the planes position with keyboard keys
-void CreateDefaultEnemies(int xPositions[4])
-{
-}
-
 // Clear remenants of texture from memory
 void Enemy::UnloadEnemy()
 {
     UnloadTexture(enemyTexture);
 }
 
-void Enemy::isHit(Rectangle enemyBndBox, Rectangle bulletBndBox)
+void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
 {
-    CheckCollisionRecs(enemyBndBox, bulletBndBox);
+    if(leftBullets.size()> 0 && rightBullets.size() > 0)
+    {       
+        Vector2 enemyPos = {(float)x, (float)y};
+        Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
+
+        Rectangle enemyRect = {enemyPos.x, enemyPos.y-50, enemySize.x, enemySize.y};
+
+        for (int x = 0; x < rightBullets.size(); x++)
+        {
+            Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
+            Vector2 bulletRightSize = {(float)rightBullets[x].texture.width, (float)rightBullets[x].texture.height};
+            Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
+            if (CheckCollisionRecs(enemyRect, bulletRect))
+            {
+                if(y >= 150)
+                { 
+                    health -= rightBullets[x].damage;
+                    rightBullets[x].active = false;
+                }
+                rightBullets.erase(rightBullets.begin() + x);
+            }
+        }
+        for (int x = 0; x < leftBullets.size(); x++)
+        {
+            Vector2 bulletLeftPos = {(float)leftBullets[x].x, (float)leftBullets[x].y};
+            Vector2 bulletLeftSize = {(float)leftBullets[x].texture.width, (float)leftBullets[x].texture.height};
+            Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y-16, bulletLeftSize.x, bulletLeftSize.y};
+            if (CheckCollisionRecs(enemyRect, bulletRect))
+            {
+                if(y >= 150) 
+                {
+                    health -= leftBullets[x].damage;
+                    leftBullets[x].active = false;
+                }
+                leftBullets.erase(leftBullets.begin() + x);
+            }
+        }
+    }
+}
+
+void Enemy::ResetDefaultEnenmy(int spawnPositionX) 
+{
+            speed = 2;
+            health = 100;
+            active = false;
+            x = spawnPositionX;
+            y = -100;
 }

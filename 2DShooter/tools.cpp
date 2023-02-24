@@ -17,24 +17,22 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
         {
             Enemy defEnemy;
             defEnemy.InitEnemy();
-            defEnemy.speed = 2;
-            defEnemy.x = xPositions[i];
-            defEnemy.y = -100;
+            defEnemy.ResetDefaultEnenmy(xPositions[i]);
             enemies.push_back(defEnemy);
         }
 
         if (!enemies[i].active && enemies[i].health >= 0)
             enemies[i].active = true;
 
-        if (enemies[i].health == 0)
+        if (enemies[i].health <= 0)
         {
-            enemies.erase(enemies.begin() + i);
+            enemies[i].ResetDefaultEnenmy(xPositions[i]);
+            return;
         }
 
         if (enemies[i].active && enemies[i].health > 0)
         {
-            enemies[i].active = true;
-            if (enemies[i].y < 150)
+            if (enemies[i].y <= 150)
                 enemies[i].y += enemies[i].speed;
             else
                 enemies[i].hover(xPositions[i], 50);

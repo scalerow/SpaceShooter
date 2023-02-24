@@ -2,16 +2,17 @@
 #define BULLET_H
 
 #include <raylib.h>
-#include "player.h"
-#include "enemy.h"
 
-class Bullet : public Player, public Enemy
+class Bullet 
 {
 public:
     int x;
     int y;
     Texture2D texture;
     int speed;
+    int damage;
+    bool active;
+
 
     Bullet();
     ~Bullet();

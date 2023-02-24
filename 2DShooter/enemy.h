@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <raylib.h>
+#include "bullet.h"
 
 using namespace std;
 
@@ -25,10 +26,11 @@ public:
     void hover(int position, int hoverRange);
 
     void InitEnemy();
-    void CreateEnemies(float delta, Vector4 flightArea);
+    
+    void ResetDefaultEnenmy(int spawnPositionX);
+    
+    void isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets);
     void UnloadEnemy();
-
-    void isHit(Rectangle enemyBndBox, Rectangle bulletBndBox);
 
 private:
     bool leftHover;

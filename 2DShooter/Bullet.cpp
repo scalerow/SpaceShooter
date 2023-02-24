@@ -1,12 +1,11 @@
 #include "bullet.h"
-#include <raylib.h>
 
 Bullet::Bullet()
 {
     x = 0;
     y = 0;
     speed = 0;
-    texture = {};
+    damage=1;
 }
 
 Bullet::~Bullet() {}

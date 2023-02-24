@@ -28,8 +28,8 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
 int main(void)
 {
     Tools tools;
-    static vector<Bullet> bulletsRight;
-    static vector<Bullet> bulletsLeft;
+    vector<Bullet> bulletsRight;
+    vector<Bullet> bulletsLeft;
 
     static vector<Bullet> defaultEnemyBullets;
 
@@ -126,34 +126,7 @@ int main(void)
 
             for (int i = 0; i < tools.enemies.size(); i++)
             {
-
-                Vector2 enemyPos = {tools.enemies[i].x, tools.enemies[i].y};
-                Vector2 enemySize = {(float)tools.enemies[i].enemyTexture.width, (float)tools.enemies[i].enemyTexture.height};
-
-                Rectangle enemyRect = {enemyPos.x, enemyPos.y, enemySize.x, enemySize.y};
-
-                for (int x = 0; x < bulletsRight.size(); x++)
-                {
-                    Vector2 bulletRightPos = {(float)bulletsRight[x].x, (float)bulletsRight[x].y};
-                    Vector2 bulletRightSize = {(float)bulletsRight[x].texture.width, (float)bulletsRight[x].texture.height};
-                    Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
-                    if (CheckCollisionRecs(enemyRect, bulletRect))
-                    {
-                        tools.enemies[i].health -= 10;
-                        bulletsRight.erase(bulletsRight.begin() + x);
-                    }
-                }
-                for (int x = 0; x < bulletsLeft.size(); x++)
-                {
-                    Vector2 bulletLeftPos = {(float)bulletsLeft[x].x, (float)bulletsLeft[x].y};
-                    Vector2 bulletLeftSize = {(float)bulletsLeft[x].texture.width, (float)bulletsLeft[x].texture.height};
-                    Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y, bulletLeftSize.x, bulletLeftSize.y};
-                    if (CheckCollisionRecs(enemyRect, bulletRect))
-                    {
-                        tools.enemies[i].health -= 10;
-                        bulletsLeft.erase(bulletsLeft.begin() + x);
-                    }
-                }
+                tools.enemies[i].isHit(bulletsLeft, bulletsRight);
             }
             // UpdateEnemies
             // UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
@@ -180,20 +153,22 @@ int main(void)
 
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    if (shotTimer < 12)
+    if (shotTimer < 15)
     {
         shotTimer++;
     }
 
-    if (shotTimer >= 12)
+    if (shotTimer >= 15)
     {
         Bullet bullet = {};
-        bullet.speed = 10;
+        bullet.speed = 7;
         bullet.texture = texture;
         bullet.x = position.x + 13;
         bullet.y = position.y;
+        bullet.active = true;
         bullets.push_back(bullet);
         shotTimer = 0;
+
     }
 
     for (int i = 0; i < bullets.size(); i++)
@@ -212,25 +187,27 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
 
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
 {
-    if (shotTimer < 12)
+    if (shotTimer < 15)
     {
         shotTimer++;
     }
 
-    if (shotTimer >= 12)
+    if (shotTimer >= 15)
     {
         Bullet bullet = {};
-        bullet.speed = 10;
+        bullet.speed = 7;
         bullet.texture = texture;
         bullet.x = position.x + 78;
         bullet.y = position.y;
+        bullet.active = true;
         bullets.push_back(bullet);
         shotTimer = 0;
+        
     }
 
     for (int i = 0; i < bullets.size(); i++)
     {
-        if (!bullets[i].playerBulletCollides())
+        if (bullets[i].active)
         {
             bullets[i].updatePlayer();
             DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
