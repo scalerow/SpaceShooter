@@ -20,8 +20,8 @@ typedef struct PlanePlayer
     Texture2D planeTexture;
 } PlanePlayer;
 
-void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
-void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer);
+void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer);
+void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer);
 // void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
 //  void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer);
 
@@ -116,12 +116,12 @@ int main(void)
 
             DrawTexture(game.gameTexture, game.gameBackgroudPosition.x, game.gameBackgroudPosition.y, RAYWHITE);
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
-            DrawTextureEx(player.planeTexture, player.position, player.rotation, 1, WHITE);
-
+            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
+            DrawTextureV(player.planeTexture, player.position, WHITE);
             // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-            UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, game.shotTimerLeft);
+            UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, player.rotation, game.shotTimerLeft);
             // UpdateRightBullet(bulletRight[i], planePlayer.position);
-            UpdateRightBullet(bulletsRight, bulletTexture, player.position, game.shotTimerRight);
+            UpdateRightBullet(bulletsRight, bulletTexture, player.position, player.rotation, game.shotTimerRight);
 
             tools.CreateMultipleEnemies(enemyPositions);
 
@@ -152,7 +152,7 @@ int main(void)
     return 0;
 }
 
-void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
+void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer)
 {
     if (shotTimer < 15)
     {
@@ -162,22 +162,21 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
     if (shotTimer >= 15)
     {
         Bullet bullet = {};
-        bullet.speed = 7;
+        bullet.speed = 7.f;
         bullet.texture = texture;
-        bullet.x = position.x + 13;
+        bullet.x = position.x + 0.5;
         bullet.y = position.y;
         bullet.active = true;
         bullets.push_back(bullet);
         shotTimer = 0;
-
     }
 
     for (int i = 0; i < bullets.size(); i++)
     {
         if (!bullets[i].playerBulletCollides())
         {
-            bullets[i].updatePlayer();
-            DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
+            bullets[i].updatePlayerBullet();
+            DrawTextureV(bullets[i].texture, {bullets[i].x, bullets[i].y}, WHITE);
         }
         else
         {
@@ -186,7 +185,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &posi
     }
 }
 
-void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &position, int &shotTimer)
+void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer)
 {
     if (shotTimer < 15)
     {
@@ -198,20 +197,19 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 &pos
         Bullet bullet = {};
         bullet.speed = 7;
         bullet.texture = texture;
-        bullet.x = position.x + 78;
+        bullet.x = position.x + 149.5;
         bullet.y = position.y;
         bullet.active = true;
         bullets.push_back(bullet);
         shotTimer = 0;
-        
     }
 
     for (int i = 0; i < bullets.size(); i++)
     {
         if (bullets[i].active)
         {
-            bullets[i].updatePlayer();
-            DrawTexture(bullets[i].texture, bullets[i].x, bullets[i].y, WHITE);
+            bullets[i].updatePlayerBullet();
+            DrawTextureEx(bullets[i].texture, {bullets[i].x, bullets[i].y}, rotation, 1, WHITE);
         }
         else
         {

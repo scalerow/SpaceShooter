@@ -2,24 +2,26 @@
 #define BULLET_H
 
 #include <raylib.h>
+#include <cmath>
 
-class Bullet 
+class Bullet
 {
 public:
-    int x;
-    int y;
+    float x;
+    float y;
     Texture2D texture;
-    int speed;
+    float speed;
     int damage;
     bool active;
-
+    float specialAttckPoints;
+    float rotation;
 
     Bullet();
     ~Bullet();
 
-    void updatePlayer();
-    void updateEnemy();
-
+    void specialAttack(float rotation, float radius);
+    void updatePlayerBullet();
+    void updateEnemyBullet();
     bool playerBulletCollides();
     bool enemyBulletCollides();
 };

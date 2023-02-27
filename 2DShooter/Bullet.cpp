@@ -8,18 +8,26 @@ Bullet::Bullet()
     damage = 5;
 }
 
-Bullet::~Bullet() {}
+Bullet::~Bullet()
+{
+}
 
-void Bullet::updatePlayer()
+void Bullet::updatePlayerBullet()
 {
 
     y -= speed;
 }
 
-void Bullet::updateEnemy()
+void Bullet::updateEnemyBullet()
 {
 
     y += speed;
+}
+
+void Bullet::specialAttack(float rotation, float radius)
+{
+    x = cos(rotation * DEG2RAD) * x - sin(rotation * DEG2RAD) * y;
+    y = sin(rotation * DEG2RAD) * x + cos(rotation * DEG2RAD) * y;
 }
 
 bool Bullet::playerBulletCollides()
