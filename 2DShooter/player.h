@@ -10,6 +10,7 @@ private:
     /* data */
 public:
     Vector2 position;
+    int rotation;
     float speed;
     bool canShoot;
     float health;

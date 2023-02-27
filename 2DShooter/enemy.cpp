@@ -67,7 +67,6 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
 
         Rectangle enemyRect = {enemyPos.x, enemyPos.y - 50, enemySize.x, enemySize.y};
-
         for (int x = 0; x < rightBullets.size(); x++)
         {
             Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};

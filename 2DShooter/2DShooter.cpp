@@ -115,7 +115,8 @@ int main(void)
             player.UpdatePlayer(deltaTime, game.flightArea);
 
             DrawTexture(game.gameTexture, game.gameBackgroudPosition.x, game.gameBackgroudPosition.y, RAYWHITE);
-            DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+            DrawTextureEx(player.planeTexture, player.position, player.rotation, 1, WHITE);
 
             // UpdateLeftBullet(&bulletLeft, planePlayer.position);
             UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, game.shotTimerLeft);
