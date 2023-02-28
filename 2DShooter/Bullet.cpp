@@ -4,8 +4,8 @@ Bullet::Bullet()
 {
     x = 0;
     y = 0;
-    speed = 0;
-    damage = 5;
+    bulletSpeed = 0;
+    bulletDamage = 5;
 }
 
 Bullet::~Bullet()
@@ -15,30 +15,45 @@ Bullet::~Bullet()
 void Bullet::updatePlayerBullet()
 {
 
-    y -= speed;
+    y -= bulletSpeed;
 }
 
 void Bullet::updateEnemyBullet()
 {
 
-    y += speed;
+    y += bulletSpeed;
 }
 
-void Bullet::InitSpecialAttack(Vector2 pos)
+void Bullet::InitSpecialAttackBullet(Vector2 pos)
 {
     Image bulletimg = LoadImage("../mymedia/bullet_0.png");
     Texture2D texture = LoadTextureFromImage(bulletimg);
     UnloadImage(bulletimg);
     bulletTexture = texture;
-    speed = 5;
-    rotation = 0;
-    radius = 10;
-    x = pos.x;
-    y = pos.y;
-    active = true;
-    damage = 10;
+    bulletSpeed = 5;
+    spRotation = 0;
+    spRadius = 20;
+    x = pos.x + 75;
+    y = pos.y - 50;
+    bulletActive = true;
+    bulletDamage = 10;
+    spActive = true;
     // x +=  cos(rotation * DEG2RAD) * radius;
     // y +=  sin(rotation * DEG2RAD) * radius;
+}
+
+void Bullet::UpdateSpecialAttack(Vector2 playerPos)
+{
+
+    int bulletRotation = 270 + spRotation;
+    spRotation += 20;
+    x += cos(spRotation * DEG2RAD) * spRadius;
+    y -= sin(spRotation * DEG2RAD) * spRadius;
+    // DrawTexture(bullets[x].texture, bullets[x].x, bullets[x].y, WHITE);
+    DrawTextureEx(bulletTexture, {x, y}, bulletRotation, 1, RAYWHITE);
+
+    if (y < 0)
+        ResetSpecialAttack(playerPos);
 }
 
 bool Bullet::playerBulletCollides()
@@ -63,10 +78,11 @@ bool Bullet::enemyBulletCollides()
 
 void Bullet::ResetSpecialAttack(Vector2 spawnPos)
 {
-    rotation = 0;
-    radius = 10;
+    spRotation = 0;
+    spRadius = 10;
     x = spawnPos.x;
     y = spawnPos.y;
-    active = true;
-    damage = 10;
+    bulletActive = true;
+    bulletDamage = 10;
+    spActive = false;
 }

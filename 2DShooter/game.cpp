@@ -19,8 +19,8 @@ void Game::InitGame()
 {
     isGameActive = true;
 
-    Image background = LoadImage("../mymedia/2d_desert_sprite.png");
-    ImageResize(&background, background.width, screenHeight);
+    Image background = LoadImage("../mymedia/space_background.png");
+    // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
     Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};
     UnloadImage(background);
@@ -32,13 +32,14 @@ void Game::InitGame()
 
 void Game::RenderBackground(bool menu)
 {
-    if(!menu)
+    if (!menu)
     {
-        DrawTexture(gameTexture,gameBackgroudPosition.x,gameBackgroudPosition.y,RAYWHITE);
+        DrawTexture(gameTexture, gameBackgroudPosition.x, gameBackgroudPosition.y, RAYWHITE);
     }
-    else {
+    else
+    {
         BeginBlendMode(BLEND_ALPHA);
-        DrawTexture(menuTexture,menuBackgroudPosition.x,menuBackgroudPosition.y,DARKGRAY);
+        DrawTexture(menuTexture, menuBackgroudPosition.x, menuBackgroudPosition.y, DARKGRAY);
         EndBlendMode();
     }
 }

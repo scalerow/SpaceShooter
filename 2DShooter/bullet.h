@@ -10,17 +10,18 @@ public:
     float x;
     float y;
     Texture2D bulletTexture;
-    float speed;
-    int damage;
-    bool active;
-    float specialAttckPoints;
-    float rotation;
-    float radius;
+    float bulletSpeed;
+    int bulletDamage;
+    bool bulletActive;
+    bool spActive;
+    float spRotation;
+    float spRadius;
 
     Bullet();
     ~Bullet();
 
-    void InitSpecialAttack(Vector2 pos);
+    void InitSpecialAttackBullet(Vector2 pos);
+    void UpdateSpecialAttack(Vector2 playerPos);
     void updatePlayerBullet();
     void updateEnemyBullet();
     bool playerBulletCollides();

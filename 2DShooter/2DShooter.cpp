@@ -75,9 +75,8 @@ int main(void)
                 game.InitMenu();
             }
 
-             game.RenderBackground(true);
-            //DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
-            
+            game.RenderBackground(true);
+            // DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
 
             // Play button
             Rectangle rectPlay = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 120};
@@ -111,21 +110,31 @@ int main(void)
             }
             player.UpdatePlayer(deltaTime, game.flightArea);
             game.RenderBackground();
-           
+
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
-            DrawTextureV(player.planeTexture, player.position, WHITE);
+
             // UpdateLeftBullet(&bulletLeft, planePlayer.position);
             UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, player.rotation, game.shotTimerLeft);
             // UpdateRightBullet(bulletRight[i], planePlayer.position);
             UpdateRightBullet(bulletsRight, bulletTexture, player.position, player.rotation, game.shotTimerRight);
 
+            DrawTextureV(player.planeTexture, player.position, WHITE);
             tools.CreateMultipleEnemies(enemyPositions);
-            if(IsKeyDown(KEY_SPACE))
+
+            if (IsKeyDown(KEY_SPACE))
             {
-            tools.CreateSpecialAttack(player.position);    
+                tools.InitSpecialAttack(player.position);
             }
-            
+
+            if (tools.bullets.size() > 0)
+            {
+                for (int i = 0; i < tools.bullets.size(); i++)
+                {
+                    tools.bullets[i].UpdateSpecialAttack(player.position);
+                }
+            }
+
             for (int i = 0; i < tools.enemies.size(); i++)
             {
                 tools.enemies[i].isHit(bulletsLeft, bulletsRight);
@@ -163,11 +172,11 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posit
     if (shotTimer >= 15)
     {
         Bullet bullet = {};
-        bullet.speed = 7.f;
+        bullet.bulletSpeed = 7.f;
         bullet.bulletTexture = texture;
         bullet.x = position.x + 0.5;
         bullet.y = position.y;
-        bullet.active = true;
+        bullet.bulletActive = true;
         bullets.push_back(bullet);
         shotTimer = 0;
     }
@@ -196,21 +205,21 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posi
     if (shotTimer >= 15)
     {
         Bullet bullet = {};
-        bullet.speed = 7;
+        bullet.bulletSpeed = 7;
         bullet.bulletTexture = texture;
         bullet.x = position.x + 149.5;
         bullet.y = position.y;
-        bullet.active = true;
+        bullet.bulletActive = true;
         bullets.push_back(bullet);
         shotTimer = 0;
     }
 
     for (int i = 0; i < bullets.size(); i++)
     {
-        if (bullets[i].active)
+        if (bullets[i].bulletActive)
         {
             bullets[i].updatePlayerBullet();
-            DrawTextureV(bullets[i].bulletTexture, {bullets[i].x, bullets[i].y},  WHITE);
+            DrawTextureV(bullets[i].bulletTexture, {bullets[i].x, bullets[i].y}, WHITE);
         }
         else
         {

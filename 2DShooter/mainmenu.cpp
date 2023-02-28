@@ -15,8 +15,8 @@ MainMenu::~MainMenu()
 void MainMenu::InitMenu()
 {
     isMenuActive = true;
-    Image background = LoadImage("../mymedia/2d_desert_sprite.png");
-    ImageResize(&background, background.width, screenHeight);
+    Image background = LoadImage("../mymedia/space_background_menu.png");
+    // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
 
     Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};

@@ -41,27 +41,13 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
     }
 }
 
-void Tools::CreateSpecialAttack(Vector2 position) 
-{  
-    if(bullets.size() < 10)
+void Tools::InitSpecialAttack(Vector2 position)
+{
+    if (bullets.size() < 6)
     {
 
         Bullet bullet;
-        bullet.InitSpecialAttack(position);
+        bullet.InitSpecialAttackBullet(position);
         bullets.push_back(bullet);
-    }      
-    
-    for (int x = 0; x < bullets.size(); x++)
-    {        
-            bullets[x].rotation += 5;
-            bullets[x].radius += 1;
-            bullets[x].x += cos(bullets[x].rotation * DEG2RAD) * bullets[x].radius;
-            bullets[x].y -=  sin(bullets[x].rotation * DEG2RAD) * bullets[x].radius;
-            //DrawTexture(bullets[x].texture, bullets[x].x, bullets[x].y, WHITE);
-            DrawTexture(bullets[x].bulletTexture, bullets[x].x,bullets[x].y, WHITE);
-            if (bullets[x].radius < 100)
-                bullets[x].radius += bullets[x].speed;
-            
-                
     }
 }

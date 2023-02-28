@@ -76,8 +76,8 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
             {
                 if (y >= 150)
                 {
-                    health -= rightBullets[x].damage;
-                    rightBullets[x].active = false;
+                    health -= rightBullets[x].bulletDamage;
+                    rightBullets[x].bulletActive = false;
                 }
                 rightBullets.erase(rightBullets.begin() + x);
             }
@@ -91,8 +91,8 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
             {
                 if (y >= 150)
                 {
-                    health -= leftBullets[x].damage;
-                    leftBullets[x].active = false;
+                    health -= leftBullets[x].bulletDamage;
+                    leftBullets[x].bulletActive = false;
                 }
                 leftBullets.erase(leftBullets.begin() + x);
             }

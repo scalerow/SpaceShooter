@@ -19,7 +19,7 @@ public:
     Tools();
     ~Tools();
     void CreateMultipleEnemies(int xPositions[4]);
-    void CreateSpecialAttack(Vector2 position);
+    void InitSpecialAttack(Vector2 position);
 };
 
 #endif
