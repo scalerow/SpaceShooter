@@ -70,7 +70,7 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
         for (int x = 0; x < rightBullets.size(); x++)
         {
             Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
-            Vector2 bulletRightSize = {(float)rightBullets[x].texture.width, (float)rightBullets[x].texture.height};
+            Vector2 bulletRightSize = {(float)rightBullets[x].bulletTexture.width, (float)rightBullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
             if (CheckCollisionRecs(enemyRect, bulletRect))
             {
@@ -85,7 +85,7 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
         for (int x = 0; x < leftBullets.size(); x++)
         {
             Vector2 bulletLeftPos = {(float)leftBullets[x].x, (float)leftBullets[x].y};
-            Vector2 bulletLeftSize = {(float)leftBullets[x].texture.width, (float)leftBullets[x].texture.height};
+            Vector2 bulletLeftSize = {(float)leftBullets[x].bulletTexture.width, (float)leftBullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y - 16, bulletLeftSize.x, bulletLeftSize.y};
             if (CheckCollisionRecs(enemyRect, bulletRect))
             {

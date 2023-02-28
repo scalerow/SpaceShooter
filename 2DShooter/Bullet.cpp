@@ -24,10 +24,21 @@ void Bullet::updateEnemyBullet()
     y += speed;
 }
 
-void Bullet::specialAttack(float rotation, float radius)
+void Bullet::InitSpecialAttack(Vector2 pos)
 {
-    x = cos(rotation * DEG2RAD) * x - sin(rotation * DEG2RAD) * y;
-    y = sin(rotation * DEG2RAD) * x + cos(rotation * DEG2RAD) * y;
+    Image bulletimg = LoadImage("../mymedia/bullet_0.png");
+    Texture2D texture = LoadTextureFromImage(bulletimg);
+    UnloadImage(bulletimg);
+    bulletTexture = texture;
+    speed = 5;
+    rotation = 0;
+    radius = 10;
+    x = pos.x;
+    y = pos.y;
+    active = true;
+    damage = 10;
+    // x +=  cos(rotation * DEG2RAD) * radius;
+    // y +=  sin(rotation * DEG2RAD) * radius;
 }
 
 bool Bullet::playerBulletCollides()
@@ -48,4 +59,14 @@ bool Bullet::enemyBulletCollides()
     }
     else
         return false;
+}
+
+void Bullet::ResetSpecialAttack(Vector2 spawnPos)
+{
+    rotation = 0;
+    radius = 10;
+    x = spawnPos.x;
+    y = spawnPos.y;
+    active = true;
+    damage = 10;
 }

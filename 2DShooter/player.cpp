@@ -4,6 +4,9 @@
 
 Player::Player()
 {
+    shotTimer = 0;
+    rotation = 0.f;
+    radius = 10.f;
 }
 
 Player::~Player()
@@ -37,10 +40,9 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     // {
     //     rotation += 4.f;
     // }
-    if (IsKeyPressed(KEY_SPACE))
-    {
-        FireSpecialAttack();
-    }
+    
+    FireSpecialAttack();
+    
 
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - 100)
     {
@@ -71,46 +73,13 @@ void Player::Fire()
 
 void Player::FireSpecialAttack()
 {
-    Image img = LoadImage("../mymedia/bullet_0.png");
-    Texture2D texture = LoadTextureFromImage(img);
-    UnloadImage(img);
+    
 
-    int bulletCounter = 0;
-    int rangeCurrent = 0;
-    int rangeEnd = 500;
-
-    std::vector<Bullet> bullets;
-    for (int i = 0; i < rangeEnd; i++)
-    {
-        bulletCounter++;
-
-        if (rangeCurrent != rangeEnd)
-            rangeCurrent++;
-
-        if (bullets.size() <= 10)
-        {
-            for (int x = 0; x <= 10; x++)
-            {
-                Bullet bullet;
-                bullet.texture = texture;
-                bullet.active = true;
-                bullet.damage = 10;
-                bullet.x = position.x + 75;
-                bullet.y = position.y - 50;
-                bullets.push_back(bullet);
-            }
-        }
-        if (rangeCurrent == 488)
-        {
-            int l = 1;
-        }
-        bullets[bulletCounter].specialAttack(36.f, rangeCurrent);
-        DrawTexture(bullets[bulletCounter].texture, bullets[bulletCounter].x, bullets[bulletCounter].y, WHITE);
-        if (bulletCounter <= 10)
-            bulletCounter = 0;
-
+    
+    
+    
         // cos((rotation * DEG2RAD)) * 50 - sin((rotation * DEG2RAD) * 10) * bullets[bulletCounter].y, sin((rotation * DEG2RAD) * 10) * bullets[bulletCounter].x + cos((rotation * DEG2RAD) * 10) * bullets[bulletCounter].y
-    }
+    
 }
 
 // Clear remenants of texture from memory

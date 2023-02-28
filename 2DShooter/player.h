@@ -13,11 +13,13 @@ private:
 public:
     Vector2 position;
     float rotation;
+    float radius;
     float speed;
     bool canShoot;
     float health;
     Texture2D planeTexture;
     int specialAttackBulletCount;
+    int shotTimer;
 
     Player();
     ~Player();

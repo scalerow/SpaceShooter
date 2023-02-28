@@ -30,6 +30,19 @@ void Game::InitGame()
     gameBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
 
+void Game::RenderBackground(bool menu)
+{
+    if(!menu)
+    {
+        DrawTexture(gameTexture,gameBackgroudPosition.x,gameBackgroudPosition.y,RAYWHITE);
+    }
+    else {
+        BeginBlendMode(BLEND_ALPHA);
+        DrawTexture(menuTexture,menuBackgroudPosition.x,menuBackgroudPosition.y,DARKGRAY);
+        EndBlendMode();
+    }
+}
+
 // Clear remenants of texture from memory
 void Game::UnloadGame()
 {

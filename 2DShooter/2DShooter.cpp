@@ -75,12 +75,9 @@ int main(void)
                 game.InitMenu();
             }
 
-            // Need to unload game texture
-            Color interactionColor = ColorAlphaBlend(BLACK, WHITE, BLUE);
-
-            BeginBlendMode(BLEND_ALPHA);
-            DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
-            EndBlendMode();
+             game.RenderBackground(true);
+            //DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
+            
 
             // Play button
             Rectangle rectPlay = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 120};
@@ -113,8 +110,8 @@ int main(void)
                 player.InitPlayer(screenHeight, screenWidth);
             }
             player.UpdatePlayer(deltaTime, game.flightArea);
-
-            DrawTexture(game.gameTexture, game.gameBackgroudPosition.x, game.gameBackgroudPosition.y, RAYWHITE);
+            game.RenderBackground();
+           
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
             DrawTextureV(player.planeTexture, player.position, WHITE);
@@ -124,7 +121,11 @@ int main(void)
             UpdateRightBullet(bulletsRight, bulletTexture, player.position, player.rotation, game.shotTimerRight);
 
             tools.CreateMultipleEnemies(enemyPositions);
-
+            if(IsKeyDown(KEY_SPACE))
+            {
+            tools.CreateSpecialAttack(player.position);    
+            }
+            
             for (int i = 0; i < tools.enemies.size(); i++)
             {
                 tools.enemies[i].isHit(bulletsLeft, bulletsRight);
@@ -163,7 +164,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posit
     {
         Bullet bullet = {};
         bullet.speed = 7.f;
-        bullet.texture = texture;
+        bullet.bulletTexture = texture;
         bullet.x = position.x + 0.5;
         bullet.y = position.y;
         bullet.active = true;
@@ -176,7 +177,7 @@ void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posit
         if (!bullets[i].playerBulletCollides())
         {
             bullets[i].updatePlayerBullet();
-            DrawTextureV(bullets[i].texture, {bullets[i].x, bullets[i].y}, WHITE);
+            DrawTextureV(bullets[i].bulletTexture, {bullets[i].x, bullets[i].y}, WHITE);
         }
         else
         {
@@ -196,7 +197,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posi
     {
         Bullet bullet = {};
         bullet.speed = 7;
-        bullet.texture = texture;
+        bullet.bulletTexture = texture;
         bullet.x = position.x + 149.5;
         bullet.y = position.y;
         bullet.active = true;
@@ -209,7 +210,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posi
         if (bullets[i].active)
         {
             bullets[i].updatePlayerBullet();
-            DrawTextureEx(bullets[i].texture, {bullets[i].x, bullets[i].y}, rotation, 1, WHITE);
+            DrawTextureV(bullets[i].bulletTexture, {bullets[i].x, bullets[i].y},  WHITE);
         }
         else
         {

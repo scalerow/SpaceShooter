@@ -22,6 +22,7 @@ public:
     virtual ~Game();
 
     void InitGame();
+    void RenderBackground(bool menu = false);
     void UnloadGame();
 };
 
