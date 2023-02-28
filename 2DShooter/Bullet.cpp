@@ -12,16 +12,12 @@ Bullet::~Bullet()
 {
 }
 
+// Player related
+
 void Bullet::updatePlayerBullet()
 {
 
     y -= bulletSpeed;
-}
-
-void Bullet::updateEnemyBullet()
-{
-
-    y += bulletSpeed;
 }
 
 void Bullet::InitSpecialAttackBullet(Vector2 pos)
@@ -66,16 +62,6 @@ bool Bullet::playerBulletCollides()
         return false;
 }
 
-bool Bullet::enemyBulletCollides()
-{
-    if (y >= 1080)
-    {
-        return true;
-    }
-    else
-        return false;
-}
-
 void Bullet::ResetSpecialAttack(Vector2 spawnPos)
 {
     spRotation = 0;
@@ -85,4 +71,32 @@ void Bullet::ResetSpecialAttack(Vector2 spawnPos)
     bulletActive = true;
     bulletDamage = 10;
     spActive = false;
+}
+
+// Enemy related
+
+void Bullet::InitEnemyBullet(int positionX, Texture2D &bTxtr)
+{
+    bulletSpeed = 5.f;
+    bulletTexture = bTxtr;
+    x = positionX;
+    y = 250;
+    bulletDamage = 10;
+    bulletActive = true;
+}
+
+void Bullet::updateEnemyBullet()
+{
+
+    y += bulletSpeed;
+}
+
+bool Bullet::enemyBulletCollides()
+{
+    if (y >= 1080)
+    {
+        return true;
+    }
+    else
+        return false;
 }

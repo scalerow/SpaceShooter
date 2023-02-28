@@ -16,8 +16,10 @@ public:
     bool active;
     int speed;
     bool isBoss;
+    int defaultShotTimer;
     Texture2D enemyTexture;
     Vector2 position;
+    vector<Bullet> enemyBullets;
 
     Enemy();
     ~Enemy();
@@ -26,10 +28,10 @@ public:
     void hover(int position, int hoverRange);
 
     void InitEnemy();
-    
+    void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
     void ResetDefaultEnenmy(int spawnPositionX);
-    
-    void isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets);
+
+    void isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets, int &playerScore);
     void UnloadEnemy();
 
 private:

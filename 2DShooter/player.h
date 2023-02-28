@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include "game.h"
 #include "bullet.h"
-#include "vector"
+#include <vector>
 
 class Player
 {
@@ -16,18 +16,19 @@ public:
     float radius;
     float speed;
     bool canShoot;
-    float health;
+    int health;
     Texture2D planeTexture;
     int specialAttackBulletCount;
     int shotTimer;
+    bool gameOver;
+    int score;
 
     Player();
     ~Player();
 
     void InitPlayer(float screenHeight, float screenWidth);
     void UpdatePlayer(float delta, Vector4 flightArea);
-    void FireSpecialAttack();
-    void Fire();
+    void isHit(std::vector<Bullet> &bullet);
     void UnloadPlayer();
 };
 

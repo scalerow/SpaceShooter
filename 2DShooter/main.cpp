@@ -22,6 +22,7 @@ typedef struct PlanePlayer
 
 void UpdateLeftBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer);
 void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 position, float rotation, int &shotTimer);
+void DrawGame();
 // void UpdateDefaultEnemies(vector<Enemy> &enemies, Texture2D &texture, int xPositions[4]);
 //  void UpdateDefaultEnemyBullet(vector<Bullet> &bullets, Texture2D &texture, int (&enemyPositions)[4], int &shotTimer);
 
@@ -108,39 +109,97 @@ int main(void)
                 game.InitGame();
                 player.InitPlayer(screenHeight, screenWidth);
             }
-            player.UpdatePlayer(deltaTime, game.flightArea);
-            game.RenderBackground();
 
-            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
-            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
-
-            // UpdateLeftBullet(&bulletLeft, planePlayer.position);
-            UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, player.rotation, game.shotTimerLeft);
-            // UpdateRightBullet(bulletRight[i], planePlayer.position);
-            UpdateRightBullet(bulletsRight, bulletTexture, player.position, player.rotation, game.shotTimerRight);
-
-            DrawTextureV(player.planeTexture, player.position, WHITE);
-            tools.CreateMultipleEnemies(enemyPositions);
-
-            if (IsKeyDown(KEY_SPACE))
+            if (!player.gameOver)
             {
-                tools.InitSpecialAttack(player.position);
-            }
+                player.UpdatePlayer(deltaTime, game.flightArea);
 
-            if (tools.bullets.size() > 0)
-            {
-                for (int i = 0; i < tools.bullets.size(); i++)
+                game.RenderBackground();
+
+                char stringPlayerScore[15 + sizeof(char)] = "";
+                sprintf(stringPlayerScore, "Score: %d", player.score);
+                int scoreStringWidth = MeasureText(stringPlayerScore, 72);
+                DrawText(stringPlayerScore, (screenWidth - scoreStringWidth) - 50, 50, 72, GREEN);
+                char stringPlayerHealth[15 + sizeof(char)] = "";
+                sprintf(stringPlayerHealth, "Health: %d", player.health);
+                DrawText(stringPlayerHealth, 50, 50, 72, GREEN);
+                // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+                // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
+
+                // UpdateLeftBullet(&bulletLeft, planePlayer.position);
+                UpdateLeftBullet(bulletsLeft, bulletTexture, player.position, player.rotation, game.shotTimerLeft);
+                // UpdateRightBullet(bulletRight[i], planePlayer.position);
+                UpdateRightBullet(bulletsRight, bulletTexture, player.position, player.rotation, game.shotTimerRight);
+
+                DrawTextureV(player.planeTexture, player.position, WHITE);
+                tools.CreateMultipleEnemies(enemyPositions);
+
+                if (IsKeyDown(KEY_SPACE))
                 {
-                    tools.bullets[i].UpdateSpecialAttack(player.position);
+                    tools.InitSpecialAttack(player.position);
+                }
+
+                if (tools.bullets.size() > 0)
+                {
+                    for (int i = 0; i < tools.bullets.size(); i++)
+                    {
+                        tools.bullets[i].UpdateSpecialAttack(player.position);
+                    }
+                }
+
+                for (int i = 0; i < tools.enemies.size(); i++)
+                {
+                    player.isHit(tools.enemies[i].enemyBullets);
+                }
+
+                for (int i = 0; i < tools.enemies.size(); i++)
+                {
+                    tools.enemies[i].isHit(bulletsLeft, bulletsRight, player.score);
                 }
             }
-
-            for (int i = 0; i < tools.enemies.size(); i++)
+            else
             {
-                tools.enemies[i].isHit(bulletsLeft, bulletsRight);
+                game.RenderBackground(true);
+                int textWidth = MeasureText("GAME OVER", 100);
+                DrawText("GAME OVER", (screenWidth / 2) - (textWidth / 2), 100, 100, RED);
+
+                char stringPlayerScore[15 + sizeof(char)] = "";
+                sprintf(stringPlayerScore, "Score: %d", player.score);
+                int scoreStringWidth = MeasureText(stringPlayerScore, 100);
+                DrawText(stringPlayerScore, (screenWidth / 2) - (scoreStringWidth / 2), (screenHeight / 2) - 50, 100, RED);
+
+                int subTextWidth = MeasureText("[PRESS ENTER TO RESTART OR BACKSPACE TO EXIIT]", 48);
+                DrawText("[PRESS ENTER TO RESTART OR BACKSPACE TO EXIIT]", (screenWidth / 2) - (subTextWidth / 2), screenHeight - 100, 48, RED);
+                if (IsKeyPressed(KEY_ENTER))
+                {
+                    for (int i = 0; i < tools.enemies.size(); i++)
+                    {
+                        bulletsLeft.clear();
+                        bulletsRight.clear();
+                        tools.enemies[i].ResetDefaultEnenmy(enemyPositions[i]);
+                        tools.enemies[i].enemyBullets.clear();
+                    }
+                    // tools.enemies.clear();
+                    player.UnloadPlayer();
+                    game.isGameActive = false;
+                    game.LoadGame();
+                }
+                if (IsKeyPressed(KEY_BACKSPACE))
+                {
+                    for (int i = 0; i < tools.enemies.size(); i++)
+                    {
+                        bulletsLeft.clear();
+                        bulletsRight.clear();
+                        tools.enemies[i].ResetDefaultEnenmy(enemyPositions[i]);
+                        tools.enemies[i].enemyBullets.clear();
+                    }
+
+                    tools.enemies.clear();
+                    player.UnloadPlayer();
+                    game.isGameActive = false;
+                    game.LoadMenu();
+                }
             }
-            // UpdateEnemies
-            // UpdateDefaultEnemies(defaultEnemy, defaultEnemyTexture, enemyPositions);
         }
         else if (game.activateSettings)
         {
@@ -299,3 +358,7 @@ void UpdateRightBullet(vector<Bullet> &bullets, Texture2D &texture, Vector2 posi
 //         }
 //     }
 // }
+
+void DrawGame()
+{
+}

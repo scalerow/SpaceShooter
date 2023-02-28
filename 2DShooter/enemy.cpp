@@ -59,7 +59,7 @@ void Enemy::UnloadEnemy()
     UnloadTexture(enemyTexture);
 }
 
-void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
+void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets, int &playerScore)
 {
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
@@ -96,6 +96,37 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets)
                 }
                 leftBullets.erase(leftBullets.begin() + x);
             }
+        }
+        if (health <= 0)
+            playerScore += 110;
+    }
+}
+
+void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)
+{
+    if (defaultShotTimer < 80)
+    {
+        defaultShotTimer++;
+    }
+    if (defaultShotTimer >= 80 && active == true && y >= 150)
+    {
+        Bullet bullet;
+        bullet.InitEnemyBullet(posX, btxtr);
+        enemyBullets.push_back(bullet);
+        defaultShotTimer = 0;
+    }
+
+    for (int i = 0; i < enemyBullets.size(); i++)
+    {
+
+        if (!enemyBullets[i].enemyBulletCollides() && enemyBullets[i].bulletActive)
+        {
+            enemyBullets[i].updateEnemyBullet();
+            DrawTexture(enemyBullets[i].bulletTexture, enemyBullets[i].x, enemyBullets[i].y, WHITE);
+        }
+        else
+        {
+            enemyBullets.erase(enemyBullets.begin() + i);
         }
     }
 }

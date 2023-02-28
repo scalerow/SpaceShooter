@@ -8,8 +8,20 @@ Tools::~Tools()
 {
 }
 
+void Tools::InitEnemyBulletTexture()
+{
+    Image defaultEnemyBulletImg = LoadImage("../mymedia/bullet_enemy_0.png");
+    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
+    UnloadImage(defaultEnemyBulletImg);
+    enemyBulletTexture = defaultenemyBulletTexture;
+}
+
 void Tools::CreateMultipleEnemies(int xPositions[4])
 {
+    if (enemyBulletTexture.width != 10)
+    {
+        InitEnemyBulletTexture();
+    }
 
     for (int i = 0; i < 4; i++)
     {
@@ -36,7 +48,9 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
                 enemies[i].y += enemies[i].speed;
             else
                 enemies[i].hover(xPositions[i], 50);
+
             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
+            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
         }
     }
 }

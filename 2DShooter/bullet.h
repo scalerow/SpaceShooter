@@ -20,13 +20,19 @@ public:
     Bullet();
     ~Bullet();
 
+    // Player related
+
     void InitSpecialAttackBullet(Vector2 pos);
     void UpdateSpecialAttack(Vector2 playerPos);
-    void updatePlayerBullet();
-    void updateEnemyBullet();
-    bool playerBulletCollides();
-    bool enemyBulletCollides();
     void ResetSpecialAttack(Vector2 spawnPos);
+    void updatePlayerBullet();
+    bool playerBulletCollides();
+
+    // Enemy related
+
+    void InitEnemyBullet(int positionX, Texture2D &btxtr);
+    void updateEnemyBullet();
+    bool enemyBulletCollides();
 };
 
 #endif

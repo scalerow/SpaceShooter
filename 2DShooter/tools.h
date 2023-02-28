@@ -15,10 +15,13 @@ private:
 public:
     vector<Enemy> enemies;
     vector<Bullet> bullets;
+    Texture2D enemyBulletTexture;
 
     Tools();
     ~Tools();
+    void InitEnemyBulletTexture();
     void CreateMultipleEnemies(int xPositions[4]);
+    void InitEnemiesAttack(int positionX[4]);
     void InitSpecialAttack(Vector2 position);
 };
 

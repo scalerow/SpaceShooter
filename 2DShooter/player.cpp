@@ -25,7 +25,9 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     speed = 8.f;
     canShoot = true;
     specialAttackBulletCount = 10;
-
+    gameOver = false;
+    health = 100;
+    score = 0;
     UnloadImage(planeImg);
 }
 
@@ -40,9 +42,6 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     // {
     //     rotation += 4.f;
     // }
-    
-    FireSpecialAttack();
-    
 
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - 100)
     {
@@ -67,19 +66,30 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     }
 }
 
-void Player::Fire()
+void Player::isHit(std::vector<Bullet> &bullets)
 {
-}
+    if (bullets.size() > 0)
+    {
+        Vector2 playerPos = {(float)position.x, (float)position.y};
+        Vector2 playerSize = {(float)planeTexture.width, (float)planeTexture.height};
 
-void Player::FireSpecialAttack()
-{
-    
+        Rectangle playerRect = {playerPos.x, playerPos.y - 75, playerSize.x, playerSize.y};
+        for (int x = 0; x < bullets.size(); x++)
+        {
+            Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
+            Vector2 bulletSize = {(float)bullets[x].bulletTexture.width, (float)bullets[x].bulletTexture.height};
+            Rectangle bulletRect = {bulletPos.x, bulletPos.y, bulletSize.x, bulletSize.y};
+            if (CheckCollisionRecs(playerRect, bulletRect))
+            {
 
-    
-    
-    
-        // cos((rotation * DEG2RAD)) * 50 - sin((rotation * DEG2RAD) * 10) * bullets[bulletCounter].y, sin((rotation * DEG2RAD) * 10) * bullets[bulletCounter].x + cos((rotation * DEG2RAD) * 10) * bullets[bulletCounter].y
-    
+                health -= bullets[x].bulletDamage;
+                bullets[x].bulletActive = false;
+                bullets.erase(bullets.begin() + x);
+                if (health <= 0)
+                    gameOver = true;
+            }
+        }
+    }
 }
 
 // Clear remenants of texture from memory
