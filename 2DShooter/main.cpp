@@ -8,6 +8,7 @@
 #include "mainmenu.h"
 #include <vector>
 #include "tools.h"
+#include "settings.h"
 
 using namespace std;
 
@@ -36,7 +37,7 @@ int main(void)
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
-    InitWindow(screenWidth, screenHeight, "DesertSpaceShooter");
+    InitWindow(screenWidth, screenHeight, "Space Shooter");
     Image icon = LoadImage("../myymedia/icon.ico");
     SetWindowIcon(icon);
 
@@ -52,9 +53,11 @@ int main(void)
     int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
     int enemyCounter = 0;
     int enemyShotTimer = 0;
-    Game game = Game(screenHeight, screenWidth);
+    Vector2 mouseposition = GetMousePosition();
+    Game game = Game(screenWidth, screenHeight);
     game.LoadMenu();
     Player player;
+    Settings settings;
 
     SetTargetFPS(60);
     while (!game.shouldExit && !WindowShouldClose())
@@ -65,10 +68,16 @@ int main(void)
         BeginDrawing();
         ClearBackground(BLACK);
 
+        if (!game.activateGame && !game.activateMenu && !game.activateSettings)
+        {
+            game.LoadMenu();
+        }
+
         if (game.activateMenu)
         {
             if (!game.isMenuActive)
             {
+
                 // Clear remenants of texture from memory
                 player.UnloadPlayer();
                 game.UnloadGame();
@@ -168,8 +177,8 @@ int main(void)
                 int scoreStringWidth = MeasureText(stringPlayerScore, 100);
                 DrawText(stringPlayerScore, (screenWidth / 2) - (scoreStringWidth / 2), (screenHeight / 2) - 50, 100, RED);
 
-                int subTextWidth = MeasureText("[PRESS ENTER TO RESTART OR BACKSPACE TO EXIIT]", 48);
-                DrawText("[PRESS ENTER TO RESTART OR BACKSPACE TO EXIIT]", (screenWidth / 2) - (subTextWidth / 2), screenHeight - 100, 48, RED);
+                int subTextWidth = MeasureText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", 48);
+                DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), screenHeight - 100, 48, RED);
                 if (IsKeyPressed(KEY_ENTER))
                 {
                     for (int i = 0; i < tools.enemies.size(); i++)
@@ -190,12 +199,14 @@ int main(void)
                     {
                         bulletsLeft.clear();
                         bulletsRight.clear();
+                        tools.enemies[i].UnloadEnemy();
                         tools.enemies[i].ResetDefaultEnenmy(enemyPositions[i]);
                         tools.enemies[i].enemyBullets.clear();
                     }
 
                     tools.enemies.clear();
                     player.UnloadPlayer();
+                    game.UnloadGame();
                     game.isGameActive = false;
                     game.LoadMenu();
                 }
@@ -203,6 +214,21 @@ int main(void)
         }
         else if (game.activateSettings)
         {
+            if (!settings.isSettingsActive)
+            {
+                game.UnloadMenu();
+                player.UnloadPlayer();
+                game.UnloadGame();
+                settings.InitSettings();
+            }
+            game.RenderBackground(true);
+            settings.DrawSettings();
+
+            if (settings.exitSettings)
+            {
+                settings.exitSettings = false;
+                game.LoadMenu();
+            }
         }
 
         // Update enemy bullets
@@ -210,7 +236,6 @@ int main(void)
 
         EndDrawing();
     }
-    UnloadTexture(player.planeTexture);
     UnloadTexture(game.gameTexture);
     UnloadTexture(game.menuTexture);
     UnloadTexture(player.planeTexture);

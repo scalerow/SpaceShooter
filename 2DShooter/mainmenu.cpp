@@ -1,7 +1,7 @@
 #include "mainmenu.h"
 #include "raylib.h"
 
-MainMenu::MainMenu(float height, float width) : Home{height, width}
+MainMenu::MainMenu(float width, float height) : Home{width, height}
 {
     isMenuActive = false;
     shouldExit = false;
@@ -19,7 +19,7 @@ void MainMenu::InitMenu()
     // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
 
-    Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};
+    Vector2 backgroundPos = {0, 0};
     UnloadImage(background);
 
     playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
@@ -66,10 +66,10 @@ void MainMenu::SettingsAction(Rectangle btnBounds)
         {
             settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         }
-
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
-            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, RED);
+            isMenuActive = false;
+            LoadSettings();
         }
     }
     else

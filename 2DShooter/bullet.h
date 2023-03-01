@@ -33,6 +33,8 @@ public:
     void InitEnemyBullet(int positionX, Texture2D &btxtr);
     void updateEnemyBullet();
     bool enemyBulletCollides();
+
+    void UnloadBullet();
 };
 
 #endif

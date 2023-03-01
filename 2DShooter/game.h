@@ -18,7 +18,7 @@ public:
     Vector4 flightArea;
     bool isGameActive;
 
-    Game(float heightP, float widthP);
+    Game(float widthP, float heightP);
     virtual ~Game();
 
     void InitGame();

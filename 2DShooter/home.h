@@ -11,7 +11,7 @@ public:
     bool activateGame = false;
     bool activateSettings = false;
 
-    Home(float height, float width);
+    Home(float width, float height);
     ~Home();
 
     void LoadMenu();

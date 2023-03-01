@@ -17,7 +17,7 @@ public:
     bool shouldExit;
     bool isMenuActive;
 
-    MainMenu(float height, float width);
+    MainMenu(float width, float height);
     ~MainMenu();
     void InitMenu();
     void PlayAction(Rectangle btnBounds);

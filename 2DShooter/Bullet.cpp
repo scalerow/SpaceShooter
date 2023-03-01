@@ -100,3 +100,8 @@ bool Bullet::enemyBulletCollides()
     else
         return false;
 }
+
+void Bullet::UnloadBullet()
+{
+    UnloadTexture(bulletTexture);
+}

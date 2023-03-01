@@ -1,7 +1,7 @@
 #include <raylib.h>
 #include "game.h"
 
-Game::Game(float heightP, float widthP) : MainMenu{heightP, widthP}
+Game::Game(float widthP, float heightP) : MainMenu{widthP, heightP}
 {
     shotTimerRight = 0;
     shotTimerLeft = 0;
@@ -22,7 +22,7 @@ void Game::InitGame()
     Image background = LoadImage("../mymedia/space_background.png");
     // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
-    Vector2 backgroundPos = {(screenWidth - backgroundTxr.width) / 2, 0};
+    Vector2 backgroundPos = {0, 0};
     UnloadImage(background);
 
     flightArea = {backgroundPos.x, backgroundPos.y, backgroundPos.x + backgroundTxr.width, screenHeight};
