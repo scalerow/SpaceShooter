@@ -35,7 +35,7 @@ void MainMenu::PlayAction(Rectangle btnBounds)
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
             playButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         else
         {
@@ -60,7 +60,7 @@ void MainMenu::SettingsAction(Rectangle btnBounds)
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
             settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         else
         {
@@ -84,7 +84,7 @@ void MainMenu::ExitAction(Rectangle btnBounds)
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
             exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         else
         {
