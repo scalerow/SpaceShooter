@@ -4,9 +4,7 @@
 
 Player::Player()
 {
-    shotTimer = 0;
-    rotation = 0.f;
-    radius = 10.f;
+    InitPlayer(GetScreenHeight(), GetScreenWidth());
 }
 
 Player::~Player()
@@ -19,16 +17,23 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
 
     Image planeImg = LoadImage("../mymedia/space_plane_0.png");
     Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
-    planeTexture = LoadTextureFromImage(planeImg);
+
+    Image bulletImg = LoadImage("../mymedia/bullet_0.png");
+    Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
+    
+    playerBulletTexture = LoadTextureFromImage(bulletImg);
+    playerTexture = LoadTextureFromImage(planeImg);
     position = planePosition;
     rotation = 0.00;
     speed = 8.f;
-    canShoot = true;
     specialAttackBulletCount = 10;
     gameOver = false;
-    health = 100;
+    leftShotTimer = 0;
+    rightShotTimer = 0;
+    health = 150;
     score = 0;
     UnloadImage(planeImg);
+    UnloadImage(bulletImg);
 }
 
 // Update the planes position with keyboard keys
@@ -71,7 +76,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
     if (bullets.size() > 0)
     {
         Vector2 playerPos = {(float)position.x, (float)position.y};
-        Vector2 playerSize = {(float)planeTexture.width, (float)planeTexture.height};
+        Vector2 playerSize = {(float)playerTexture.width, (float)playerTexture.height};
 
         Rectangle playerRect = {playerPos.x, playerPos.y - 75, playerSize.x, playerSize.y};
         for (int x = 0; x < bullets.size(); x++)
@@ -92,8 +97,73 @@ void Player::isHit(std::vector<Bullet> &bullets)
     }
 }
 
+void Player::UpdateLeftBullet()
+{
+    if(leftShotTimer < 15)
+    {
+        leftShotTimer++;
+    }
+    if (leftShotTimer >= 15)
+    {
+        Bullet bullet = {};
+        bullet.bulletSpeed = 7.f;
+        bullet.bulletTexture = playerBulletTexture;
+        bullet.x = position.x + 0.5;
+        bullet.y = position.y;
+        bullet.bulletActive = true;
+        leftBullets.push_back(bullet);
+        leftShotTimer = 0;
+    }
+
+    for (int i = 0; i < leftBullets.size(); i++)
+    {
+        if (!leftBullets[i].playerBulletCollides())
+        {
+            leftBullets[i].updatePlayerBullet();
+            DrawTextureV(leftBullets[i].bulletTexture, {leftBullets[i].x, leftBullets[i].y}, WHITE);
+        }
+        else
+        {
+            leftBullets.erase(leftBullets.begin() + i);
+        }
+    }
+}
+
+void Player::UpdateRightBullet()
+{
+    if(rightShotTimer < 15)
+    {
+        rightShotTimer++;
+    }
+    if (rightShotTimer >= 15)
+    {
+        Bullet bullet = {};
+        bullet.bulletSpeed = 7.f;
+        bullet.bulletTexture = playerBulletTexture;
+        bullet.x = position.x + 149.5;
+        bullet.y = position.y;
+        bullet.bulletActive = true;
+        rightBullets.push_back(bullet);
+        rightShotTimer = 0;
+    }
+
+    for (int i = 0; i < rightBullets.size(); i++)
+    {
+        if (rightBullets[i].bulletActive)
+        {
+            rightBullets[i].updatePlayerBullet();
+            DrawTextureV(rightBullets[i].bulletTexture, {rightBullets[i].x, rightBullets[i].y}, WHITE);
+        }
+        else
+        {
+            rightBullets.erase(rightBullets.begin() + i);
+        }
+    }
+}
+
 // Clear remenants of texture from memory
 void Player::UnloadPlayer()
 {
-    UnloadTexture(planeTexture);
+    UnloadTexture(playerTexture);
+    UnloadTexture(playerBulletTexture);
 }

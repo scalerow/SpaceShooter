@@ -9,17 +9,21 @@
 class Player
 {
 private:
-    /* data */
+
 public:
     Vector2 position;
     float rotation;
     float radius;
     float speed;
-    bool canShoot;
     int health;
-    Texture2D planeTexture;
+    Texture2D playerTexture;
+    Texture2D playerBulletTexture;
+    std::vector<Bullet> rightBullets;
+    std::vector<Bullet> leftBullets;
+    int leftShotTimer;
+    int rightShotTimer;
     int specialAttackBulletCount;
-    int shotTimer;
+    
     bool gameOver;
     int score;
 
@@ -28,6 +32,8 @@ public:
 
     void InitPlayer(float screenHeight, float screenWidth);
     void UpdatePlayer(float delta, Vector4 flightArea);
+    void UpdateRightBullet();
+    void UpdateLeftBullet();
     void isHit(std::vector<Bullet> &bullet);
     void UnloadPlayer();
 };
