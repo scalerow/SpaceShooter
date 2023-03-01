@@ -111,7 +111,7 @@ void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)
     if (defaultShotTimer >= 80 && active == true && y >= 150)
     {
         Bullet bullet;
-        bullet.InitEnemyBullet(posX, btxtr);
+        bullet.InitEnemyBullet(posX + (enemyTexture.width /2), btxtr);
         enemyBullets.push_back(bullet);
         defaultShotTimer = 0;
     }
