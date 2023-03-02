@@ -20,7 +20,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
 
     Image bulletImg = LoadImage("../mymedia/bullet_0.png");
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
-    
+
     playerBulletTexture = LoadTextureFromImage(bulletImg);
     playerTexture = LoadTextureFromImage(planeImg);
     position = planePosition;
@@ -84,6 +84,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
             Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
             Vector2 bulletSize = {(float)bullets[x].bulletTexture.width, (float)bullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletPos.x, bulletPos.y, bulletSize.x, bulletSize.y};
+            BoundingBox bbBullet = {{30, 10, 0}, {30, 10, 0}};
             if (CheckCollisionRecs(playerRect, bulletRect))
             {
 
@@ -99,7 +100,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
 
 void Player::UpdateLeftBullet()
 {
-    if(leftShotTimer < 15)
+    if (leftShotTimer < 15)
     {
         leftShotTimer++;
     }
@@ -131,7 +132,7 @@ void Player::UpdateLeftBullet()
 
 void Player::UpdateRightBullet()
 {
-    if(rightShotTimer < 15)
+    if (rightShotTimer < 15)
     {
         rightShotTimer++;
     }

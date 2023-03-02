@@ -9,7 +9,6 @@
 class Player
 {
 private:
-
 public:
     Vector2 position;
     float rotation;
@@ -23,7 +22,7 @@ public:
     int leftShotTimer;
     int rightShotTimer;
     int specialAttackBulletCount;
-    
+
     bool gameOver;
     int score;
 
