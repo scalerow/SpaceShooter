@@ -25,7 +25,7 @@ int main(void)
     SetWindowIcon(icon);
 
     int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
-
+    Vector3 planepos = {980, 500, 0};
     Game game = Game(screenWidth, screenHeight);
     game.LoadMenu();
     Player player;
@@ -34,9 +34,9 @@ int main(void)
     // TEST CAMERA MODE
     Model plane = LoadModel("../mymedia/plane_model_render.obj");
 
-    Camera2D camera = {0};
-    camera.offset = {980, 500};
-    camera.target = {0, 0};
+    Camera2D camera;
+    camera.offset = {0, 0};
+    camera.target = {980, 500};
     camera.rotation = 0;
     camera.zoom = 0;
 
@@ -51,29 +51,38 @@ int main(void)
     {
         if (IsKeyDown(KEY_RIGHT))
         {
-            player.position.x += 10;
+            planepos.x += 10;
+            camera.offset.x += 10;
         }
         if (IsKeyDown(KEY_LEFT))
         {
-            player.position.x -= 10;
+            planepos.x -= 10;
+            camera.offset.x -= 10;
         }
         if (IsKeyDown(KEY_UP))
-            player.position.y -= 10;
+        {
+            planepos.y -= 10;
+            camera.offset.y -= 10;
+        }
         if (IsKeyDown(KEY_DOWN))
-            player.position.y += 10;
+        {
+            planepos.y += 10;
+            camera.offset.y += 10;
+        }
 
-        camera.target = {player.position.x + 20, player.position.y + 20};
+        camera.target = {planepos.x, planepos.y};
 
         if (IsKeyDown(KEY_A))
             camera.rotation--;
         else if (IsKeyDown(KEY_S))
             camera.rotation++;
-        camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
-        ClearBackground(GREEN);
-        BeginDrawing();
+        camera.zoom += ((float)GetMouseWheelMove() * 1.f);
 
+        BeginDrawing();
+        ClearBackground(WHITE);
         BeginMode2D(camera);
-        DrawModel(plane, {980, 500, 0}, 0, WHITE);
+        DrawModel(plane, planepos, 0, WHITE);
+        DrawSphere({planepos.x, planepos.y, 0}, 20, RED);
         DrawBoundingBox(bounds, GREEN);
         EndMode2D();
         EndDrawing();
