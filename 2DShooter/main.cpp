@@ -32,7 +32,7 @@ int main(void)
     Settings settings;
 
     // TEST CAMERA MODE
-    Model plane = LoadModel("../mymedia/plane_model_render.obj");
+    Model plane = LoadModel("../mymedia/plane_model.obj");
 
     Camera2D camera;
     camera.offset = {0, 0};
@@ -44,27 +44,30 @@ int main(void)
 
     // END TEST CAMERA MODE
     Matrix matrix = GetCameraMatrix2D(camera);
-
+    player.InitPlayer(screenHeight, screenWidth);
+    game.InitGame();
     SetTargetFPS(60);
     // while (!game.shouldExit && !WindowShouldClose())
     while (!WindowShouldClose())
-    {
-        if (IsKeyDown(KEY_RIGHT))
+    { 
+        float deltaTime = GetFrameTime();
+
+        if (IsKeyDown(KEY_LEFT))
         {
             planepos.x += 10;
             camera.offset.x += 10;
         }
-        if (IsKeyDown(KEY_LEFT))
+        if (IsKeyDown(KEY_RIGHT))
         {
             planepos.x -= 10;
             camera.offset.x -= 10;
         }
-        if (IsKeyDown(KEY_UP))
+        if (IsKeyDown(KEY_DOWN))
         {
             planepos.y -= 10;
             camera.offset.y -= 10;
         }
-        if (IsKeyDown(KEY_DOWN))
+        if (IsKeyDown(KEY_UP))
         {
             planepos.y += 10;
             camera.offset.y += 10;
@@ -82,13 +85,15 @@ int main(void)
         ClearBackground(WHITE);
         BeginMode2D(camera);
         DrawModel(plane, planepos, 0, WHITE);
+        DrawMeshInstanced(plane.meshes[0], plane.materials[0], &plane.transform, 3);
+        player.UpdatePlayer(deltaTime, game.flightArea);
         DrawSphere({planepos.x, planepos.y, 0}, 20, RED);
         DrawBoundingBox(bounds, GREEN);
         EndMode2D();
         EndDrawing();
 
         // Move player around
-        float deltaTime = GetFrameTime();
+        
 
         // BeginDrawing();
         // ClearBackground(BLACK);
