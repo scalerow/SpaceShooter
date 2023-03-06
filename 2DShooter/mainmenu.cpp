@@ -15,7 +15,7 @@ MainMenu::~MainMenu()
 void MainMenu::InitMenu()
 {
     isMenuActive = true;
-    Image background = LoadImage("../mymedia/space_background_menu.png");
+    Image background = LoadImage("./media/space_background_menu.png");
     // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
 

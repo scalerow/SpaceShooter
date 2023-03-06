@@ -10,7 +10,7 @@ Tools::~Tools()
 
 void Tools::InitEnemyBulletTexture()
 {
-    Image defaultEnemyBulletImg = LoadImage("../mymedia/bullet_enemy_0.png");
+    Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
     enemyBulletTexture = defaultenemyBulletTexture;

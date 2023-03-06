@@ -47,7 +47,7 @@ void Enemy::hover(int position, int hoverRange)
 void Enemy::InitEnemy()
 {
 
-    Image defaultEnemyImg = LoadImage("../mymedia/default_enemy_0.png");
+    Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
     enemyTexture = LoadTextureFromImage(defaultEnemyImg);
     speed = 2.f;
     UnloadImage(defaultEnemyImg);
@@ -111,7 +111,7 @@ void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)
     if (defaultShotTimer >= 80 && active == true && y >= 150)
     {
         Bullet bullet;
-        bullet.InitEnemyBullet(posX + (enemyTexture.width /2), btxtr);
+        bullet.InitEnemyBullet(posX + (enemyTexture.width / 2), btxtr);
         enemyBullets.push_back(bullet);
         defaultShotTimer = 0;
     }

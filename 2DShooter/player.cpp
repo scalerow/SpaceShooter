@@ -4,7 +4,6 @@
 
 Player::Player()
 {
-    InitPlayer(GetScreenHeight(), GetScreenWidth());
 }
 
 Player::~Player()
@@ -15,12 +14,12 @@ Player::~Player()
 void Player::InitPlayer(float screenHeight, float screenWidth)
 {
 
-    Image planeImg = LoadImage("../mymedia/space_plane_0.png");
+    Image planeImg = LoadImage("./media/space_plane_0.png");
     Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
 
-    Image bulletImg = LoadImage("../mymedia/bullet_0.png");
+    Image bulletImg = LoadImage("./media/bullet_0.png");
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
-    
+
     playerBulletTexture = LoadTextureFromImage(bulletImg);
     playerTexture = LoadTextureFromImage(planeImg);
     position = planePosition;
@@ -99,7 +98,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
 
 void Player::UpdateLeftBullet()
 {
-    if(leftShotTimer < 15)
+    if (leftShotTimer < 15)
     {
         leftShotTimer++;
     }
@@ -131,7 +130,7 @@ void Player::UpdateLeftBullet()
 
 void Player::UpdateRightBullet()
 {
-    if(rightShotTimer < 15)
+    if (rightShotTimer < 15)
     {
         rightShotTimer++;
     }

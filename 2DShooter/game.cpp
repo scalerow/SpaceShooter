@@ -19,7 +19,7 @@ void Game::InitGame()
 {
     isGameActive = true;
 
-    Image background = LoadImage("../mymedia/space_background.png");
+    Image background = LoadImage("./media/space_background.png");
     // ImageResize(&background, background.width, screenHeight);
     Texture2D backgroundTxr = LoadTextureFromImage(background);
     Vector2 backgroundPos = {0, 0};

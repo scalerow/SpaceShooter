@@ -28,6 +28,10 @@
 # VCPKG
 vcpkg*
 
+# Build
+build*
+webbuild*
+
 # Executables
 *.exe
 *.out
