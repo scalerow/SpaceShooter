@@ -16,80 +16,93 @@ void DrawGame();
 
 int main(void)
 {
-    Tools tools;
+    //Tools tools;
 
     float screenWidth = 1920.f;
     float screenHeight = 1080.f;
     InitWindow(screenWidth, screenHeight, "Space Shooter");
-    Image icon = LoadImage("../myymedia/icon.ico");
-    SetWindowIcon(icon);
 
     int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
-    Vector3 planepos = {980, 500, 0};
-    Game game = Game(screenWidth, screenHeight);
-    game.LoadMenu();
+    Vector3 planepos = {0.f,0.f, 270.f};
+    // Game game = Game(screenWidth, screenHeight);
+    // game.LoadMenu();
     Player player;
     Settings settings;
 
-    // TEST CAMERA MODE
-    Model plane = LoadModel("../mymedia/plane_model.obj");
+    player.InitPlayer(screenHeight, screenWidth);
 
-    Camera2D camera;
-    camera.offset = {0, 0};
-    camera.target = {980, 500};
-    camera.rotation = 0;
-    camera.zoom = 0;
+    // TEST CAMERA MODE
+    Camera3D cam = {0};
+    cam.position = {20.0f, 20.0f, 20.0f};
+    cam.target = {0.0f, 8.0f,0.0f };
+    cam.fovy = 45.f;
+    cam.up = { 0.0f, 1.6f, 0.0f }; 
+    cam.projection = CAMERA_ORTHOGRAPHIC;
+
+    Camera2D camera = {0};
+    camera.offset = {screenWidth/2, screenHeight/2};
+    camera.target = {0.f, 8.f};
+    camera.rotation = 0.f;
+    camera.zoom = 1.f;
+     Model plane = LoadModel("../mymedia/model.gltf");
+     Model universe = LoadModel("../mymedia/universe.obj");
 
     BoundingBox bounds = GetMeshBoundingBox(plane.meshes[0]);
 
     // END TEST CAMERA MODE
-    Matrix matrix = GetCameraMatrix2D(camera);
-    player.InitPlayer(screenHeight, screenWidth);
-    game.InitGame();
+    
+    //player.InitPlayer(screenHeight, screenWidth);
+    //game.InitGame();
     SetTargetFPS(60);
     // while (!game.shouldExit && !WindowShouldClose())
     while (!WindowShouldClose())
     { 
-        float deltaTime = GetFrameTime();
+      //  float deltaTime = GetFrameTime();
 
         if (IsKeyDown(KEY_LEFT))
-        {
-            planepos.x += 10;
-            camera.offset.x += 10;
-        }
-        if (IsKeyDown(KEY_RIGHT))
         {
             planepos.x -= 10;
             camera.offset.x -= 10;
         }
-        if (IsKeyDown(KEY_DOWN))
+        if (IsKeyDown(KEY_RIGHT))
         {
-            planepos.y -= 10;
-            camera.offset.y -= 10;
+            planepos.x += 10;
+            camera.offset.x += 10;
         }
-        if (IsKeyDown(KEY_UP))
+        if (IsKeyDown(KEY_DOWN))
         {
             planepos.y += 10;
             camera.offset.y += 10;
         }
+        if (IsKeyDown(KEY_UP))
+        {
+            planepos.y -= 10;
+            camera.offset.y -= 10;
+        }
 
         camera.target = {planepos.x, planepos.y};
+        
 
         if (IsKeyDown(KEY_A))
             camera.rotation--;
         else if (IsKeyDown(KEY_S))
             camera.rotation++;
         camera.zoom += ((float)GetMouseWheelMove() * 1.f);
-
+        
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(RAYWHITE);
         BeginMode2D(camera);
-        DrawModel(plane, planepos, 0, WHITE);
-        DrawMeshInstanced(plane.meshes[0], plane.materials[0], &plane.transform, 3);
-        player.UpdatePlayer(deltaTime, game.flightArea);
-        DrawSphere({planepos.x, planepos.y, 0}, 20, RED);
-        DrawBoundingBox(bounds, GREEN);
+        //DrawCircleV({planepos.x, planepos.y}, 100, RED);
+       DrawTexture(player.playerTexture, planepos.x, planepos.y, WHITE );
+
+         //DrawModelEx(plane, planepos,{0.f, 0.f,0.f},0, {1.f,1.f,1.f},WHITE );
+         //DrawModel(universe, {900.f, 500.f, 0.f},0, BLACK);
+        
         EndMode2D();
+        // BeginMode3D(cam);
+        // DrawSphere({-10.f, -10.f, 0.f}, 50.f, BLUE);
+        // DrawModel(plane, {0.f, 0.f, 0.f}, 1.f, WHITE);
+        // EndMode3D();
         EndDrawing();
 
         // Move player around
@@ -264,9 +277,9 @@ int main(void)
 
         // EndDrawing();
     }
-    UnloadTexture(game.gameTexture);
-    UnloadTexture(game.menuTexture);
-    UnloadTexture(player.playerTexture);
+    // UnloadTexture(game.gameTexture);
+    // UnloadTexture(game.menuTexture);
+    // UnloadTexture(player.playerTexture);
 
     CloseWindow();
 
