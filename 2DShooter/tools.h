@@ -25,8 +25,8 @@ public:
     void CreateMultipleEnemies(int xPositions[4]);
     void InitEnemiesAttack(int positionX[4]);
     void InitSpecialAttack(Vector2 position);
-    void FillParticles(vector<Debris> &debris);
-    float Distance(float x, float y);
+    // void FillParticles(vector<Debris> &debris);
+    // float Distance(float x, float y);
 };
 
 #endif
