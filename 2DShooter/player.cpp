@@ -1,6 +1,5 @@
 #include "player.h"
-#include <raylib.h>
-#include <cmath>
+
 
 Player::Player()
 {
@@ -116,7 +115,7 @@ void Player::UpdateLeftBullet()
 
     for (int i = 0; i < leftBullets.size(); i++)
     {
-        if (!leftBullets[i].playerBulletCollides())
+        if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletCollides())
         {
             leftBullets[i].updatePlayerBullet();
             DrawTextureV(leftBullets[i].bulletTexture, {leftBullets[i].x, leftBullets[i].y}, WHITE);
@@ -148,7 +147,7 @@ void Player::UpdateRightBullet()
 
     for (int i = 0; i < rightBullets.size(); i++)
     {
-        if (rightBullets[i].bulletActive)
+        if (rightBullets[i].bulletActive && !rightBullets[i].playerBulletCollides())
         {
             rightBullets[i].updatePlayerBullet();
             DrawTextureV(rightBullets[i].bulletTexture, {rightBullets[i].x, rightBullets[i].y}, WHITE);

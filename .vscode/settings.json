@@ -45,7 +45,8 @@
         "xutility": "cpp",
         "vector": "cpp",
         "*.m": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "random": "cpp"
     },
     "FSharp.suggestGitignore": false
 }

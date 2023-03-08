@@ -4,6 +4,8 @@
 #include <vector>
 #include <raylib.h>
 #include "bullet.h"
+#include "tools.h"
+#include "gameobjects.h"
 
 using namespace std;
 
@@ -26,6 +28,10 @@ public:
     void update();
 
     void hover(int position, int hoverRange);
+
+    void EnemyExplosion();
+    void FillParticles(vector<Debris> &debris);
+    float Distance(float x, float y);
 
     void InitEnemy();
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);

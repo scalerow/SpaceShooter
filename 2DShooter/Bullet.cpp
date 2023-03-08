@@ -22,7 +22,7 @@ void Bullet::updatePlayerBullet()
 
 void Bullet::InitSpecialAttackBullet(Vector2 pos)
 {
-    Image bulletimg = LoadImage("./media/bullet_0.png");
+    Image bulletimg = LoadImage("../mymedia/bullet_0.png");
     Texture2D texture = LoadTextureFromImage(bulletimg);
     UnloadImage(bulletimg);
     bulletTexture = texture;

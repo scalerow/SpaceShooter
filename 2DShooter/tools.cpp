@@ -13,12 +13,12 @@ void Tools::InitEnemyBulletTexture()
     Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
-    enemyBulletTexture = defaultenemyBulletTexture;
+    enemyBulletTexture = &defaultenemyBulletTexture;
 }
 
 void Tools::CreateMultipleEnemies(int xPositions[4])
 {
-    if (enemyBulletTexture.width != 10)
+    if (enemyBulletTexture->width != 10)
     {
         InitEnemyBulletTexture();
     }
@@ -38,6 +38,7 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
 
         if (enemies[i].health <= 0)
         {
+            enemies[i].EnemyExplosion();
             enemies[i].ResetDefaultEnenmy(xPositions[i]);
             return;
         }
@@ -50,9 +51,33 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
                 enemies[i].hover(xPositions[i], 50);
 
             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
-            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
+            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, *enemyBulletTexture);
         }
     }
+}
+
+void Tools::FillParticles(vector<Debris> &debris)
+{
+    for(int i = 0; i < 100; i++)
+    {
+        float speed = (float)GetRandomValue(50, 300);
+        mt19937 rng;
+        rng.seed(random_device()());
+        uniform_real_distribution<float> dist(0.0f, 2.0f * PI);
+        float direction = dist(rng);
+
+        debris.push_back(
+            Debris{
+                Vector2 {speed * cos(direction), speed * sin(direction)},
+                Vector2 {(float)GetScreenWidth() /2.0f, (float)GetScreenHeight() /2.0f} 
+            }
+        );
+    }
+}
+
+float Tools::Distance(float x, float y)
+{
+    return (float)sqrt((x*x) + (y*y));
 }
 
 void Tools::InitSpecialAttack(Vector2 position)
