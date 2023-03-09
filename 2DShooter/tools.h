@@ -6,15 +6,16 @@
 #include "enemy.h"
 #include "bullet.h"
 #include <cmath>
+// #include "gameobjects.h"
+// #include <random>
 
-using namespace std;
 
 class Tools
 {
 private:
 public:
-    vector<Enemy> enemies;
-    vector<Bullet> bullets;
+    std::vector<Enemy> enemies;
+    std::vector<Bullet> bullets;
     Texture2D enemyBulletTexture;
 
     Tools();
@@ -23,6 +24,8 @@ public:
     void CreateMultipleEnemies(int xPositions[4]);
     void InitEnemiesAttack(int positionX[4]);
     void InitSpecialAttack(Vector2 position);
+    // void FillParticles(vector<Debris> &debris);
+    // float Distance(float x, float y);
 };
 
 #endif

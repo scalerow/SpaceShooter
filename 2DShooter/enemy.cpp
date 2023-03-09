@@ -59,7 +59,7 @@ void Enemy::UnloadEnemy()
     UnloadTexture(enemyTexture);
 }
 
-void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets, int &playerScore)
+void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
 {
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
@@ -100,6 +100,54 @@ void Enemy::isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets, int
         if (health <= 0)
             playerScore += 110;
     }
+}
+
+void Enemy::EnemyExplosion()
+{
+    
+    float bloom = 6.f;
+    for(int i = 0; i <= enemyDebris.size(); i++)
+    {
+        Debris debri = enemyDebris[i];
+        DrawCircleGradient(debri.Position.x, debri.Position.y, bloom, Fade(PURPLE, 0.6f), Fade(PURPLE, 0.0f));
+        DrawCircleV(debri.Position, 2.0f, PURPLE);
+        debri.Position.x += debri.Velocity.x * GetFrameTime();
+        debri.Position.y += debri.Velocity.y * GetFrameTime();
+
+        if(Distance(debri.Position.x - (float)GetScreenWidth() / 2.f, debri.Position.x - (float)GetScreenWidth()/2) > 200.f)
+        {
+            enemyDebris.erase(enemyDebris.begin() + i);
+        } 
+        if(enemyDebris.empty())
+        {
+            FillParticles(enemyDebris);
+        }
+    }
+
+}
+
+void Enemy::FillParticles(std::vector<Debris> &debris)
+{
+    for(int i = 0; i < 100; i++)
+    {
+        float speed = (float)GetRandomValue(50, 300);
+        std::mt19937 rng;
+        rng.seed(std::random_device()());
+        std::uniform_real_distribution<float> dist(0.0f, 2.0f * PI);
+        float direction = dist(rng);
+
+        debris.push_back(
+            Debris{
+                Vector2 {speed * std::cos(direction), speed * std::sin(direction)},
+                Vector2 {(float)GetScreenWidth() /2.0f, (float)GetScreenHeight() /2.0f} 
+            }
+        );
+    }
+}
+
+float Enemy::Distance(float x, float y)
+{
+    return (float)std::sqrt((x*x) + (y*y));
 }
 
 void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)

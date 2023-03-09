@@ -5,6 +5,8 @@
 #include "game.h"
 #include "bullet.h"
 #include <vector>
+#include <cmath>
+#include "gameobjects.h"
 
 class Player
 {

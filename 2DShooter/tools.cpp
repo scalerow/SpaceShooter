@@ -38,6 +38,8 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
 
         if (enemies[i].health <= 0)
         {
+            enemies[i].FillParticles(enemies[i].enemyDebris);
+            enemies[i].EnemyExplosion();
             enemies[i].ResetDefaultEnenmy(xPositions[i]);
             return;
         }
@@ -54,6 +56,30 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
         }
     }
 }
+
+// void Tools::FillParticles(std::vector<Debris> &debris)
+// {
+//     for(int i = 0; i < 100; i++)
+//     {
+//         float speed = (float)GetRandomValue(50, 300);
+//         mt19937 rng;
+//         rng.seed(random_device()());
+//         uniform_real_distribution<float> dist(0.0f, 2.0f * PI);
+//         float direction = dist(rng);
+
+//         debris.push_back(
+//             Debris{
+//                 Vector2 {speed * cos(direction), speed * sin(direction)},
+//                 Vector2 {(float)GetScreenWidth() /2.0f, (float)GetScreenHeight() /2.0f} 
+//             }
+//         );
+//     }
+// }
+
+// float Tools::Distance(float x, float y)
+// {
+//     return (float)sqrt((x*x) + (y*y));
+// }
 
 void Tools::InitSpecialAttack(Vector2 position)
 {
