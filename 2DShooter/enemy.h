@@ -4,10 +4,8 @@
 #include <vector>
 #include <raylib.h>
 #include "bullet.h"
-#include "tools.h"
+#include <random>
 #include "gameobjects.h"
-
-using namespace std;
 
 class Enemy
 {
@@ -21,7 +19,8 @@ public:
     int defaultShotTimer;
     Texture2D enemyTexture;
     Vector2 position;
-    vector<Bullet> enemyBullets;
+    std::vector<Bullet> enemyBullets;
+    std::vector<Debris> enemyDebris;
 
     Enemy();
     ~Enemy();
@@ -30,14 +29,14 @@ public:
     void hover(int position, int hoverRange);
 
     void EnemyExplosion();
-    void FillParticles(vector<Debris> &debris);
+    void FillParticles(std::vector<Debris> &debris);
     float Distance(float x, float y);
 
     void InitEnemy();
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
     void ResetDefaultEnenmy(int spawnPositionX);
 
-    void isHit(vector<Bullet> &leftBullets, vector<Bullet> &rightBullets, int &playerScore);
+    void isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);
     void UnloadEnemy();
 
 private:

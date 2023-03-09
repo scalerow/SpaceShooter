@@ -6,18 +6,17 @@
 #include "enemy.h"
 #include "bullet.h"
 #include <cmath>
-#include "gameobjects.h"
-#include <random>
+// #include "gameobjects.h"
+// #include <random>
 
-using namespace std;
 
 class Tools
 {
 private:
 public:
-    vector<Enemy> enemies;
-    vector<Bullet> bullets;
-    Texture2D* enemyBulletTexture;
+    std::vector<Enemy> enemies;
+    std::vector<Bullet> bullets;
+    Texture2D enemyBulletTexture;
 
     Tools();
     ~Tools();

@@ -46,7 +46,9 @@
         "vector": "cpp",
         "*.m": "cpp",
         "sstream": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "algorithm": "cpp",
+        "list": "cpp"
     },
     "FSharp.suggestGitignore": false
 }

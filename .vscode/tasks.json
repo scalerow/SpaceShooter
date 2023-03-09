@@ -25,7 +25,8 @@
                 "${fileDirname}\\mainmenu.cpp",
                 "${fileDirname}\\home.cpp",
                 "${fileDirname}\\tools.cpp",
-                "${fileDirname}\\settings.cpp"
+                "${fileDirname}\\settings.cpp",
+                "${fileDirname}\\gameobjects.cpp"
 
 
             ],

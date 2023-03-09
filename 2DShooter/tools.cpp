@@ -13,12 +13,12 @@ void Tools::InitEnemyBulletTexture()
     Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
-    enemyBulletTexture = &defaultenemyBulletTexture;
+    enemyBulletTexture = defaultenemyBulletTexture;
 }
 
 void Tools::CreateMultipleEnemies(int xPositions[4])
 {
-    if (enemyBulletTexture->width != 10)
+    if (enemyBulletTexture.width != 10)
     {
         InitEnemyBulletTexture();
     }
@@ -38,6 +38,7 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
 
         if (enemies[i].health <= 0)
         {
+            enemies[i].FillParticles(enemies[i].enemyDebris);
             enemies[i].EnemyExplosion();
             enemies[i].ResetDefaultEnenmy(xPositions[i]);
             return;
@@ -51,12 +52,12 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
                 enemies[i].hover(xPositions[i], 50);
 
             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
-            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, *enemyBulletTexture);
+            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
         }
     }
 }
 
-// void Tools::FillParticles(vector<Debris> &debris)
+// void Tools::FillParticles(std::vector<Debris> &debris)
 // {
 //     for(int i = 0; i < 100; i++)
 //     {
