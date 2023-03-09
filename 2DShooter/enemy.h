@@ -17,6 +17,7 @@ public:
     int speed;
     bool isBoss;
     int defaultShotTimer;
+    int spawnPosition;
     Texture2D enemyTexture;
     Vector2 position;
     std::vector<Bullet> enemyBullets;
@@ -29,12 +30,12 @@ public:
     void hover(int position, int hoverRange);
 
     void EnemyExplosion();
-    void FillParticles(std::vector<Debris> &debris);
+    void FillParticles();
     float Distance(float x, float y);
 
-    void InitEnemy();
+    void InitDefaultEnemyDefaults(int pos);
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
-    void ResetDefaultEnenmy(int spawnPositionX);
+    void ResetDefaultEnenmy();
 
     void isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);
     void UnloadEnemy();

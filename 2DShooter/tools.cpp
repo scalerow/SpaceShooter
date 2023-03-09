@@ -25,25 +25,26 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
 
     for (int i = 0; i < 4; i++)
     {
+        // First spawn,initiating 4 enemies
         if (enemies.size() < 4)
         {
             Enemy defEnemy;
-            defEnemy.InitEnemy();
-            defEnemy.ResetDefaultEnenmy(xPositions[i]);
+            defEnemy.InitDefaultEnemyDefaults(xPositions[i]);
+            defEnemy.ResetDefaultEnenmy();
             enemies.push_back(defEnemy);
         }
 
-        if (!enemies[i].active && enemies[i].health >= 0)
+        // Activate new enemy
+        if (!enemies[i].active && enemies[i].health >= 100)
             enemies[i].active = true;
 
-        if (enemies[i].health <= 0)
+        // Enemy killed and removed, explosion
+        if (enemies[i].health <= 0 && !enemies[i].active)
         {
-            enemies[i].FillParticles(enemies[i].enemyDebris);
             enemies[i].EnemyExplosion();
-            enemies[i].ResetDefaultEnenmy(xPositions[i]);
-            return;
         }
 
+        // Hover and draw default enenmy movements
         if (enemies[i].active && enemies[i].health > 0)
         {
             if (enemies[i].y <= 150)
@@ -70,7 +71,7 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
 //         debris.push_back(
 //             Debris{
 //                 Vector2 {speed * cos(direction), speed * sin(direction)},
-//                 Vector2 {(float)GetScreenWidth() /2.0f, (float)GetScreenHeight() /2.0f} 
+//                 Vector2 {(float)GetScreenWidth() /2.0f, (float)GetScreenHeight() /2.0f}
 //             }
 //         );
 //     }

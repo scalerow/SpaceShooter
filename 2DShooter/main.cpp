@@ -156,7 +156,10 @@ void DrawGame()
 
             for (int i = 0; i < tools.enemies.size(); i++)
             {
-                tools.enemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
+                if (tools.enemies[i].health > 0 && tools.enemies[i].active)
+                {
+                    tools.enemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
+                }
             }
         }
         else
@@ -178,7 +181,7 @@ void DrawGame()
                 {
                     player.leftBullets.clear();
                     player.rightBullets.clear();
-                    tools.enemies[i].ResetDefaultEnenmy(enemyPositions[i]);
+                    tools.enemies[i].ResetDefaultEnenmy();
                     tools.enemies[i].enemyBullets.clear();
                 }
                 // tools.enemies.clear();
@@ -193,7 +196,7 @@ void DrawGame()
                     player.leftBullets.clear();
                     player.rightBullets.clear();
                     tools.enemies[i].UnloadEnemy();
-                    tools.enemies[i].ResetDefaultEnenmy(enemyPositions[i]);
+                    tools.enemies[i].ResetDefaultEnenmy();
                     tools.enemies[i].enemyBullets.clear();
                 }
 
