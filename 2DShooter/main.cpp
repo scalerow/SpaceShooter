@@ -132,7 +132,6 @@ void DrawGame()
 
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
-
             DrawTextureV(player.playerTexture, player.position, WHITE);
             tools.CreateMultipleEnemies(enemyPositions);
 

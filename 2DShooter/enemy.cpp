@@ -68,6 +68,9 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         Vector2 enemyPos = {(float)x, (float)y};
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
         Rectangle enemyRect = {enemyPos.x, enemyPos.y - 50, enemySize.x, enemySize.y};
+        Vector2 enemyTrianglePointOne = {enemyPos.x + 4, enemyPos.y + 26};
+        Vector2 enemyTrianglePointTwo = {enemyPos.x + 49, enemyPos.y + 106};
+        Vector2 enemyTrianglePointThree = {enemyPos.x + 95, enemyPos.y + 26};
 
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
@@ -76,15 +79,16 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
             Vector2 bulletRightSize = {(float)rightBullets[x].bulletTexture.width, (float)rightBullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
-
             // Collision determination
-            if (CheckCollisionRecs(enemyRect, bulletRect))
+            // if (CheckCollisionRecs(enemyRect, bulletRect))
+            if (CheckCollisionPointTriangle(Vector2{bulletRightPos.x + 5, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
             {
                 if (y >= 150)
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= rightBullets[x].bulletDamage;
-                    DrawCircleGradient(rightBullets[x].x, rightBullets[x].y, 2, Fade(Color{166, 79, 167, 255}, 0.6f), Fade(Color{166, 79, 167, 255}, 0.0f));
+                    DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
+                    DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, WHITE);
                     rightBullets[x].bulletActive = false;
                 }
                 rightBullets.erase(rightBullets.begin() + x);
@@ -109,13 +113,17 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y - 16, bulletLeftSize.x, bulletLeftSize.y};
 
             // Collision determination
-            if (CheckCollisionRecs(enemyRect, bulletRect))
+            // if (CheckCollisionRecs(enemyRect, bulletRect))
+            if (CheckCollisionPointTriangle(Vector2{bulletLeftPos.x + 5, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
+
             {
                 if (y >= 150)
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= leftBullets[x].bulletDamage;
-                    DrawCircleGradient(leftBullets[x].x, leftBullets[x].y + 16, 2, Fade(Color{166, 79, 167, 255}, 0.6f), Fade(Color{166, 79, 167, 255}, 0.0f));
+                    DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
+                    DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, WHITE);
+
                     leftBullets[x].bulletActive = false;
                 }
                 leftBullets.erase(leftBullets.begin() + x);
