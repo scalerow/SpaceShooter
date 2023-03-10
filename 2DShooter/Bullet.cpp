@@ -93,7 +93,7 @@ void Bullet::updateEnemyBullet()
 
 bool Bullet::enemyBulletCollides()
 {
-    if (y >= 1080)
+    if (y >= GetScreenHeight())
     {
         return true;
     }

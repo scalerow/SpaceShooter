@@ -1,6 +1,5 @@
 #include "player.h"
 
-
 Player::Player()
 {
     playerActive = false;
@@ -70,9 +69,8 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
         position.y -= 350.f * delta;
     }
 
-    if(playerActive)
-        DrawTextureV(playerTexture,position, WHITE);
-
+    if (playerActive)
+        DrawTextureV(playerTexture, position, WHITE);
 }
 
 void Player::isHit(std::vector<Bullet> &bullets)
@@ -94,13 +92,11 @@ void Player::isHit(std::vector<Bullet> &bullets)
                 health -= bullets[x].bulletDamage;
                 bullets[x].bulletActive = false;
                 bullets.erase(bullets.begin() + x);
-                if(health <= 0)
+                if (health <= 0)
                 {
                     playerActive = false;
                     FillDebris(300);
                 }
-                    
-
             }
         }
     }
@@ -110,7 +106,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
 
 void Player::UpdateLeftBullet()
 {
-    if(playerActive)
+    if (playerActive)
     {
         if (leftShotTimer < 15)
         {
@@ -145,7 +141,7 @@ void Player::UpdateLeftBullet()
 
 void Player::UpdateRightBullet()
 {
-    if(playerActive)
+    if (playerActive)
     {
         if (rightShotTimer < 15)
         {
@@ -185,17 +181,17 @@ void Player::PlayerExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < playerDebris.size(); i++)
     {
         Debris &debri = playerDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y-8.f, debrisSize, Fade(SKYBLUE, 0.6f), Fade(SKYBLUE, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize/4, SKYBLUE);
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade(RAYWHITE, 0.6f), Fade(RAYWHITE, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, RAYWHITE);
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 
         bool xRange;
         bool yRange;
-        
-        xRange =  debri.Position.x < position.x - explosionArea || debri.Position.x > position.x + explosionArea;
+
+        xRange = debri.Position.x < position.x - explosionArea || debri.Position.x > position.x + explosionArea;
         yRange = debri.Position.y < position.y - explosionArea || debri.Position.y > position.y + explosionArea;
-                
+
         if (xRange || yRange)
         {
             playerDebris.erase(playerDebris.begin() + i);
@@ -220,7 +216,7 @@ void Player::FillDebris(int particleAmount)
         playerDebris.push_back(
             Debris{
                 Vector2{debriSpeed * std::cos(direction), debriSpeed * std::sin(direction)},
-                Vector2{position.x + (playerTexture.width /2), position.y + (playerTexture.height / 2)}});
+                Vector2{position.x + (playerTexture.width / 2), position.y + (playerTexture.height / 2)}});
     }
 }
 

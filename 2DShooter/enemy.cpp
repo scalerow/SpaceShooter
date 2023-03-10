@@ -90,20 +90,19 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                     // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
                     // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, WHITE);
 
-                    for(int i = 3; i --> 0;)
+                    for (int i = 3; i-- > 0;)
                     {
-                        if(i == 0)
+                        if (i == 0)
                         {
-                            
-                            DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(GREEN, 0.6f), Fade(GREEN, 0.0f));
-                            DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, GREEN);
+
+                            DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
                         }
                         else
                         {
-                            DrawCircleLines(bulletRightPos.x + 4.f, bulletRightPos.y + 9.f, i * 15, GREEN);
-                            DrawCircleLines(bulletRightPos.x + 5.f, bulletRightPos.y + 10.f, i * 15, GREEN);
+                            DrawCircleLines(bulletRightPos.x + 4.f, bulletRightPos.y + 9.f, i * 15, RED);
+                            DrawCircleLines(bulletRightPos.x + 5.f, bulletRightPos.y + 10.f, i * 15, RED);
                         }
-                            
                     }
 
                     rightBullets[x].bulletActive = false;
@@ -140,21 +139,20 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                     health -= leftBullets[x].bulletDamage;
                     // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
                     // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, WHITE);
-                    
-                    for(int i = 3; i --> 0;)
+
+                    for (int i = 3; i-- > 0;)
                     {
-                        if(i == 0)
+                        if (i == 0)
                         {
-                            
-                            DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(GREEN, 0.6f), Fade(GREEN, 0.0f));
-                            DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, GREEN);
+
+                            DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
                         }
                         else
                         {
-                            DrawCircleLines(bulletLeftPos.x + 4.f, bulletLeftPos.y + 9.f, i * 15, GREEN);
-                            DrawCircleLines(bulletLeftPos.x + 5.f, bulletLeftPos.y + 10.f, i * 15, GREEN);
+                            DrawCircleLines(bulletLeftPos.x + 4.f, bulletLeftPos.y + 9.f, i * 15, RED);
+                            DrawCircleLines(bulletLeftPos.x + 5.f, bulletLeftPos.y + 10.f, i * 15, RED);
                         }
-                            
                     }
 
                     leftBullets[x].bulletActive = false;
@@ -184,17 +182,17 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < enemyDebris.size(); i++)
     {
         Debris &debri = enemyDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y-8.f, debrisSize, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize/4, WHITE);
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade(RAYWHITE, 0.6f), Fade(RAYWHITE, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, RAYWHITE);
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 
         bool xRange;
         bool yRange;
 
-        xRange =  debri.Position.x < x - explosionArea || debri.Position.x > x + explosionArea;
+        xRange = debri.Position.x < x - explosionArea || debri.Position.x > x + explosionArea;
         yRange = debri.Position.y < y - explosionArea || debri.Position.y > y + explosionArea;
-       
+
         if (xRange || yRange)
         {
             enemyDebris.erase(enemyDebris.begin() + i);

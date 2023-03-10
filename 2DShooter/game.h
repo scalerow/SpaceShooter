@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include "raylib.h"
-#include "MainMenu.h"
+#include "mainmenu.h"
 #include "player.h"
 
 class Game : public MainMenu
