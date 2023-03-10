@@ -49,7 +49,7 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     //     rotation += 4.f;
     // }
 
-    if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - 100)
+    if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - playerTexture.width)
     {
         position.x += 350.f * delta;
     }
@@ -57,7 +57,7 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     {
         position.x -= 350.f * delta;
     }
-    if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - 100)
+    if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - CalculateObjectSizeY(100))
     {
         // position.y -= 10 * sin((rotation + 270) * DEG2RAD);
         // position.x -= 10 * cos((rotation + 270) * DEG2RAD);
@@ -82,7 +82,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
         Vector2 playerPos = {(float)position.x, (float)position.y};
         Vector2 playerSize = {(float)playerTexture.width, (float)playerTexture.height};
 
-        Rectangle playerRect = {playerPos.x, playerPos.y - CalculateByPixelsY(75), playerSize.x, playerSize.y};
+        Rectangle playerRect = {playerPos.x, playerPos.y - CalculateObjectSizeY(75), playerSize.x, playerSize.y};
         for (int x = 0; x < bullets.size(); x++)
         {
             Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
@@ -103,7 +103,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
         }
     }
     else if (health <= 0)
-        PlayerExplosion(CalculateByPixelsX(700.f), CalculateByPixelsY(8.f));
+        PlayerExplosion(CalculateObjectSizeY(700.f), CalculateObjectSizeY(8.f));
 }
 
 void Player::UpdateLeftBullet()

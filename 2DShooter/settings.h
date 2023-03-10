@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include <raylib.h>
+#include "gameobjects.h"
 
 class Settings
 {

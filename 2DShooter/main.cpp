@@ -19,10 +19,10 @@ using namespace std;
 
 static Tools tools;
 static Vector2 maxResolution = {3840.f, 2160.f};
-static float screenWidth = 1280.f;
-static float screenHeight = 720.f;
+float screenWidth = 1280.f;
+float screenHeight = 768.f;
 static float resolutionNormalizer = 100.f;
-int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
+vector<int> enemyPositions;
 static Game game = Game(screenWidth, screenHeight);
 static Player player;
 static Settings settings;
@@ -33,7 +33,12 @@ int main(void)
 {
 
     InitWindow(screenWidth, screenHeight, "Space Shooter");
-
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetWindowMinSize(480, 272);
+    enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
+    enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
+    enemyPositions.push_back(CalculateObjectSizeX(400.f + 612.f));
+    enemyPositions.push_back(CalculateObjectSizeX(400.f + 816.f));
     player.InitPlayer(GetScreenHeight(), GetScreenWidth());
     game.LoadMenu();
 
@@ -80,6 +85,12 @@ void DrawGame()
 
             game.InitMenu();
         }
+        if (IsWindowResized())
+        {
+            screenHeight = GetScreenHeight();
+            screenWidth = GetScreenWidth();
+            game.InitMenu();
+        }
 
         game.RenderBackground(true);
         // DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
@@ -114,6 +125,14 @@ void DrawGame()
         {
             game.UnloadMenu();
 
+            game.InitGame();
+            player.InitPlayer(screenHeight, screenWidth);
+        }
+
+        if (IsWindowResized())
+        {
+            screenHeight = GetScreenHeight();
+            screenWidth = GetScreenWidth();
             game.InitGame();
             player.InitPlayer(screenHeight, screenWidth);
         }
@@ -225,6 +244,16 @@ void DrawGame()
             game.UnloadGame();
             settings.InitSettings();
         }
+
+        if (IsWindowResized())
+        {
+            screenHeight = GetScreenHeight();
+            screenWidth = GetScreenWidth();
+            game.screenHeight = screenHeight;
+            game.screenWidth = screenWidth;
+            settings.InitSettings();
+        }
+
         game.RenderBackground(true);
         settings.DrawSettings();
 

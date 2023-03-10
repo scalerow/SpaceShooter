@@ -90,10 +90,10 @@ void Settings::DrawSettings()
 
     // Fullscreen
 
-    int fullscreenStringWidth = MeasureText("FULLSCREEN", 48);
-    Rectangle fullscreenButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + 50, (screenHeight / 2) - 200, 48, 48};
+    int fullscreenStringWidth = MeasureText("FULLSCREEN", CalculateObjectSizeY(48));
+    Rectangle fullscreenButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + CalculateObjectSizeX(50), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), CalculateObjectSizeY(48)};
 
-    DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - 200, 48, GREEN);
+    DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), GREEN);
     if (fullscreen)
     {
         DrawRectangle(fullscreenButtonRect.x, fullscreenButtonRect.y, fullscreenButtonRect.width, fullscreenButtonRect.height, GREEN);
@@ -104,8 +104,8 @@ void Settings::DrawSettings()
     }
 
     // Sound
-    Rectangle soundButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + 50, (screenHeight / 2) - 100, 48, 48};
-    DrawText("SOUND", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - 100, 48, GREEN);
+    Rectangle soundButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + CalculateObjectSizeX(50), (screenHeight / 2) - CalculateObjectSizeY(100), CalculateObjectSizeY(48), CalculateObjectSizeY(48)};
+    DrawText("SOUND", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(100), CalculateObjectSizeY(48), GREEN);
 
     if (soundActive)
     {
@@ -117,8 +117,8 @@ void Settings::DrawSettings()
     }
 
     // Exit
-    float backStringWidth = MeasureText("BACK", 72);
-    Rectangle backButtonRect = {(screenWidth / 2) - (backStringWidth / 2), screenHeight - 100, backStringWidth, 72};
+    float backStringWidth = MeasureText("BACK", CalculateObjectSizeY(72));
+    Rectangle backButtonRect = {(screenWidth / 2) - (backStringWidth / 2), screenHeight - CalculateObjectSizeY(100), backStringWidth, CalculateObjectSizeY(72)};
     DrawText("BACK", backButtonRect.x, backButtonRect.y, backButtonRect.height, backButtonColor);
 
     toggleSound(soundButtonRect);

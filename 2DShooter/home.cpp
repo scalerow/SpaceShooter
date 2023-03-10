@@ -1,7 +1,7 @@
 #include "home.h"
 #include "mainmenu.h"
 
-Home::Home(float height, float width) : screenHeight{height}, screenWidth{width}
+Home::Home(float width, float height) : screenHeight{height}, screenWidth{width}
 {
 }
 

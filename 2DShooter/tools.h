@@ -6,7 +6,7 @@
 #include "enemy.h"
 #include "bullet.h"
 #include <cmath>
-// #include "gameobjects.h"
+#include "gameobjects.h"
 // #include <random>
 
 class Tools
@@ -20,8 +20,7 @@ public:
     Tools();
     ~Tools();
     void InitEnemyBulletTexture();
-    void CreateMultipleEnemies(int xPositions[4]);
-    void InitEnemiesAttack(int positionX[4]);
+    void CreateMultipleEnemies(std::vector<int> &xPositions);
     void InitSpecialAttack(Vector2 position);
     // void FillParticles(vector<Debris> &debris);
     // float Distance(float x, float y);

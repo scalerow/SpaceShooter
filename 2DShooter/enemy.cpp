@@ -48,6 +48,7 @@ void Enemy::InitDefaultEnemyDefaults(int pos)
 {
 
     Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
+    ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
     enemyTexture = LoadTextureFromImage(defaultEnemyImg);
     speed = 2.f;
     spawnPosition = pos;
@@ -67,10 +68,10 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         // Creating enemy hitbox
         Vector2 enemyPos = {(float)x, (float)y};
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
-        Rectangle enemyRect = {enemyPos.x, enemyPos.y - 50, enemySize.x, enemySize.y};
-        Vector2 enemyTrianglePointOne = {enemyPos.x + 4, enemyPos.y + 26};
-        Vector2 enemyTrianglePointTwo = {enemyPos.x + 49, enemyPos.y + 106};
-        Vector2 enemyTrianglePointThree = {enemyPos.x + 95, enemyPos.y + 26};
+        Rectangle enemyRect = {enemyPos.x, enemyPos.y - CalculateObjectSizeY(50), enemySize.x, enemySize.y};
+        Vector2 enemyTrianglePointOne = {enemyPos.x + CalculateObjectSizeX(4), enemyPos.y + CalculateObjectSizeY(26)};
+        Vector2 enemyTrianglePointTwo = {enemyPos.x + CalculateObjectSizeX(49), enemyPos.y + CalculateObjectSizeY(106)};
+        Vector2 enemyTrianglePointThree = {enemyPos.x + CalculateObjectSizeX(95), enemyPos.y + CalculateObjectSizeY(26)};
 
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
@@ -81,7 +82,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
             // Collision determination
             // if (CheckCollisionRecs(enemyRect, bulletRect))
-            if (CheckCollisionPointTriangle(Vector2{bulletRightPos.x + 5, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
+            if (CheckCollisionPointTriangle(Vector2{bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
             {
                 if (y >= 150)
                 {
@@ -95,13 +96,13 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                         if (i == 0)
                         {
 
-                            DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
+                            DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
                         }
                         else
                         {
-                            DrawCircleLines(bulletRightPos.x + 4.f, bulletRightPos.y + 9.f, i * 15, RED);
-                            DrawCircleLines(bulletRightPos.x + 5.f, bulletRightPos.y + 10.f, i * 15, RED);
+                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
                         }
                     }
 
@@ -145,13 +146,13 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                         if (i == 0)
                         {
 
-                            DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
+                            DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
                         }
                         else
                         {
-                            DrawCircleLines(bulletLeftPos.x + 4.f, bulletLeftPos.y + 9.f, i * 15, RED);
-                            DrawCircleLines(bulletLeftPos.x + 5.f, bulletLeftPos.y + 10.f, i * 15, RED);
+                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
                         }
                     }
 

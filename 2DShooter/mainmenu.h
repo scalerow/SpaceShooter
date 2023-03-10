@@ -2,7 +2,8 @@
 #define MAINMENU_H
 
 #include "home.h"
-#include "raylib.h"
+#include <raylib.h>
+#include "gameobjects.h"
 
 class MainMenu : public Home
 {
@@ -17,7 +18,7 @@ public:
     bool shouldExit;
     bool isMenuActive;
 
-    MainMenu(float width, float height);
+    MainMenu(float &width, float &height);
     ~MainMenu();
     void InitMenu();
     void PlayAction(Rectangle btnBounds);

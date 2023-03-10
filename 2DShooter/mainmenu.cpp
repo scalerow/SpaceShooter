@@ -1,7 +1,6 @@
 #include "mainmenu.h"
-#include "raylib.h"
 
-MainMenu::MainMenu(float width, float height) : Home{width, height}
+MainMenu::MainMenu(float &width, float &height) : Home{width, height}
 {
     isMenuActive = false;
     shouldExit = false;
@@ -16,7 +15,7 @@ void MainMenu::InitMenu()
 {
     isMenuActive = true;
     Image background = LoadImage("./media/space_background_menu.png");
-    // ImageResize(&background, background.width, screenHeight);
+    ImageResize(&background, CalculateObjectSizeX(background.width), CalculateObjectSizeY(background.height));
     Texture2D backgroundTxr = LoadTextureFromImage(background);
 
     Vector2 backgroundPos = {0, 0};
