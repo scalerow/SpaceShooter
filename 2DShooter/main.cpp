@@ -37,8 +37,10 @@ int main(void)
 {
 
     InitWindow(screenWidth, screenHeight, "Space Shooter");
+#ifdef PLATFORM_DESKTOP
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
+#endif
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 612.f));
@@ -89,12 +91,12 @@ void DrawGame()
 
             game.InitMenu();
         }
-        if (IsWindowResized())
-        {
-            screenHeight = GetScreenHeight();
-            screenWidth = GetScreenWidth();
-            game.InitMenu();
-        }
+        // if (IsWindowResized())
+        // {
+        //     screenHeight = GetScreenHeight();
+        //     screenWidth = GetScreenWidth();
+        //     game.InitMenu();
+        // }
 
         game.RenderBackground(true);
         // DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
@@ -133,13 +135,13 @@ void DrawGame()
             player.InitPlayer(screenHeight, screenWidth);
         }
 
-        if (IsWindowResized())
-        {
-            screenHeight = GetScreenHeight();
-            screenWidth = GetScreenWidth();
-            game.InitGame();
-            player.InitPlayer(screenHeight, screenWidth);
-        }
+        // if (IsWindowResized())
+        // {
+        //     screenHeight = GetScreenHeight();
+        //     screenWidth = GetScreenWidth();
+        //     game.InitGame();
+        //     player.InitPlayer(screenHeight, screenWidth);
+        // }
 
         if (!player.gameOver)
         {
@@ -249,14 +251,14 @@ void DrawGame()
             settings.InitSettings();
         }
 
-        if (IsWindowResized())
-        {
-            screenHeight = GetScreenHeight();
-            screenWidth = GetScreenWidth();
-            game.screenHeight = screenHeight;
-            game.screenWidth = screenWidth;
-            settings.InitSettings();
-        }
+        // if (IsWindowResized())
+        // {
+        //     screenHeight = GetScreenHeight();
+        //     screenWidth = GetScreenWidth();
+        //     game.screenHeight = screenHeight;
+        //     game.screenWidth = screenWidth;
+        //     settings.InitSettings();
+        // }
 
         game.RenderBackground(true);
         settings.DrawSettings();
