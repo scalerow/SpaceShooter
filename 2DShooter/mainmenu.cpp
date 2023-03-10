@@ -32,6 +32,7 @@ void MainMenu::InitMenu()
 void MainMenu::PlayAction(Rectangle btnBounds)
 {
     Vector2 mousePoint = GetMousePosition();
+
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
@@ -57,6 +58,7 @@ void MainMenu::PlayAction(Rectangle btnBounds)
 void MainMenu::SettingsAction(Rectangle btnBounds)
 {
     Vector2 mousePoint = GetMousePosition();
+
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {

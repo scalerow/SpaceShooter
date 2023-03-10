@@ -14,9 +14,11 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
 {
 
     Image planeImg = LoadImage("./media/space_plane_0.png");
-    Vector2 planePosition = {screenWidth / 2, screenHeight - 100};
+    ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
+    Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
 
     Image bulletImg = LoadImage("./media/bullet_0.png");
+    ImageResize(&bulletImg, CalculateObjectSizeX(bulletImg.width), CalculateObjectSizeY(bulletImg.height));
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
 
     playerBulletTexture = LoadTextureFromImage(bulletImg);
@@ -80,7 +82,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
         Vector2 playerPos = {(float)position.x, (float)position.y};
         Vector2 playerSize = {(float)playerTexture.width, (float)playerTexture.height};
 
-        Rectangle playerRect = {playerPos.x, playerPos.y - 75, playerSize.x, playerSize.y};
+        Rectangle playerRect = {playerPos.x, playerPos.y - CalculateByPixelsY(75), playerSize.x, playerSize.y};
         for (int x = 0; x < bullets.size(); x++)
         {
             Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
@@ -101,7 +103,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
         }
     }
     else if (health <= 0)
-        PlayerExplosion(700.f, 8.f);
+        PlayerExplosion(CalculateByPixelsX(700.f), CalculateByPixelsY(8.f));
 }
 
 void Player::UpdateLeftBullet()
@@ -117,7 +119,7 @@ void Player::UpdateLeftBullet()
             Bullet bullet = {};
             bullet.bulletSpeed = 7.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + 0.5;
+            bullet.x = position.x + CalculateObjectSizeX(0.5f);
             bullet.y = position.y;
             bullet.bulletActive = true;
             leftBullets.push_back(bullet);
@@ -152,7 +154,7 @@ void Player::UpdateRightBullet()
             Bullet bullet = {};
             bullet.bulletSpeed = 7.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + 149.5;
+            bullet.x = position.x + CalculateObjectSizeX(149.5f);
             bullet.y = position.y;
             bullet.bulletActive = true;
             rightBullets.push_back(bullet);
