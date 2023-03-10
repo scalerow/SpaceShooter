@@ -88,23 +88,23 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= rightBullets[x].bulletDamage;
-                    // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-                    // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, WHITE);
+                    DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
 
-                    for (int i = 3; i-- > 0;)
-                    {
-                        if (i == 0)
-                        {
+                    // for (int i = 3; i-- > 0;)
+                    // {
+                    //     if (i == 0)
+                    //     {
 
-                            DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                        }
-                        else
-                        {
-                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                        }
-                    }
+                    //         DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    //         DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                    //     }
+                    //     else
+                    //     {
+                    //         DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                    //         DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    //     }
+                    // }
 
                     rightBullets[x].bulletActive = false;
                 }
@@ -138,23 +138,22 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= leftBullets[x].bulletDamage;
-                    // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-                    // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, WHITE);
+                    DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
+                    // for (int i = 3; i-- > 0;)
+                    // {
+                    //     if (i == 0)
+                    //     {
 
-                    for (int i = 3; i-- > 0;)
-                    {
-                        if (i == 0)
-                        {
-
-                            DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                        }
-                        else
-                        {
-                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                        }
-                    }
+                    //         DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    //         DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                    //     }
+                    //     else
+                    //     {
+                    //         DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                    //         DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    //     }
+                    //}
 
                     leftBullets[x].bulletActive = false;
                 }
@@ -171,7 +170,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         }
         if (health <= 0)
         {
-            FillDebris(80);
+            FillDebris(50);
         }
     }
 }

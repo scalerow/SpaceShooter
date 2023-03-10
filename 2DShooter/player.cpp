@@ -97,7 +97,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
                 if (health <= 0)
                 {
                     playerActive = false;
-                    FillDebris(300);
+                    FillDebris(100);
                 }
             }
         }
