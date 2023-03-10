@@ -87,8 +87,25 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= rightBullets[x].bulletDamage;
-                    DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-                    DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, WHITE);
+                    // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
+                    // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, WHITE);
+
+                    for(int i = 3; i --> 0;)
+                    {
+                        if(i == 0)
+                        {
+                            
+                            DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(GREEN, 0.6f), Fade(GREEN, 0.0f));
+                            DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, GREEN);
+                        }
+                        else
+                        {
+                            DrawCircleLines(bulletRightPos.x + 4.f, bulletRightPos.y + 9.f, i * 15, GREEN);
+                            DrawCircleLines(bulletRightPos.x + 5.f, bulletRightPos.y + 10.f, i * 15, GREEN);
+                        }
+                            
+                    }
+
                     rightBullets[x].bulletActive = false;
                 }
                 rightBullets.erase(rightBullets.begin() + x);
@@ -121,8 +138,24 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= leftBullets[x].bulletDamage;
-                    DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-                    DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, WHITE);
+                    // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
+                    // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, WHITE);
+                    
+                    for(int i = 3; i --> 0;)
+                    {
+                        if(i == 0)
+                        {
+                            
+                            DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(GREEN, 0.6f), Fade(GREEN, 0.0f));
+                            DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, GREEN);
+                        }
+                        else
+                        {
+                            DrawCircleLines(bulletLeftPos.x + 4.f, bulletLeftPos.y + 9.f, i * 15, GREEN);
+                            DrawCircleLines(bulletLeftPos.x + 5.f, bulletLeftPos.y + 10.f, i * 15, GREEN);
+                        }
+                            
+                    }
 
                     leftBullets[x].bulletActive = false;
                 }
@@ -139,26 +172,29 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         }
         if (health <= 0)
         {
-            FillParticles();
+            FillDebris(80);
         }
     }
 }
 
-void Enemy::EnemyExplosion()
+void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
 {
 
     float bloom = 8.f;
     for (int i = 0; i < enemyDebris.size(); i++)
     {
         Debris &debri = enemyDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y, bloom, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
-        DrawCircleV(debri.Position, 2.0f, WHITE);
+        DrawCircleGradient(debri.Position.x, debri.Position.y-8.f, debrisSize, Fade(WHITE, 0.6f), Fade(WHITE, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize/4, WHITE);
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 
-        float debrisDistance = Distance(debri.Position.x - (float)GetScreenWidth() / 2.f, debri.Position.x - (float)GetScreenWidth() / 2.f);
-        bool xRange = debri.Position.x < x - 200 || debri.Position.x > x + 200;
-        bool yRange = debri.Position.y < y - 200 || debri.Position.y > y + 200;
+        bool xRange;
+        bool yRange;
+
+        xRange =  debri.Position.x < x - explosionArea || debri.Position.x > x + explosionArea;
+        yRange = debri.Position.y < y - explosionArea || debri.Position.y > y + explosionArea;
+       
         if (xRange || yRange)
         {
             enemyDebris.erase(enemyDebris.begin() + i);
@@ -170,9 +206,9 @@ void Enemy::EnemyExplosion()
     }
 }
 
-void Enemy::FillParticles()
+void Enemy::FillDebris(int particleAmount)
 {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < particleAmount; i++)
     {
         float debriSpeed = (float)GetRandomValue(50, 300);
         std::mt19937 rng;
@@ -185,11 +221,6 @@ void Enemy::FillParticles()
                 Vector2{debriSpeed * std::cos(direction), debriSpeed * std::sin(direction)},
                 Vector2{(float)x, (float)y}});
     }
-}
-
-float Enemy::Distance(float x, float y)
-{
-    return (float)std::sqrt((x * x) + (y * y));
 }
 
 void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)

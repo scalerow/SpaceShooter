@@ -29,9 +29,8 @@ public:
 
     void hover(int position, int hoverRange);
 
-    void EnemyExplosion();
-    void FillParticles();
-    float Distance(float x, float y);
+    void EnemyExplosion(float explosionArea, float debrisSize);
+    void FillDebris(int particleAmount);
 
     void InitDefaultEnemyDefaults(int pos);
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);

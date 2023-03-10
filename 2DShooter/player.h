@@ -7,6 +7,7 @@
 #include <vector>
 #include <cmath>
 #include "gameobjects.h"
+#include <random>
 
 class Player
 {
@@ -18,6 +19,7 @@ public:
     float radius;
     float speed;
     int health;
+    bool playerActive;
     Texture2D playerTexture;
     Texture2D playerBulletTexture;
     std::vector<Bullet> rightBullets;
@@ -25,6 +27,7 @@ public:
     int leftShotTimer;
     int rightShotTimer;
     int specialAttackBulletCount;
+    std::vector<Debris> playerDebris;
     
     bool gameOver;
     int score;
@@ -37,6 +40,9 @@ public:
     void UpdateRightBullet();
     void UpdateLeftBullet();
     void isHit(std::vector<Bullet> &bullet);
+    void PlayerExplosion(float explosionArea, float debrisSize);
+    void FillDebris(int particleAmount);
+
     void UnloadPlayer();
 };
 

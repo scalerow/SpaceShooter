@@ -116,24 +116,26 @@ void DrawGame()
 
         if (!player.gameOver)
         {
-            player.UpdatePlayer(deltaTime, game.flightArea);
-
             game.RenderBackground();
 
+            char stringPlayerHealth[15 + sizeof(char)] = "";
+            sprintf(stringPlayerHealth, "%d", player.health);
+            int healthStringWidth = MeasureText(stringPlayerHealth, 72);
             char stringPlayerScore[15 + sizeof(char)] = "";
             sprintf(stringPlayerScore, "Score: %d", player.score);
-            int scoreStringWidth = MeasureText(stringPlayerScore, 72);
-            DrawText(stringPlayerScore, (screenWidth - scoreStringWidth) - 50, 50, 72, GREEN);
-            char stringPlayerHealth[15 + sizeof(char)] = "";
-            sprintf(stringPlayerHealth, "Health: %d", player.health);
-            DrawText(stringPlayerHealth, 50, 50, 72, GREEN);
+            DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
+            DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
+            DrawRectangle((screenWidth - 450), 958, (400.f/150.f) * (float)player.health, 72, GREEN);
+            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth,958, 72,WHITE);
+            
+
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
 
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
-            DrawTextureV(player.playerTexture, player.position, WHITE);
-            tools.CreateMultipleEnemies(enemyPositions);
+            player.UpdatePlayer(deltaTime, game.flightArea);
+            tools.CreateMultipleEnemies(enemyPositions); 
 
             if (IsKeyDown(KEY_SPACE))
             {
@@ -151,6 +153,13 @@ void DrawGame()
             for (int i = 0; i < tools.enemies.size(); i++)
             {
                 player.isHit(tools.enemies[i].enemyBullets);
+                if(!player.playerActive)
+                {
+                    player.leftBullets.clear();
+                    player.rightBullets.clear();
+                    tools.enemies[i].ResetDefaultEnenmy();
+                    tools.enemies[i].enemyBullets.clear();
+                }
             }
 
             for (int i = 0; i < tools.enemies.size(); i++)
@@ -176,13 +185,6 @@ void DrawGame()
             DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), screenHeight - 100, 48, RED);
             if (IsKeyPressed(KEY_ENTER))
             {
-                for (int i = 0; i < tools.enemies.size(); i++)
-                {
-                    player.leftBullets.clear();
-                    player.rightBullets.clear();
-                    tools.enemies[i].ResetDefaultEnenmy();
-                    tools.enemies[i].enemyBullets.clear();
-                }
                 // tools.enemies.clear();
                 player.UnloadPlayer();
                 game.isGameActive = false;

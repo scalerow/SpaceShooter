@@ -41,7 +41,7 @@ void Tools::CreateMultipleEnemies(int xPositions[4])
         // Enemy killed and removed, explosion
         if (enemies[i].health <= 0 && !enemies[i].active)
         {
-            enemies[i].EnemyExplosion();
+            enemies[i].EnemyExplosion(200.f, 8.f);
         }
 
         // Hover and draw default enenmy movements
