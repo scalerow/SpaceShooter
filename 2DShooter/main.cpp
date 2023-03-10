@@ -122,23 +122,13 @@ void DrawGame()
         {
             game.RenderBackground();
 
-            char stringPlayerHealth[15 + sizeof(char)] = "";
-            sprintf(stringPlayerHealth, "%d", player.health);
-            int healthStringWidth = MeasureText(stringPlayerHealth, 72);
-            char stringPlayerScore[15 + sizeof(char)] = "";
-            sprintf(stringPlayerScore, "Score: %d", player.score);
-            DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
-            DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
-            DrawRectangle((screenWidth - 450), 958, (400.f / 150.f) * (float)player.health, 72, GREEN);
-            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth, 958, 72, WHITE);
-
-            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
-            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
-
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
             player.UpdatePlayer(deltaTime, game.flightArea);
             tools.CreateMultipleEnemies(enemyPositions);
+
+            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
 
             if (IsKeyDown(KEY_SPACE))
             {
@@ -172,20 +162,34 @@ void DrawGame()
                     tools.enemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
                 }
             }
+
+            char stringPlayerHealth[15 + sizeof(char)] = "";
+            sprintf(stringPlayerHealth, "%d", player.health);
+            int healthStringWidth = MeasureText(stringPlayerHealth, CalculateObjectSizeY(72));
+            char stringPlayerScore[15 + sizeof(char)] = "";
+            sprintf(stringPlayerScore, "Score: %d", player.score);
+            DrawText(stringPlayerScore, CalculateXCoord(resolutionNormalizer - 23.4375f), CalculateYCoord(4.63f), CalculateObjectSizeY(72.f), GREEN);
+
+            // Healthbar
+            DrawRectangleLines(CalculateXCoord(resolutionNormalizer - 23.4375f), CalculateYCoord(88.7f), CalculateObjectSizeX(400.f), CalculateObjectSizeY(72.f), GREEN);
+            // Healtbar filler
+            DrawRectangle(CalculateXCoord(resolutionNormalizer - 23.4375f), CalculateYCoord(88.7f), CalculateObjectSizeX((400.f / 150.f) * (float)player.health), CalculateObjectSizeY(72.f), GREEN);
+            // Health plain text
+            DrawText(stringPlayerHealth, CalculateXCoord(resolutionNormalizer - 10.416f) - healthStringWidth, CalculateYCoord(88.7f), CalculateObjectSizeY(72.f), WHITE);
         }
         else
         {
             game.RenderBackground(true);
-            int textWidth = MeasureText("GAME OVER", 100);
-            DrawText("GAME OVER", (screenWidth / 2) - (textWidth / 2), 100, 100, RED);
+            int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(100));
+            DrawText("GAME OVER", CalculateXCoord(resolutionNormalizer / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(100.f), RED);
 
             char stringPlayerScore[15 + sizeof(char)] = "";
             sprintf(stringPlayerScore, "Score: %d", player.score);
-            int scoreStringWidth = MeasureText(stringPlayerScore, 100);
-            DrawText(stringPlayerScore, (screenWidth / 2) - (scoreStringWidth / 2), (screenHeight / 2) - 50, 100, RED);
+            int scoreStringWidth = MeasureText(stringPlayerScore, CalculateObjectSizeY(100));
+            DrawText(stringPlayerScore, CalculateXCoord(resolutionNormalizer / 2) - (scoreStringWidth / 2), CalculateYCoord(resolutionNormalizer / 2) - 4.63f, CalculateObjectSizeY(100.f), RED);
 
-            int subTextWidth = MeasureText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", 48);
-            DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), screenHeight - 100, 48, RED);
+            int subTextWidth = MeasureText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", CalculateObjectSizeY(48.f));
+            DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(resolutionNormalizer - 9.26f), CalculateObjectSizeY(48.f), RED);
             if (IsKeyPressed(KEY_ENTER))
             {
                 // tools.enemies.clear();
