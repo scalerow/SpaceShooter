@@ -9,6 +9,7 @@
 #include <vector>
 #include "tools.h"
 #include "settings.h"
+#include "gameobjects.h"
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
@@ -17,9 +18,11 @@
 using namespace std;
 
 static Tools tools;
-static float screenWidth = 1920.f;
-static float screenHeight = 1080.f;
-static int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
+static Vector2 maxResolution = {3840.f, 2160.f};
+static float screenWidth = 1280.f;
+static float screenHeight = 720.f;
+static float resolutionNormalizer = 100.f;
+int enemyPositions[] = {400 + 204, 400 + 408, 400 + 612, 400 + 816};
 static Game game = Game(screenWidth, screenHeight);
 static Player player;
 static Settings settings;
@@ -82,27 +85,28 @@ void DrawGame()
         // DrawTexture(game.menuTexture, game.menuBackgroudPosition.x, game.menuBackgroudPosition.y, DARKGRAY);
 
         // Play button
-        Rectangle rectPlay = Rectangle{(screenWidth / 2.f) - 250, screenHeight / 2.f, 500, 120};
-        DrawRectangleLinesEx(rectPlay, 10, game.playButtonColor);
-        DrawText("PLAY", (screenWidth / 2.f) - 125, (screenHeight / 2.f) + 15, 96, game.playButtonColor);
+        Rectangle startButtonPos = {CalculateXCoord((resolutionNormalizer / 2.f) - 13.f), CalculateYCoord(resolutionNormalizer / 2.f), CalculateObjectSizeX(500), CalculateObjectSizeY(120)};
+        DrawRectangleLinesEx(startButtonPos, 10, game.playButtonColor);
+        Vector2 startButtonTextPos = {50.f - 6.5f, 50.f + 1.3f};
+        DrawText("PLAY", CalculateXCoord(startButtonTextPos.x), CalculateYCoord(startButtonTextPos.y), CalculateObjectSizeY(96.f), game.playButtonColor);
 
         // Settings button
-        float settingsWidth = MeasureText("SETTINGS", 72);
-        Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + 300.f, settingsWidth, 72};
+        float settingsWidth = MeasureText("SETTINGS", CalculateObjectSizeY(72));
+        Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + CalculateYCoord(27.77f), settingsWidth, CalculateObjectSizeY(72.f)};
         Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y, rectSettings.width, rectSettings.height};
-        DrawText("SETTINGS", rectSettings.x, rectSettings.y, 72, game.settingsButtonColor);
+        DrawText("SETTINGS", rectSettings.x, rectSettings.y, CalculateObjectSizeY(72), game.settingsButtonColor);
 
 #ifndef PLATFORM_WEB
         // Exit button
-        float exitWidth = MeasureText("EXIT", 72);
-        Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + 400.f, exitWidth, 72};
+        float exitWidth = MeasureText("EXIT", CalculateObjectSizeY(72));
+        Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + CalculateYCoord(37.03f), exitWidth, CalculateObjectSizeY(72)};
         Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y, rectExit.width, rectExit.height};
-        DrawText("EXIT", rectExit.x, rectExit.y, 72, game.exitButtonColor);
+        DrawText("EXIT", rectExit.x, rectExit.y, CalculateObjectSizeY(72), game.exitButtonColor);
         game.ExitAction(exitHitbox);
 #endif
 
         game.SettingsAction(settingsHitbox);
-        game.PlayAction(rectPlay);
+        game.PlayAction(startButtonPos);
     }
     else if (game.activateGame)
     {
@@ -125,9 +129,8 @@ void DrawGame()
             sprintf(stringPlayerScore, "Score: %d", player.score);
             DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
             DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
-            DrawRectangle((screenWidth - 450), 958, (400.f/150.f) * (float)player.health, 72, GREEN);
-            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth,958, 72,WHITE);
-            
+            DrawRectangle((screenWidth - 450), 958, (400.f / 150.f) * (float)player.health, 72, GREEN);
+            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth, 958, 72, WHITE);
 
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
@@ -135,7 +138,7 @@ void DrawGame()
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
             player.UpdatePlayer(deltaTime, game.flightArea);
-            tools.CreateMultipleEnemies(enemyPositions); 
+            tools.CreateMultipleEnemies(enemyPositions);
 
             if (IsKeyDown(KEY_SPACE))
             {
@@ -153,7 +156,7 @@ void DrawGame()
             for (int i = 0; i < tools.enemies.size(); i++)
             {
                 player.isHit(tools.enemies[i].enemyBullets);
-                if(!player.playerActive)
+                if (!player.playerActive)
                 {
                     player.leftBullets.clear();
                     player.rightBullets.clear();
