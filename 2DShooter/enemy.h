@@ -18,7 +18,8 @@ public:
     bool isBoss;
     int defaultShotTimer;
     int spawnPosition;
-    Texture2D enemyTexture;
+    Texture2D enemyTexture = {0, 0, 0, 0};
+    bool textureLoaded;
     Vector2 position;
     std::vector<Bullet> enemyBullets;
     std::vector<Debris> enemyDebris;
@@ -33,6 +34,7 @@ public:
     void FillDebris(int particleAmount);
 
     void InitDefaultEnemyDefaults(int pos);
+    Texture2D LoadEnemyTexture();
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
     void ResetDefaultEnenmy();
 

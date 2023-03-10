@@ -42,17 +42,29 @@ void Enemy::hover(int position, int hoverRange)
         }
     }
 }
+Texture2D Enemy::LoadEnemyTexture()
+{
+    Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
+    ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
+    Texture2D text = LoadTextureFromImage(defaultEnemyImg);
+    UnloadImage(defaultEnemyImg);
 
+    return text;
+}
 // Initialize the plane for the game
 void Enemy::InitDefaultEnemyDefaults(int pos)
 {
+    if (!enemyTexture.width <= 0)
+    {
+        enemyTexture = LoadEnemyTexture();
+    }
+    else
+    {
+        enemyTexture = enemyTexture;
+    }
 
-    Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
-    ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
-    enemyTexture = LoadTextureFromImage(defaultEnemyImg);
     speed = 2.f;
     spawnPosition = pos;
-    UnloadImage(defaultEnemyImg);
 }
 
 // Clear remenants of texture from memory

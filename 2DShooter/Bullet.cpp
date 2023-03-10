@@ -22,18 +22,18 @@ void Bullet::updatePlayerBullet()
 
 void Bullet::InitSpecialAttackBullet(Vector2 pos)
 {
-    Image bulletimg = LoadImage("./media/bullet_0.png");
-    Texture2D texture = LoadTextureFromImage(bulletimg);
-    UnloadImage(bulletimg);
-    bulletTexture = texture;
-    bulletSpeed = 5;
-    spRotation = 0;
-    spRadius = 20;
-    x = pos.x + 75;
-    y = pos.y - 50;
-    bulletActive = true;
-    bulletDamage = 10;
-    spActive = true;
+    // Image bulletimg = LoadImage("./media/bullet_0.png");
+    // Texture2D texture = LoadTextureFromImage(bulletimg);
+    // UnloadImage(bulletimg);
+    // bulletTexture = texture;
+    // bulletSpeed = 5;
+    // spRotation = 0;
+    // spRadius = 20;
+    // x = pos.x + 75;
+    // y = pos.y - 50;
+    // bulletActive = true;
+    // bulletDamage = 10;
+    // spActive = true;
     // x +=  cos(rotation * DEG2RAD) * radius;
     // y +=  sin(rotation * DEG2RAD) * radius;
 }
