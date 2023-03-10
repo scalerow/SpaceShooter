@@ -141,13 +141,23 @@ void DrawGame()
         {
             game.RenderBackground();
 
+            char stringPlayerHealth[15 + sizeof(char)] = "";
+            sprintf(stringPlayerHealth, "%d", player.health);
+            int healthStringWidth = MeasureText(stringPlayerHealth, 72);
+            char stringPlayerScore[15 + sizeof(char)] = "";
+            sprintf(stringPlayerScore, "Score: %d", player.score);
+            DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
+            DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
+            DrawRectangle((screenWidth - 450), 958, (400.f / 150.f) * (float)player.health, 72, GREEN);
+            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth, 958, 72, WHITE);
+
+            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
+            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
+
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
             player.UpdatePlayer(deltaTime, game.flightArea);
             tools.CreateMultipleEnemies(enemyPositions);
-
-            // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
-            // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
 
             if (IsKeyDown(KEY_SPACE))
             {
