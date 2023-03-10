@@ -125,9 +125,8 @@ void DrawGame()
             sprintf(stringPlayerScore, "Score: %d", player.score);
             DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
             DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
-            DrawRectangle((screenWidth - 450), 958, (400.f/150.f) * (float)player.health, 72, GREEN);
-            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth,958, 72,WHITE);
-            
+            DrawRectangle((screenWidth - 450), 958, (400.f / 150.f) * (float)player.health, 72, GREEN);
+            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth, 958, 72, WHITE);
 
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
@@ -135,7 +134,7 @@ void DrawGame()
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
             player.UpdatePlayer(deltaTime, game.flightArea);
-            tools.CreateMultipleEnemies(enemyPositions); 
+            tools.CreateMultipleEnemies(enemyPositions);
 
             if (IsKeyDown(KEY_SPACE))
             {
@@ -153,7 +152,7 @@ void DrawGame()
             for (int i = 0; i < tools.enemies.size(); i++)
             {
                 player.isHit(tools.enemies[i].enemyBullets);
-                if(!player.playerActive)
+                if (!player.playerActive)
                 {
                     player.leftBullets.clear();
                     player.rightBullets.clear();
