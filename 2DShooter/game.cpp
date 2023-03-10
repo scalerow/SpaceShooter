@@ -25,7 +25,7 @@ void Game::InitGame()
     gameBackgroudPosition = {0, 0};
     UnloadImage(background);
 
-    flightArea = {gameBackgroudPosition.x, gameBackgroudPosition.y, screenWidth, screenHeight - 200};
+    flightArea = {gameBackgroudPosition.x, gameBackgroudPosition.y, screenWidth, screenHeight};
     gameTexture = backgroundTxr;
 }
 

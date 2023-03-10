@@ -13,14 +13,18 @@
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
+float screenWidth = 1280.f;
+float screenHeight = 760.f;
+#else
+float screenWidth = 1920.f;
+float screenHeight = 1080.f;
 #endif
 
 using namespace std;
 
 static Tools tools;
 static Vector2 maxResolution = {3840.f, 2160.f};
-float screenWidth = 1280.f;
-float screenHeight = 768.f;
+
 static float resolutionNormalizer = 100.f;
 vector<int> enemyPositions;
 static Game game = Game(screenWidth, screenHeight);
@@ -140,16 +144,6 @@ void DrawGame()
         if (!player.gameOver)
         {
             game.RenderBackground();
-
-            char stringPlayerHealth[15 + sizeof(char)] = "";
-            sprintf(stringPlayerHealth, "%d", player.health);
-            int healthStringWidth = MeasureText(stringPlayerHealth, 72);
-            char stringPlayerScore[15 + sizeof(char)] = "";
-            sprintf(stringPlayerScore, "Score: %d", player.score);
-            DrawText(stringPlayerScore, (screenWidth - 400) - 50, 50, 72, GREEN);
-            DrawRectangleLines((screenWidth - 450), 958, 400, 72, GREEN);
-            DrawRectangle((screenWidth - 450), 958, (400.f / 150.f) * (float)player.health, 72, GREEN);
-            DrawText(stringPlayerHealth, (screenWidth - 200) - healthStringWidth, 958, 72, WHITE);
 
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
