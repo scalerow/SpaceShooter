@@ -24,13 +24,17 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
         InitEnemyBulletTexture();
     }
 
+    if(enemies.size() <= 0)
+    {
+        defaultEnemyTexture = LoadEnemyTexture();
+    }
     for (int i = 0; i < 4; i++)
     {
         // First spawn,initiating 4 enemies
         if (enemies.size() < 4)
         {
             Enemy defEnemy;
-            defEnemy.InitDefaultEnemyDefaults(xPositions[i]);
+            defEnemy.InitDefaultEnemyDefaults(xPositions[i], defaultEnemyTexture);
             defEnemy.ResetDefaultEnenmy();
             enemies.push_back(defEnemy);
         }

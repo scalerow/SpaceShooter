@@ -97,7 +97,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
                 if (health <= 0)
                 {
                     playerActive = false;
-                    FillDebris(100);
+                    FillDebris(300);
                 }
             }
         }
@@ -183,8 +183,8 @@ void Player::PlayerExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < playerDebris.size(); i++)
     {
         Debris &debri = playerDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade(RAYWHITE, 0.6f), Fade(RAYWHITE, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, RAYWHITE);
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242,229,170,255}, 0.6f), Fade({242,229,170,255}, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242,229,170,255});
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 

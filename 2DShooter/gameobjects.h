@@ -15,5 +15,6 @@ float CalculateByPixelsX(float x);
 float CalculateByPixelsY(float y);
 float CalculateObjectSizeX(float x);
 float CalculateObjectSizeY(float y);
+Texture2D LoadEnemyTexture();
 
 #endif

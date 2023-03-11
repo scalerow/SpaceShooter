@@ -55,3 +55,15 @@ float CalculateObjectSizeY(float y)
 
     return (y / 100) * scaling;
 }
+
+
+
+Texture2D LoadEnemyTexture()
+{
+    Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
+    ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
+    Texture2D text = LoadTextureFromImage(defaultEnemyImg);
+    UnloadImage(defaultEnemyImg);
+
+    return text;
+}

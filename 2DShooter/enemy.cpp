@@ -52,17 +52,9 @@ Texture2D Enemy::LoadEnemyTexture()
     return text;
 }
 // Initialize the plane for the game
-void Enemy::InitDefaultEnemyDefaults(int pos)
+void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D& texture)
 {
-    if (!enemyTexture.width <= 0)
-    {
-        enemyTexture = LoadEnemyTexture();
-    }
-    else
-    {
-        enemyTexture = enemyTexture;
-    }
-
+    enemyTexture = texture;
     speed = 2.f;
     spawnPosition = pos;
 }
@@ -100,23 +92,23 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= rightBullets[x].bulletDamage;
-                    DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
+                    // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
 
-                    // for (int i = 3; i-- > 0;)
-                    // {
-                    //     if (i == 0)
-                    //     {
+                    for (int i = 3; i-- > 0;)
+                    {
+                        if (i == 0)
+                        {
 
-                    //         DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    //         DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                    //     }
-                    //     else
-                    //     {
-                    //         DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                    //         DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                    //     }
-                    // }
+                            DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        }
+                        else
+                        {
+                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        }
+                    }
 
                     rightBullets[x].bulletActive = false;
                 }
@@ -150,22 +142,23 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= leftBullets[x].bulletDamage;
-                    DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
-                    // for (int i = 3; i-- > 0;)
-                    // {
-                    //     if (i == 0)
-                    //     {
+                    // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                    // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
+                    
+                    for (int i = 3; i-- > 0;)
+                    {
+                        if (i == 0)
+                        {
 
-                    //         DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    //         DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                    //     }
-                    //     else
-                    //     {
-                    //         DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                    //         DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                    //     }
-                    //}
+                            DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                            DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        }
+                        else
+                        {
+                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        }
+                    }
 
                     leftBullets[x].bulletActive = false;
                 }
@@ -194,8 +187,8 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < enemyDebris.size(); i++)
     {
         Debris &debri = enemyDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade(RAYWHITE, 0.6f), Fade(RAYWHITE, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, RAYWHITE);
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242,229,170,255}, 0.6f), Fade({242,229,170,255}, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242,229,170,255});
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 

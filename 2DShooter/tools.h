@@ -16,6 +16,7 @@ public:
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     Texture2D enemyBulletTexture;
+    Texture2D defaultEnemyTexture;
 
     Tools();
     ~Tools();
