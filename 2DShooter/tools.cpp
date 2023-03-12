@@ -55,7 +55,7 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
             if (enemies[i].y <= 150)
                 enemies[i].y += enemies[i].speed;
             else
-                enemies[i].hover(CalculateByPixelsX(xPositions[i]), 50);
+                enemies[i].hover(CalculateByPixelsX(xPositions[i]));
 
             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
             enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);

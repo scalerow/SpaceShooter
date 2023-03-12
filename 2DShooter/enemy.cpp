@@ -3,6 +3,7 @@
 Enemy::Enemy()
 {
     health = 100;
+    defaultEnemyHoverRange = 50;
     isBoss = false;
     active = false;
     leftHover = false,
@@ -16,9 +17,9 @@ void Enemy::update()
     y += speed;
 }
 
-void Enemy::hover(int position, int hoverRange)
+void Enemy::hover(int position)
 {
-    int range[] = {position - hoverRange, position + hoverRange};
+    int range[] = {position - defaultEnemyHoverRange, position + defaultEnemyHoverRange};
 
     if (leftHover && x > range[0])
     {
@@ -72,7 +73,6 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         // Creating enemy hitbox
         Vector2 enemyPos = {(float)x, (float)y};
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
-        Rectangle enemyRect = {enemyPos.x, enemyPos.y - CalculateObjectSizeY(50), enemySize.x, enemySize.y};
         Vector2 enemyTrianglePointOne = {enemyPos.x + CalculateObjectSizeX(4), enemyPos.y + CalculateObjectSizeY(26)};
         Vector2 enemyTrianglePointTwo = {enemyPos.x + CalculateObjectSizeX(49), enemyPos.y + CalculateObjectSizeY(106)};
         Vector2 enemyTrianglePointThree = {enemyPos.x + CalculateObjectSizeX(95), enemyPos.y + CalculateObjectSizeY(26)};
@@ -80,13 +80,16 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
         {
+            //For verifying hitbox, comment out when done
+            //DrawTriangle(enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree, RED);
             // Creating bullet hitbox
             Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
             Vector2 bulletRightSize = {(float)rightBullets[x].bulletTexture.width, (float)rightBullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
             // Collision determination
-            // if (CheckCollisionRecs(enemyRect, bulletRect))
-            if (CheckCollisionPointTriangle(Vector2{bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
+            bool leftCornerBullet = CheckCollisionPointTriangle(Vector2{bulletRightPos.x, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
+            bool rightCornerBullet = CheckCollisionPointTriangle(Vector2{bulletRightPos.x + bulletRightSize.x, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
+            if (leftCornerBullet || rightCornerBullet)
             {
                 if (y >= 150)
                 {
@@ -135,8 +138,9 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
 
             // Collision determination
             // if (CheckCollisionRecs(enemyRect, bulletRect))
-            if (CheckCollisionPointTriangle(Vector2{bulletLeftPos.x + 5, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree))
-
+            bool leftCornerBullet = CheckCollisionPointTriangle(Vector2{bulletLeftPos.x, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
+            bool rightCornerBulllet = CheckCollisionPointTriangle(Vector2{bulletLeftPos.x + bulletLeftSize.x, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
+            if (leftCornerBullet || rightCornerBulllet)
             {
                 if (y >= 150)
                 {
@@ -182,15 +186,15 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
 
 void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
 {
-
+    float delta = GetFrameTime();
     float bloom = 8.f;
     for (int i = 0; i < enemyDebris.size(); i++)
     {
         Debris &debri = enemyDebris[i];
         DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242,229,170,255}, 0.6f), Fade({242,229,170,255}, 0.0f));
         DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242,229,170,255});
-        debri.Position.x += debri.Velocity.x * GetFrameTime();
-        debri.Position.y += debri.Velocity.y * GetFrameTime();
+        debri.Position.x += debri.Velocity.x * delta;
+        debri.Position.y += debri.Velocity.y *delta;
 
         bool xRange;
         bool yRange;
