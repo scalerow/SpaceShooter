@@ -18,6 +18,7 @@ public:
     bool isBoss;
     int defaultShotTimer;
     int spawnPosition;
+    int defaultEnemyHoverRange;
     Texture2D enemyTexture = {0, 0, 0, 0};
     bool textureLoaded;
     Vector2 position;
@@ -28,7 +29,7 @@ public:
     ~Enemy();
     void update();
 
-    void hover(int position, int hoverRange);
+    void hover(int position);
 
     void EnemyExplosion(float explosionArea, float debrisSize);
     void FillDebris(int particleAmount);
