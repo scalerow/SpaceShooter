@@ -1,4 +1,7 @@
 #include "settings.h"
+#ifdef PLATFORM_WEB
+#include <emscripten/emscripten.h>
+#endif
 
 Settings::Settings()
 {
@@ -68,8 +71,22 @@ void Settings::toggleFullscreen(Rectangle bounds)
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
             fullscreenButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            ToggleFullscreen();
-            fullscreen = IsWindowFullscreen();
+            #ifdef PLATFORM_WEB
+            if(!is_fullscreen())
+            {
+                 fullscreen_enter();
+                fullscreen = is_fullscreen();
+            }
+            else 
+            {
+                fullscreen_exit();
+                fullscreen = is_fullscreen();
+            }
+            #else
+                ToggleFullscreen();
+                fullscreen = IsWindowFullscreen();
+            #endif
+
         }
 
         else
@@ -150,3 +167,29 @@ void Settings::BackToMenu(Rectangle bounds)
         backButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     }
 }
+#ifdef PLATFORM_WEB
+bool Settings::is_fullscreen() {
+    EmscriptenFullscreenChangeEvent fsce;
+    emscripten_get_fullscreen_status(&fsce);
+    return fsce.isFullscreen;
+}
+
+void Settings::fullscreen_exit() {    emscripten_exit_fullscreen();    }
+
+void Settings::fullscreen_enter() {
+    emscripten_exit_soft_fullscreen();
+
+    // Workaround https://github.com/kripken/emscripten/issues/5124#issuecomment-292849872
+    EM_ASM(JSEvents.inEventHandler = true);
+    EM_ASM(JSEvents.currentEventHandler = {allowsDeferredCalls:true});
+
+    EmscriptenFullscreenStrategy strategy = {
+        .scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_STRETCH,
+        .canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF,
+        .filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT,
+        .canvasResizedCallback = on_canvassize_changed,
+        .canvasResizedCallbackUserData = NULL
+    };
+    emscripten_request_fullscreen_strategy(NULL, EM_FALSE, &strategy);
+}
+#endif

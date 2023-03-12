@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${vcpkgRoot}/x86-windows/include",
                 ".\\mymedia",
-                "C:\\Development\\C++\\emsdk-main\\upstream\\emscripten\\system\\include"
+                "C:\\Development\\C++\\emsdk-main\\upstream\\emscripten\\system\\include",
+                "C:\\Development\\C++\\emsdk\\upstream\\emscripten\\system\\include"
                 
             ],
             "defines": [

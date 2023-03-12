@@ -25,6 +25,9 @@ public:
 
     void toggleSound(Rectangle bounds);
     void toggleFullscreen(Rectangle bounds);
+    void fullscreen_enter();
+    void fullscreen_exit();
+    bool is_fullscreen();
 
     void DrawSettings();
 
