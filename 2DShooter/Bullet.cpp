@@ -17,7 +17,7 @@ Bullet::~Bullet()
 void Bullet::updatePlayerBullet()
 {
 
-    y -= bulletSpeed;
+    y -= bulletSpeed * GetFrameTime();
 }
 
 void Bullet::InitSpecialAttackBullet(Vector2 pos)
