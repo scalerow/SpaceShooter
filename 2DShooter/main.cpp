@@ -45,7 +45,6 @@ int main(void)
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 612.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 816.f));
-    player.InitPlayer(GetScreenHeight(), GetScreenWidth());
     game.LoadMenu();
 
 #ifdef PLATFORM_WEB
@@ -152,8 +151,8 @@ void DrawGame()
 
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
-            player.UpdatePlayer(deltaTime, game.flightArea);
             tools.CreateMultipleEnemies(enemyPositions);
+            player.UpdatePlayer(deltaTime, game.flightArea);
 
             if (IsKeyDown(KEY_SPACE))
             {

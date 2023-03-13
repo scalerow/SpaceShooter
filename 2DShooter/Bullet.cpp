@@ -17,7 +17,7 @@ Bullet::~Bullet()
 void Bullet::updatePlayerBullet()
 {
 
-    y -= bulletSpeed;
+    y -= bulletSpeed * GetFrameTime();
 }
 
 void Bullet::InitSpecialAttackBullet(Vector2 pos)
@@ -52,7 +52,7 @@ void Bullet::UpdateSpecialAttack(Vector2 playerPos)
         ResetSpecialAttack(playerPos);
 }
 
-bool Bullet::playerBulletCollides()
+bool Bullet::playerBulletOutOfScreen()
 {
     if (y <= 0)
     {

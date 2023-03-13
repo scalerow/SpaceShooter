@@ -26,7 +26,7 @@ public:
     void UpdateSpecialAttack(Vector2 playerPos);
     void ResetSpecialAttack(Vector2 spawnPos);
     void updatePlayerBullet();
-    bool playerBulletCollides();
+    bool playerBulletOutOfScreen();
 
     // Enemy related
 

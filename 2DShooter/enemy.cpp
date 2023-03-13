@@ -53,7 +53,7 @@ Texture2D Enemy::LoadEnemyTexture()
     return text;
 }
 // Initialize the plane for the game
-void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D& texture)
+void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D &texture)
 {
     enemyTexture = texture;
     speed = 2.f;
@@ -80,9 +80,9 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
         {
-            //For verifying hitbox, comment out when done
-            //DrawTriangle(enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree, RED);
-            // Creating bullet hitbox
+            // For verifying hitbox, comment out when done
+            // DrawTriangle(enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree, RED);
+            //  Creating bullet hitbox
             Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
             Vector2 bulletRightSize = {(float)rightBullets[x].bulletTexture.width, (float)rightBullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
@@ -148,7 +148,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                     health -= leftBullets[x].bulletDamage;
                     // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
                     // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
-                    
+
                     for (int i = 3; i-- > 0;)
                     {
                         if (i == 0)
@@ -179,7 +179,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
         }
         if (health <= 0)
         {
-            FillDebris(50);
+            FillDebris(40);
         }
     }
 }
@@ -191,10 +191,10 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < enemyDebris.size(); i++)
     {
         Debris &debri = enemyDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242,229,170,255}, 0.6f), Fade({242,229,170,255}, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242,229,170,255});
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242, 229, 170, 255}, 0.6f), Fade({242, 229, 170, 255}, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242, 229, 170, 255});
         debri.Position.x += debri.Velocity.x * delta;
-        debri.Position.y += debri.Velocity.y *delta;
+        debri.Position.y += debri.Velocity.y * delta;
 
         bool xRange;
         bool yRange;

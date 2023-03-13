@@ -13,7 +13,7 @@ Player::~Player()
 void Player::InitPlayer(float screenHeight, float screenWidth)
 {
 
-    Image planeImg = LoadImage("./media/space_plane_0.png");
+    Image planeImg = LoadImage("./media/space_plane_1.png");
     ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
     Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
 
@@ -79,25 +79,63 @@ void Player::isHit(std::vector<Bullet> &bullets)
 {
     if (bullets.size() > 0 && playerActive)
     {
-        Vector2 playerPos = {(float)position.x, (float)position.y};
         Vector2 playerSize = {(float)playerTexture.width, (float)playerTexture.height};
 
-        Rectangle playerRect = {playerPos.x, playerPos.y - CalculateObjectSizeY(75), playerSize.x, playerSize.y};
+        Vector2 playerMainTrianglePointOne = {position.x + CalculateObjectSizeX(4), position.y + CalculateObjectSizeY(61)};
+        Vector2 playerMainTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(15)};
+        Vector2 playerMainTrianglePointThree = {position.x + CalculateObjectSizeX(99), position.y + CalculateObjectSizeY(61)};
+
+        Vector2 playerTipTrianglePointOne = {position.x + CalculateObjectSizeX(30), position.y + CalculateObjectSizeY(33)};
+        Vector2 playerTipTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(0)};
+        Vector2 playerTipTrianglePointThree = {position.x + CalculateObjectSizeX(74), position.y + CalculateObjectSizeY(33)};
+
+        Rectangle playerLeftGun = {position.x, position.y + CalculateObjectSizeY(8), CalculateObjectSizeX(8), CalculateObjectSizeY(63)};
+        Rectangle playerRightGun = {position.x + CalculateObjectSizeX(96), position.y + CalculateObjectSizeY(8), CalculateObjectSizeX(8), CalculateObjectSizeY(63)};
+
+        Rectangle playerRect = {position.x, position.y - CalculateObjectSizeY(75), playerSize.x, playerSize.y};
         for (int x = 0; x < bullets.size(); x++)
         {
             Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
             Vector2 bulletSize = {(float)bullets[x].bulletTexture.width, (float)bullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletPos.x, bulletPos.y, bulletSize.x, bulletSize.y};
-            if (CheckCollisionRecs(playerRect, bulletRect))
-            {
 
+            bool gunleftCol = CheckCollisionRecs(playerLeftGun, bulletRect);
+            bool gunRightCol = CheckCollisionRecs(playerRightGun, bulletRect);
+            bool leftCornerBulletPlayerTip = CheckCollisionPointTriangle(Vector2{bulletPos.x, bulletPos.y}, playerTipTrianglePointOne, playerTipTrianglePointTwo, playerTipTrianglePointThree);
+            bool rightCornerBulletPlayerTip = CheckCollisionPointTriangle(Vector2{bulletPos.x + bulletSize.x, bulletPos.y + bulletSize.y}, playerTipTrianglePointOne, playerTipTrianglePointTwo, playerTipTrianglePointThree);
+            bool leftCornerBulletPlayerMain = CheckCollisionPointTriangle(Vector2{bulletPos.x, bulletPos.y}, playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree);
+            bool rightCornerBulletPlayerMain = CheckCollisionPointTriangle(Vector2{bulletPos.x + bulletSize.x, bulletPos.y + bulletSize.y}, playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree);
+
+            // Hitbox check for plane - comment out when done
+            // DrawRectangleRec(playerLeftGun, BLUE);
+            // DrawRectangleRec(playerRightGun, BLUE);
+            // DrawTriangle(playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree, GREEN);
+            // DrawTriangle(playerTipTrianglePointOne, playerTipTrianglePointTwo, playerTipTrianglePointThree, GREEN);
+
+            if (gunleftCol || gunRightCol || leftCornerBulletPlayerMain || rightCornerBulletPlayerMain || leftCornerBulletPlayerTip || rightCornerBulletPlayerTip)
+            {
                 health -= bullets[x].bulletDamage;
                 bullets[x].bulletActive = false;
                 bullets.erase(bullets.begin() + x);
+
+                for (int i = 3; i-- > 0;)
+                {
+                    if (i == 0)
+                    {
+
+                        DrawCircleGradient(bulletPos.x + CalculateObjectSizeX(5), bulletPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletPos.x + CalculateObjectSizeX(5), bulletPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                    }
+                    else
+                    {
+                        DrawCircleLines(bulletPos.x + CalculateObjectSizeX(4.f), bulletPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletPos.x + CalculateObjectSizeX(5.f), bulletPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    }
+                }
                 if (health <= 0)
                 {
                     playerActive = false;
-                    FillDebris(300);
+                    FillDebris(200);
                 }
             }
         }
@@ -110,25 +148,26 @@ void Player::UpdateLeftBullet()
 {
     if (playerActive)
     {
-        if (leftShotTimer < 15)
+        if (leftShotTimer < 10)
         {
             leftShotTimer++;
         }
-        if (leftShotTimer >= 15)
+        if (leftShotTimer >= 10)
         {
             Bullet bullet = {};
-            bullet.bulletSpeed = 7.f;
+            bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + CalculateObjectSizeX(0.5f);
+            bullet.x = position.x + CalculateObjectSizeX(32.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
+            bullet.bulletDamage = 1;
             leftBullets.push_back(bullet);
             leftShotTimer = 0;
         }
 
         for (int i = 0; i < leftBullets.size(); i++)
         {
-            if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletCollides())
+            if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletOutOfScreen())
             {
                 leftBullets[i].updatePlayerBullet();
                 DrawTextureV(leftBullets[i].bulletTexture, {leftBullets[i].x, leftBullets[i].y}, WHITE);
@@ -145,25 +184,26 @@ void Player::UpdateRightBullet()
 {
     if (playerActive)
     {
-        if (rightShotTimer < 15)
+        if (rightShotTimer < 10)
         {
             rightShotTimer++;
         }
-        if (rightShotTimer >= 15)
+        if (rightShotTimer >= 10)
         {
             Bullet bullet = {};
-            bullet.bulletSpeed = 7.f;
+            bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + CalculateObjectSizeX(149.5f);
+            bullet.x = position.x + CalculateObjectSizeX(62.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
+            bullet.bulletDamage = 10;
             rightBullets.push_back(bullet);
             rightShotTimer = 0;
         }
 
         for (int i = 0; i < rightBullets.size(); i++)
         {
-            if (rightBullets[i].bulletActive && !rightBullets[i].playerBulletCollides())
+            if (rightBullets[i].bulletActive && !rightBullets[i].playerBulletOutOfScreen())
             {
                 rightBullets[i].updatePlayerBullet();
                 DrawTextureV(rightBullets[i].bulletTexture, {rightBullets[i].x, rightBullets[i].y}, WHITE);
@@ -183,8 +223,8 @@ void Player::PlayerExplosion(float explosionArea, float debrisSize)
     for (int i = 0; i < playerDebris.size(); i++)
     {
         Debris &debri = playerDebris[i];
-        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242,229,170,255}, 0.6f), Fade({242,229,170,255}, 0.0f));
-        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242,229,170,255});
+        DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242, 229, 170, 255}, 0.6f), Fade({242, 229, 170, 255}, 0.0f));
+        DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242, 229, 170, 255});
         debri.Position.x += debri.Velocity.x * GetFrameTime();
         debri.Position.y += debri.Velocity.y * GetFrameTime();
 
