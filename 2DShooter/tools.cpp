@@ -54,8 +54,9 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
                 enemies[i].hover(CalculateByPixelsX(xPositions[i]));
 
             DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
-            enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
         }
+        enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
+
     }
 }
 

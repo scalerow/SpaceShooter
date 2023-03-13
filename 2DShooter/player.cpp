@@ -83,7 +83,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
 
         Vector2 playerMainTrianglePointOne = {position.x + CalculateObjectSizeX(4), position.y + CalculateObjectSizeY(61)};
         Vector2 playerMainTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(15)};
-        Vector2 playerMainTrianglePointThree = {position.x + CalculateObjectSizeX(98), position.y + CalculateObjectSizeY(61)};
+        Vector2 playerMainTrianglePointThree = {position.x + CalculateObjectSizeX(99), position.y + CalculateObjectSizeY(61)};
 
         Vector2 playerTipTrianglePointOne = {position.x + CalculateObjectSizeX(30), position.y + CalculateObjectSizeY(33)};
         Vector2 playerTipTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(0)};
@@ -148,26 +148,26 @@ void Player::UpdateLeftBullet()
 {
     if (playerActive)
     {
-        if (leftShotTimer < 15)
+        if (leftShotTimer < 10)
         {
             leftShotTimer++;
         }
-        if (leftShotTimer >= 15)
+        if (leftShotTimer >= 10)
         {
             Bullet bullet = {};
-            bullet.bulletSpeed = 350.f;
+            bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
             bullet.x = position.x + CalculateObjectSizeX(32.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
-            bullet.bulletDamage = 15;
+            bullet.bulletDamage = 1;
             leftBullets.push_back(bullet);
             leftShotTimer = 0;
         }
 
         for (int i = 0; i < leftBullets.size(); i++)
         {
-            if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletCollides())
+            if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletOutOfScreen())
             {
                 leftBullets[i].updatePlayerBullet();
                 DrawTextureV(leftBullets[i].bulletTexture, {leftBullets[i].x, leftBullets[i].y}, WHITE);
@@ -184,26 +184,26 @@ void Player::UpdateRightBullet()
 {
     if (playerActive)
     {
-        if (rightShotTimer < 15)
+        if (rightShotTimer < 10)
         {
             rightShotTimer++;
         }
-        if (rightShotTimer >= 15)
+        if (rightShotTimer >= 10)
         {
             Bullet bullet = {};
-            bullet.bulletSpeed = 350.f;
+            bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
             bullet.x = position.x + CalculateObjectSizeX(62.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
-            bullet.bulletDamage = 15;
+            bullet.bulletDamage = 10;
             rightBullets.push_back(bullet);
             rightShotTimer = 0;
         }
 
         for (int i = 0; i < rightBullets.size(); i++)
         {
-            if (rightBullets[i].bulletActive && !rightBullets[i].playerBulletCollides())
+            if (rightBullets[i].bulletActive && !rightBullets[i].playerBulletOutOfScreen())
             {
                 rightBullets[i].updatePlayerBullet();
                 DrawTextureV(rightBullets[i].bulletTexture, {rightBullets[i].x, rightBullets[i].y}, WHITE);
