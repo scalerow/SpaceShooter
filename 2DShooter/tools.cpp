@@ -19,14 +19,10 @@ void Tools::InitEnemyBulletTexture()
 
 void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
 {
-    if (enemyBulletTexture.width <= 0)
-    {
-        InitEnemyBulletTexture();
-    }
-
-    if(enemies.size() <= 0)
+    if (enemies.size() <= 0)
     {
         defaultEnemyTexture = LoadEnemyTexture();
+        InitEnemyBulletTexture();
     }
     for (int i = 0; i < 4; i++)
     {
