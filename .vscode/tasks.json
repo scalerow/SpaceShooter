@@ -11,6 +11,8 @@
                 "C:\\vcpkg\\installed\\x86-windows\\bin\\",
                 "/I",
                 "C:\\Development\\C++\\raylib_test\\mymedia\\",
+                "/I",
+                "C:\\boost_1_81_0",
                 "/Zi",
                 "/EHsc",
                 "/nologo",
@@ -26,7 +28,8 @@
                 "${fileDirname}\\home.cpp",
                 "${fileDirname}\\tools.cpp",
                 "${fileDirname}\\settings.cpp",
-                "${fileDirname}\\gameobjects.cpp"
+                "${fileDirname}\\gameobjects.cpp",
+                "${fileDirname}\\highscore.cpp"
 
 
             ],

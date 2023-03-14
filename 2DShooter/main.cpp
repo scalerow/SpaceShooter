@@ -24,7 +24,6 @@ using namespace std;
 
 static Tools tools;
 static Vector2 maxResolution = {3840.f, 2160.f};
-
 static float resolutionNormalizer = 100.f;
 vector<int> enemyPositions;
 static Game game = Game(screenWidth, screenHeight);
@@ -54,6 +53,7 @@ int main(void)
     SetTargetFPS(60);
     while (!game.shouldExit && !WindowShouldClose())
     {
+        settings.LoadGameSettings();
         DrawGame();
     }
 #endif

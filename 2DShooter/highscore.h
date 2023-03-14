@@ -8,12 +8,12 @@
 class HighScore
 {
 private:
-   void save();
-   void load();
-   void update();
+    void save();
+    void load();
+    void update();
 
 public:
-    std::vector<int> highScore;
+    std::vector<int> highScores;
 
     HighScore();
     ~HighScore();

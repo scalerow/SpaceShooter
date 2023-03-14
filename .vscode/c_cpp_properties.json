@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${vcpkgRoot}/x86-windows/include",
+                "C:\\boost_1_81_0",
                 ".\\mymedia",
                 "C:\\Development\\C++\\emsdk-main\\upstream\\emscripten\\system\\include"
                 

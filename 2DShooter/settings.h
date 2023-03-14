@@ -10,6 +10,7 @@
 #include <set>
 #include <exception>
 #include <iostream>
+#include "highscore.h"
 namespace pt = boost::property_tree;
 
 class Settings
@@ -21,6 +22,10 @@ private:
     Color fullscreenButtonColor;
     Color soundButtonColor;
     Color backButtonColor;
+    std::vector<int> highscores;
+    std::set<std::string> settings;
+    const std::string configFilePath = "C:\\Users\\jansun\\AppData\\Roaming\\SpaceShooter";
+    std::string configFileName = "config.xml";
 
 public:
     bool isSettingsActive;
@@ -29,7 +34,12 @@ public:
     Settings();
     ~Settings();
 
+    // load/save settings to file
+    void loadSettings(const std::string &filename);
+    void saveSettings(const std::string &filename);
+
     void InitSettings();
+    void LoadGameSettings();
 
     void toggleSound(Rectangle bounds);
     void toggleFullscreen(Rectangle bounds);

@@ -48,7 +48,10 @@
         "sstream": "cpp",
         "random": "cpp",
         "algorithm": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "optional": "cpp",
+        "set": "cpp",
+        "xtree": "cpp"
     },
     "FSharp.suggestGitignore": false
 }
