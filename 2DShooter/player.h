@@ -15,9 +15,10 @@ private:
 
 public:
     Vector2 position;
+    Vector2 velocity;
+    Vector2 acceleration;
     float rotation;
     float radius;
-    float speed;
     int health;
     bool playerActive;
     Texture2D playerTexture;

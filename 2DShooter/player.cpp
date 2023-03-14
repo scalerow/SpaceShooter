@@ -25,13 +25,14 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     playerTexture = LoadTextureFromImage(planeImg);
     position = planePosition;
     rotation = 0.00;
-    speed = 8.f;
     specialAttackBulletCount = 10;
     gameOver = false;
     leftShotTimer = 0;
     rightShotTimer = 0;
     health = 150;
     score = 0;
+    velocity = {400.f, 300.f};
+    acceleration = { 0.f, 0.f};
     playerActive = true;
     UnloadImage(planeImg);
     UnloadImage(bulletImg);
@@ -51,24 +52,48 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
 
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - playerTexture.width)
     {
-        position.x += 350.f * delta;
+        if(acceleration.x < 2.f) acceleration.x += 0.02f;
+
+        //position.x += 350.f * delta;
+        velocity.x += acceleration.x * delta;
+        position.x += velocity.x * delta;
     }
     if (IsKeyDown(KEY_LEFT) && position.x >= flightArea.x)
     {
-        position.x -= 350.f * delta;
+        if(acceleration.x < 2.f) acceleration.x += 0.02f;
+        
+        velocity.x -= acceleration.x * delta;
+        position.x -= velocity.x * delta;
+        //position.x -= 350.f * delta;
+    }
+    else 
+    {
+        if(acceleration.x > 0) acceleration.x -= 0.01f;
+        else if (acceleration.x < 0) acceleration.x = 0.f;
     }
     if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - CalculateObjectSizeY(100))
     {
+        if(acceleration.y < 2.f) acceleration.y += 0.02f;
         // position.y -= 10 * sin((rotation + 270) * DEG2RAD);
         // position.x -= 10 * cos((rotation + 270) * DEG2RAD);
-        position.y += 350.f * delta;
+        velocity.y += acceleration.y * delta;
+        position.y += velocity.y * delta;
+        //position.y += 350.f * delta;
     }
-
+    
     if (IsKeyDown(KEY_UP) && position.y >= flightArea.y)
     {
+        if(acceleration.y < 2.f) acceleration.y += 0.02f;
         // position.y += 10 * sin((rotation + 270) * DEG2RAD);
         // position.x += 10 * cos((rotation + 270) * DEG2RAD);
-        position.y -= 350.f * delta;
+        velocity.y -= acceleration.y * delta;
+        position.y -= velocity.y * delta;
+        //position.y -= 350.f * delta;
+    }
+    else 
+    {
+        if(acceleration.y > 0) acceleration.y -= 0.01f;
+        else if (acceleration.y < 0) acceleration.y = 0.f;
     }
 
     if (playerActive)
