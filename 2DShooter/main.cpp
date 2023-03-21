@@ -36,6 +36,7 @@ int main(void)
 {
 
     InitWindow(screenWidth, screenHeight, "Space Shooter");
+    InitAudioDevice();
 #ifdef PLATFORM_DESKTOP
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
