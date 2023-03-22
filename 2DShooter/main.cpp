@@ -41,7 +41,7 @@ int main(void)
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
 #endif
-    settings.loadSettings("config.xml",highscores.highScores);
+    settings.loadSettings("config.xml", highscores.highScores);
 
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
@@ -54,7 +54,7 @@ int main(void)
 #else
     settings.LoadGameSettings();
     SetTargetFPS(60);
-    while (!game.shouldExit && !WindowShouldClose())
+    while (!game.shouldExit)
     {
         DrawGame();
     }
@@ -207,48 +207,57 @@ void DrawGame()
             game.RenderBackground(true);
             int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(120.f));
             DrawText("GAME OVER", CalculateXCoord(resolutionNormalizer / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(120.f), RED);
-            
-            if(!highscores.highscoreUpdated) 
-            {   highscores.UpdateHighscores(player.score);
-                settings.saveSettings("config.xml",highscores.highScores);
+
+            if (!highscores.highscoreUpdated)
+            {
+                highscores.UpdateHighscores(player.score);
+                settings.saveSettings("config.xml", highscores.highScores);
             }
 
-            Color highscoreAchievedTextColor =  highscores.highscoreUpdated ? PURPLE : RED;
+            Color highscoreAchievedTextColor = highscores.newHighscoreEntry ? Color({110, 20, 143, 255}) : RED;
 
             char stringPlayerScore[15 + sizeof(char)] = "";
             sprintf(stringPlayerScore, "Score: %d", player.score);
             int scoreStringWidth = MeasureText(stringPlayerScore, CalculateObjectSizeY(100));
             DrawText(stringPlayerScore, CalculateXCoord(resolutionNormalizer / 2) - (scoreStringWidth / 2), CalculateYCoord(resolutionNormalizer / 2) - CalculateYCoord(18.56f), CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
-            
+
             int highscoreLabelWidth = MeasureText("Highscores", CalculateObjectSizeY(72.f));
-            DrawText("Highscores", CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2), CalculateObjectSizeY(72.f), RED);
-            DrawLineEx({CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2) + CalculateObjectSizeY(80.f)},{CalculateXCoord(resolutionNormalizer / 2) + (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2) + CalculateObjectSizeY(80.f)},8.f,RED); 
-            
-            int highscoresPosition = CalculateYCoord(resolutionNormalizer/2) + CalculateYCoord(7.08f);
-            for(int i = 0; i < highscores.highScores.size(); i++)
-            {   
+            DrawText("Highscores", CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2) - CalculateYCoord(4.26f), CalculateObjectSizeY(72.f), RED);
+            DrawLineEx({CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), CalculateYCoord(resolutionNormalizer / 2) + CalculateYCoord(3.f)}, {CalculateXCoord(resolutionNormalizer / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f), CalculateYCoord(resolutionNormalizer / 2) + CalculateYCoord(3.f)}, 8.f, RED);
+
+            int highscoresPosition = CalculateYCoord(resolutionNormalizer / 2) + CalculateYCoord(3.f);
+            for (int i = 0; i < highscores.highScores.size(); i++)
+            {
                 highscoresPosition += CalculateYCoord(7.08f);
-                
+
                 char score[15 + sizeof(char)] = "";
-                sprintf(score, "%d - %d", i + 1, highscores.highScores[i]);
+                sprintf(score, "%d", highscores.highScores[i]);
+                char scorePos[5 + sizeof(char)] = "";
+                sprintf(scorePos, "%d.", i + 1);
                 int scoreStringWidth = MeasureText(score, CalculateObjectSizeY(48.f));
-                if(highscores.highScores[i] == player.score) 
-                {   
-                    DrawText(score, CalculateXCoord(resolutionNormalizer/2) - (scoreStringWidth / 2), highscoresPosition - CalculateObjectSizeY(48),CalculateObjectSizeY(48), PURPLE);
+                int scorePosStringWidth = MeasureText(score, CalculateObjectSizeY(48.f));
+                if (highscores.highScores[i] == player.score)
+                {
+                    DrawText(score, CalculateXCoord(resolutionNormalizer / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), highscoreAchievedTextColor);
+                    DrawText(scorePos, CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), highscoreAchievedTextColor);
                 }
-                else DrawText(score, CalculateXCoord(resolutionNormalizer/2) - (scoreStringWidth / 2), highscoresPosition - CalculateObjectSizeY(48),CalculateObjectSizeY(48), RED);
+                else
+                {
+                    DrawText(score, CalculateXCoord(resolutionNormalizer / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), RED);
+                    DrawText(scorePos, CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), RED);
+                }
             }
 
-            int subTextWidth = MeasureText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", CalculateObjectSizeY(48.f));
-            DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(resolutionNormalizer - 9.26f), CalculateObjectSizeY(48.f), RED);
-            if (IsKeyPressed(KEY_ENTER))
+            int subTextWidth = MeasureText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", CalculateObjectSizeY(36.f));
+            DrawText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(resolutionNormalizer - 4.63f), CalculateObjectSizeY(36.f), RED);
+            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
             {
                 // tools.enemies.clear();
                 player.UnloadPlayer();
                 game.isGameActive = false;
                 game.LoadGame();
             }
-            if (IsKeyPressed(KEY_BACKSPACE))
+            if (IsKeyPressed(KEY_ESCAPE))
             {
                 for (int i = 0; i < tools.enemies.size(); i++)
                 {

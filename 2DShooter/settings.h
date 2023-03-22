@@ -24,6 +24,7 @@ private:
     Color backButtonColor;
     const std::string configFilePath = "C:\\Users\\jansun\\AppData\\Roaming\\SpaceShooter";
     std::string configFileName = "config.xml";
+    pt::ptree tree;
 
 public:
     bool isSettingsActive;
@@ -33,7 +34,7 @@ public:
     ~Settings();
 
     // load/save settings to file
-    void loadSettings(const std::string &filename,std::vector<int> &highscores);
+    void loadSettings(const std::string &filename, std::vector<int> &highscores);
     void saveSettings(const std::string &filename);
     void saveSettings(const std::string &filename, std::vector<int> &highscores);
 

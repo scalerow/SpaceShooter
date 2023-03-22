@@ -153,9 +153,6 @@ void Settings::BackToMenu(Rectangle bounds)
 
 void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores)
 {
-    // Create empty property tree object
-    pt::ptree tree;
-
     // Parse the XML into the property tree.
     pt::read_xml(filename, tree);
 
@@ -180,20 +177,14 @@ void Settings::loadSettings(const std::string &filename, std::vector<int> &highs
             highscores.push_back(score);
         }
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
-    
-
 }
 
 void Settings::saveSettings(const std::string &filename)
 {
-    // Create an empty property tree object.
-    pt::ptree tree;
-
     // Put the simple values into the tree. The integer is automatically
     // converted to a string. Note that the "debug" node is automatically
     // created if it doesn't exist.
@@ -206,9 +197,6 @@ void Settings::saveSettings(const std::string &filename)
 
 void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores)
 {
-    // Create an empty property tree object.
-    pt::ptree tree;
-
     // Put the simple values into the tree. The integer is automatically
     // converted to a string. Note that the "debug" node is automatically
     // created if it doesn't exist.
@@ -220,15 +208,14 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
     // multiple "module" children.
     if (highscores.size() > 0)
     {
-        
+
         tree.erase("settings.highscores");
 
-        std::sort(highscores.begin(), highscores.end());
-        BOOST_FOREACH (int highscore, highscores) 
+        std::sort(highscores.begin(), highscores.end(), std::greater<int>());
+        BOOST_FOREACH (int highscore, highscores)
         {
             tree.add("settings.highscores.highscore", highscore);
         }
-            
     }
     // Write property tree to XML file
     pt::write_xml(filename, tree);
