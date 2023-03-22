@@ -2,7 +2,6 @@
 
 Settings::Settings()
 {
-    loadSettings(configFileName);
     InitSettings();
 }
 
@@ -152,7 +151,7 @@ void Settings::BackToMenu(Rectangle bounds)
     }
 }
 
-void Settings::loadSettings(const std::string &filename)
+void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores)
 {
     // Create empty property tree object
     pt::ptree tree;
@@ -172,11 +171,22 @@ void Settings::loadSettings(const std::string &filename)
     // Use get_child to find the node containing the modules, and iterate over
     // its children. If the path cannot be resolved, get_child throws.
     // A C++11 for-range loop would also work.
-    // BOOST_FOREACH (pt::ptree::value_type &v, tree.get_child("settings.highscores"))
-    // {
-    //     // The data function is used to access the data stored in a node.
-    //     settings.insert(v.second.data());
-    // }
+    try
+    {
+        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.highscores"))
+        {
+            int score = stoi(value.second.data());
+            // The data function is used to access the data stored in a node.
+            highscores.push_back(score);
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    
+
 }
 
 void Settings::saveSettings(const std::string &filename)
@@ -190,15 +200,35 @@ void Settings::saveSettings(const std::string &filename)
     tree.put("settings.filename", configFileName);
     tree.put("settings.fullscreen", fullscreen);
     tree.put("settings.sound", soundActive);
+    // Write property tree to XML file
+    pt::write_xml(filename, tree);
+}
+
+void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores)
+{
+    // Create an empty property tree object.
+    pt::ptree tree;
+
+    // Put the simple values into the tree. The integer is automatically
+    // converted to a string. Note that the "debug" node is automatically
+    // created if it doesn't exist.
+    tree.put("settings.filename", configFileName);
+    tree.put("settings.fullscreen", fullscreen);
+    tree.put("settings.sound", soundActive);
     // Add all the modules. Unlike put, which overwrites existing nodes, add
     // adds a new node at the lowest level, so the "modules" node will have
     // multiple "module" children.
-    if (highscores.size() < 5 && highscores.size() > 0)
+    if (highscores.size() > 0)
     {
-        // int len = sizeof(highscores) / sizeof(highscores[0]);
+        
+        tree.erase("settings.highscores");
+
         std::sort(highscores.begin(), highscores.end());
-        BOOST_FOREACH (int &highscore, highscores)
-            tree.add("settings.highscores", highscore);
+        BOOST_FOREACH (int highscore, highscores) 
+        {
+            tree.add("settings.highscores.highscore", highscore);
+        }
+            
     }
     // Write property tree to XML file
     pt::write_xml(filename, tree);

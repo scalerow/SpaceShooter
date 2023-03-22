@@ -16,9 +16,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     Image planeImg = LoadImage("./media/space_plane_1.png");
     ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
     Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
-    Sound shotSound = LoadSound(".\\media\\shot.wav");
-    SetSoundPitch(shotSound, 50);
-    sound = shotSound;
+    
     Image bulletImg = LoadImage("./media/bullet_0.png");
     ImageResize(&bulletImg, CalculateObjectSizeX(bulletImg.width), CalculateObjectSizeY(bulletImg.height));
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);

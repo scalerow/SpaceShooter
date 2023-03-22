@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<settings><filename>config.xml</filename><fullscreen>true</fullscreen><sound>false</sound></settings>
+<settings><filename>config.xml</filename><fullscreen>false</fullscreen><sound>false</sound><highscores><highscore>110</highscore><highscore>220</highscore><highscore>330</highscore><highscore>550</highscore><highscore>660</highscore></highscores></settings>

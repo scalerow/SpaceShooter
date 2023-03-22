@@ -22,8 +22,6 @@ private:
     Color fullscreenButtonColor;
     Color soundButtonColor;
     Color backButtonColor;
-    std::vector<int> highscores;
-    std::set<std::string> settings;
     const std::string configFilePath = "C:\\Users\\jansun\\AppData\\Roaming\\SpaceShooter";
     std::string configFileName = "config.xml";
 
@@ -35,8 +33,12 @@ public:
     ~Settings();
 
     // load/save settings to file
-    void loadSettings(const std::string &filename);
+    void loadSettings(const std::string &filename,std::vector<int> &highscores);
     void saveSettings(const std::string &filename);
+    void saveSettings(const std::string &filename, std::vector<int> &highscores);
+
+    void ImportHighscore(std::vector<int> &highScore);
+    void UpdateHighscore(std::vector<int> &highScore);
 
     void InitSettings();
     void LoadGameSettings();

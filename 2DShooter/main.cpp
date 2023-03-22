@@ -28,6 +28,7 @@ static float resolutionNormalizer = 100.f;
 vector<int> enemyPositions;
 static Game game = Game(screenWidth, screenHeight);
 static Player player;
+static HighScore highscores;
 static Settings settings;
 
 static void DrawGame();
@@ -36,11 +37,12 @@ int main(void)
 {
 
     InitWindow(screenWidth, screenHeight, "Space Shooter");
-    InitAudioDevice();
 #ifdef PLATFORM_DESKTOP
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
 #endif
+    settings.loadSettings("config.xml",highscores.highScores);
+
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 612.f));
@@ -50,11 +52,10 @@ int main(void)
 #ifdef PLATFORM_WEB
     emscripten_set_main_loop(DrawGame, 60, 1);
 #else
-
+    settings.LoadGameSettings();
     SetTargetFPS(60);
     while (!game.shouldExit && !WindowShouldClose())
     {
-        settings.LoadGameSettings();
         DrawGame();
     }
 #endif
@@ -121,7 +122,6 @@ void DrawGame()
         DrawText("EXIT", rectExit.x, rectExit.y, CalculateObjectSizeY(72), game.exitButtonColor);
         game.ExitAction(exitHitbox);
 #endif
-
         game.SettingsAction(settingsHitbox);
         game.PlayAction(startButtonPos);
     }
@@ -130,7 +130,7 @@ void DrawGame()
         if (!game.isGameActive)
         {
             game.UnloadMenu();
-
+            highscores.highscoreUpdated = false;
             game.InitGame();
             player.InitPlayer(screenHeight, screenWidth);
         }
@@ -205,13 +205,39 @@ void DrawGame()
         else
         {
             game.RenderBackground(true);
-            int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(100));
-            DrawText("GAME OVER", CalculateXCoord(resolutionNormalizer / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(100.f), RED);
+            int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(120.f));
+            DrawText("GAME OVER", CalculateXCoord(resolutionNormalizer / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(120.f), RED);
+            
+            if(!highscores.highscoreUpdated) 
+            {   highscores.UpdateHighscores(player.score);
+                settings.saveSettings("config.xml",highscores.highScores);
+            }
+
+            Color highscoreAchievedTextColor =  highscores.highscoreUpdated ? PURPLE : RED;
 
             char stringPlayerScore[15 + sizeof(char)] = "";
             sprintf(stringPlayerScore, "Score: %d", player.score);
             int scoreStringWidth = MeasureText(stringPlayerScore, CalculateObjectSizeY(100));
-            DrawText(stringPlayerScore, CalculateXCoord(resolutionNormalizer / 2) - (scoreStringWidth / 2), CalculateYCoord(resolutionNormalizer / 2) - 4.63f, CalculateObjectSizeY(100.f), RED);
+            DrawText(stringPlayerScore, CalculateXCoord(resolutionNormalizer / 2) - (scoreStringWidth / 2), CalculateYCoord(resolutionNormalizer / 2) - CalculateYCoord(18.56f), CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
+            
+            int highscoreLabelWidth = MeasureText("Highscores", CalculateObjectSizeY(72.f));
+            DrawText("Highscores", CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2), CalculateObjectSizeY(72.f), RED);
+            DrawLineEx({CalculateXCoord(resolutionNormalizer / 2) - (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2) + CalculateObjectSizeY(80.f)},{CalculateXCoord(resolutionNormalizer / 2) + (highscoreLabelWidth / 2), CalculateYCoord(resolutionNormalizer / 2) + CalculateObjectSizeY(80.f)},8.f,RED); 
+            
+            int highscoresPosition = CalculateYCoord(resolutionNormalizer/2) + CalculateYCoord(7.08f);
+            for(int i = 0; i < highscores.highScores.size(); i++)
+            {   
+                highscoresPosition += CalculateYCoord(7.08f);
+                
+                char score[15 + sizeof(char)] = "";
+                sprintf(score, "%d - %d", i + 1, highscores.highScores[i]);
+                int scoreStringWidth = MeasureText(score, CalculateObjectSizeY(48.f));
+                if(highscores.highScores[i] == player.score) 
+                {   
+                    DrawText(score, CalculateXCoord(resolutionNormalizer/2) - (scoreStringWidth / 2), highscoresPosition - CalculateObjectSizeY(48),CalculateObjectSizeY(48), PURPLE);
+                }
+                else DrawText(score, CalculateXCoord(resolutionNormalizer/2) - (scoreStringWidth / 2), highscoresPosition - CalculateObjectSizeY(48),CalculateObjectSizeY(48), RED);
+            }
 
             int subTextWidth = MeasureText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", CalculateObjectSizeY(48.f));
             DrawText("[ENTER: RESTART, BACKSPACE: EXIT TO MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(resolutionNormalizer - 9.26f), CalculateObjectSizeY(48.f), RED);

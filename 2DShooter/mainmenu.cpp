@@ -62,15 +62,14 @@ void MainMenu::SettingsAction(Rectangle btnBounds)
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
             settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            isMenuActive = false;
+            LoadSettings();
+        }
         else
         {
             settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        }
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-        {
-            isMenuActive = false;
-            LoadSettings();
         }
     }
     else
