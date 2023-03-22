@@ -2,8 +2,6 @@
 
 Settings::Settings()
 {
-    fullscreen = false;
-    soundActive = false;
     InitSettings();
 }
 
@@ -14,8 +12,6 @@ Settings::~Settings()
 void Settings::InitSettings()
 {
     isSettingsActive = true;
-    fullscreen = fullscreen;
-    soundActive = soundActive;
     exitSettings = false;
     soundButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     fullscreenButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
@@ -39,6 +35,7 @@ void Settings::toggleSound(Rectangle bounds)
                 gameSound = LoadSound("../");
                 PlaySound(gameSound);
                 soundActive = IsSoundPlaying(gameSound);
+                saveSettings(configFileName);
             }
             else if (soundActive)
             {
@@ -70,6 +67,7 @@ void Settings::toggleFullscreen(Rectangle bounds)
             fullscreenButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
             ToggleFullscreen();
             fullscreen = IsWindowFullscreen();
+            saveSettings(configFileName);
         }
 
         else
@@ -96,6 +94,7 @@ void Settings::DrawSettings()
     DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), GREEN);
     if (fullscreen)
     {
+        saveSettings(configFilePath);
         DrawRectangle(fullscreenButtonRect.x, fullscreenButtonRect.y, fullscreenButtonRect.width, fullscreenButtonRect.height, GREEN);
     }
     else if (!fullscreen)
@@ -109,6 +108,7 @@ void Settings::DrawSettings()
 
     if (soundActive)
     {
+        saveSettings(configFilePath);
         DrawRectangle(soundButtonRect.x, soundButtonRect.y, soundButtonRect.width, soundButtonRect.height, soundButtonColor);
     }
     else if (!soundActive)
@@ -148,5 +148,88 @@ void Settings::BackToMenu(Rectangle bounds)
     else
     {
         backButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores)
+{
+    // Parse the XML into the property tree.
+    pt::read_xml(filename, tree);
+
+    // Use the throwing version of get to find the debug filename.
+    // If the path cannot be resolved, an exception is thrown.
+    fullscreen = tree.get<bool>("settings.fullscreen");
+    soundActive = tree.get<bool>("settings.sound");
+    // highscores.push_back(tree.get<int>("settings.highscores"));
+
+    // Use the default-value version of get to find the debug level.
+    // Note that the default value is used to deduce the target type.
+
+    // Use get_child to find the node containing the modules, and iterate over
+    // its children. If the path cannot be resolved, get_child throws.
+    // A C++11 for-range loop would also work.
+    try
+    {
+        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.highscores"))
+        {
+            int score = stoi(value.second.data());
+            // The data function is used to access the data stored in a node.
+            highscores.push_back(score);
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void Settings::saveSettings(const std::string &filename)
+{
+    // Put the simple values into the tree. The integer is automatically
+    // converted to a string. Note that the "debug" node is automatically
+    // created if it doesn't exist.
+    tree.put("settings.filename", configFileName);
+    tree.put("settings.fullscreen", fullscreen);
+    tree.put("settings.sound", soundActive);
+    // Write property tree to XML file
+    pt::write_xml(filename, tree);
+}
+
+void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores)
+{
+    // Put the simple values into the tree. The integer is automatically
+    // converted to a string. Note that the "debug" node is automatically
+    // created if it doesn't exist.
+    tree.put("settings.filename", configFileName);
+    tree.put("settings.fullscreen", fullscreen);
+    tree.put("settings.sound", soundActive);
+    // Add all the modules. Unlike put, which overwrites existing nodes, add
+    // adds a new node at the lowest level, so the "modules" node will have
+    // multiple "module" children.
+    if (highscores.size() > 0)
+    {
+
+        tree.erase("settings.highscores");
+
+        std::sort(highscores.begin(), highscores.end(), std::greater<int>());
+        BOOST_FOREACH (int highscore, highscores)
+        {
+            tree.add("settings.highscores.highscore", highscore);
+        }
+    }
+    // Write property tree to XML file
+    pt::write_xml(filename, tree);
+}
+
+void Settings::InitGameSettings()
+{
+    if (!IsWindowFullscreen() && fullscreen)
+    {
+        ToggleFullscreen();
+    }
+    if (soundActive)
+    {
+        gameSound = LoadSound("../");
+        PlaySound(gameSound);
     }
 }

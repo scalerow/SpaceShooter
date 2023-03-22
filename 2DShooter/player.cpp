@@ -16,7 +16,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     Image planeImg = LoadImage("./media/space_plane_1.png");
     ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
     Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
-
+    
     Image bulletImg = LoadImage("./media/bullet_0.png");
     ImageResize(&bulletImg, CalculateObjectSizeX(bulletImg.width), CalculateObjectSizeY(bulletImg.height));
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
@@ -32,7 +32,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     health = 150;
     score = 0;
     velocity = {400.f, 300.f};
-    acceleration = { 0.f, 0.f};
+    acceleration = {0.f, 0.f};
     playerActive = true;
     UnloadImage(planeImg);
     UnloadImage(bulletImg);
@@ -52,51 +52,60 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
 
     if (IsKeyDown(KEY_RIGHT) && position.x <= flightArea.z - playerTexture.width)
     {
-        if(acceleration.x < 2.f) acceleration.x += 0.02f;
+        if (acceleration.x < 2.f)
+            acceleration.x += 0.02f;
 
-        //position.x += 350.f * delta;
+        // position.x += 350.f * delta;
         velocity.x += acceleration.x * delta;
         position.x += velocity.x * delta;
     }
     if (IsKeyDown(KEY_LEFT) && position.x >= flightArea.x)
     {
-        if(acceleration.x < 2.f) acceleration.x += 0.02f;
-        
+        if (acceleration.x < 2.f)
+            acceleration.x += 0.02f;
+
         velocity.x -= acceleration.x * delta;
         position.x -= velocity.x * delta;
-        //position.x -= 350.f * delta;
+        // position.x -= 350.f * delta;
     }
-    else 
+    else
     {
-        if(acceleration.x > 0) acceleration.x -= 0.01f;
-        else if (acceleration.x < 0) acceleration.x = 0.f;
+        if (acceleration.x > 0)
+            acceleration.x -= 0.01f;
+        else if (acceleration.x < 0)
+            acceleration.x = 0.f;
     }
     if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - CalculateObjectSizeY(100))
     {
-        if(acceleration.y < 2.f) acceleration.y += 0.02f;
+        if (acceleration.y < 2.f)
+            acceleration.y += 0.02f;
         // position.y -= 10 * sin((rotation + 270) * DEG2RAD);
         // position.x -= 10 * cos((rotation + 270) * DEG2RAD);
         velocity.y += acceleration.y * delta;
         position.y += velocity.y * delta;
-        //position.y += 350.f * delta;
+        // position.y += 350.f * delta;
     }
-    
+
     if (IsKeyDown(KEY_UP) && position.y >= flightArea.y)
     {
-        if(acceleration.y < 2.f) acceleration.y += 0.02f;
+        if (acceleration.y < 2.f)
+            acceleration.y += 0.02f;
         // position.y += 10 * sin((rotation + 270) * DEG2RAD);
         // position.x += 10 * cos((rotation + 270) * DEG2RAD);
         velocity.y -= acceleration.y * delta;
         position.y -= velocity.y * delta;
-        //position.y -= 350.f * delta;
+        // position.y -= 350.f * delta;
     }
-    else 
+    else
     {
-        if(acceleration.y > 0) acceleration.y -= 0.01f;
-        else if (acceleration.y < 0) acceleration.y = 0.f;
+        if (acceleration.y > 0)
+            acceleration.y -= 0.01f;
+        else if (acceleration.y < 0)
+            acceleration.y = 0.f;
     }
 
     if (playerActive)
+
         DrawTextureV(playerTexture, position, WHITE);
 }
 
@@ -195,6 +204,7 @@ void Player::UpdateLeftBullet()
             if (leftBullets[i].bulletActive && !leftBullets[i].playerBulletOutOfScreen())
             {
                 leftBullets[i].updatePlayerBullet();
+                PlaySound(sound);
                 DrawTextureV(leftBullets[i].bulletTexture, {leftBullets[i].x, leftBullets[i].y}, WHITE);
             }
             else

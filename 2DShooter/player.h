@@ -12,8 +12,8 @@
 class Player
 {
 private:
-
 public:
+    Sound sound;
     Vector2 position;
     Vector2 velocity;
     Vector2 acceleration;
@@ -29,7 +29,7 @@ public:
     int rightShotTimer;
     int specialAttackBulletCount;
     std::vector<Debris> playerDebris;
-    
+
     bool gameOver;
     int score;
 
