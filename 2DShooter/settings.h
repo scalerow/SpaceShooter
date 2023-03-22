@@ -42,7 +42,7 @@ public:
     void UpdateHighscore(std::vector<int> &highScore);
 
     void InitSettings();
-    void LoadGameSettings();
+    void InitGameSettings();
 
     void toggleSound(Rectangle bounds);
     void toggleFullscreen(Rectangle bounds);

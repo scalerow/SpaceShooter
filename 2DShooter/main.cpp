@@ -37,11 +37,11 @@ int main(void)
 {
 
     InitWindow(screenWidth, screenHeight, "Space Shooter");
-#ifdef PLATFORM_DESKTOP
+#ifndef PLATFORM_WEB
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
-#endif
     settings.loadSettings("config.xml", highscores.highScores);
+#endif
 
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
     enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
@@ -52,7 +52,7 @@ int main(void)
 #ifdef PLATFORM_WEB
     emscripten_set_main_loop(DrawGame, 60, 1);
 #else
-    settings.LoadGameSettings();
+    settings.InitGameSettings();
     SetTargetFPS(60);
     while (!game.shouldExit)
     {
@@ -211,7 +211,9 @@ void DrawGame()
             if (!highscores.highscoreUpdated)
             {
                 highscores.UpdateHighscores(player.score);
+#ifndef PLATFORM_WEB
                 settings.saveSettings("config.xml", highscores.highScores);
+#endif
             }
 
             Color highscoreAchievedTextColor = highscores.newHighscoreEntry ? Color({110, 20, 143, 255}) : RED;

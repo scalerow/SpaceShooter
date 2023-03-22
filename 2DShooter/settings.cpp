@@ -221,7 +221,7 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
     pt::write_xml(filename, tree);
 }
 
-void Settings::LoadGameSettings()
+void Settings::InitGameSettings()
 {
     if (!IsWindowFullscreen() && fullscreen)
     {
