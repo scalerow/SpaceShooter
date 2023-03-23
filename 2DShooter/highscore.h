@@ -16,7 +16,7 @@ private:
 
 public:
     bool newHighscoreEntry;
-    bool highscoreUpdated = false;
+    bool highscoreUpdated;
     std::vector<int> highScores;
 
     HighScore();

@@ -137,10 +137,10 @@ void DrawGame()
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
 
+            player.UpdatePlayer(deltaTime, game.flightArea);
             player.UpdateLeftBullet();
             player.UpdateRightBullet();
             tools.CreateMultipleEnemies(enemyPositions);
-            player.UpdatePlayer(deltaTime, game.flightArea);
 
             if (IsKeyDown(KEY_SPACE))
             {
