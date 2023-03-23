@@ -19,14 +19,25 @@ public:
     Vector2 gameBackgroudPosition;
     Vector4 flightArea;
     bool isGameActive;
+    bool paused;
+    Rectangle resumeRec;
+    Rectangle backRec;
+    Color resumeColor;
+    Color backColor;
 
     Game(float &widthP, float &heightP);
     virtual ~Game();
 
     void InitGame();
+    void PauseGame();
     void DrawGameUI(int &health, int &score);
-    void DrawGameOver(HighScore &highscores,Settings &settings, int &score);
+    void DrawPauseGame();
+    void DrawGameOver(HighScore &highscores, Settings &settings, int &score);
     void RenderBackground(bool menu = false);
+
+    void UpdatePauseGame();
+
+    void ResetGame();
     void UnloadGame();
 };
 

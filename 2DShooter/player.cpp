@@ -300,6 +300,8 @@ void Player::FillDebris(int particleAmount)
 // Clear remenants of texture from memory
 void Player::UnloadPlayer()
 {
+    leftBullets.clear();
+    rightBullets.clear();
     UnloadTexture(playerTexture);
     UnloadTexture(playerBulletTexture);
 }
