@@ -112,6 +112,47 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
             DrawText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(100 - 4.63f), CalculateObjectSizeY(36.f), RED);
 }
 
+void Game::PauseGame()
+{
+    paused = true;
+}
+
+void Game::DrawPauseGame()
+{
+    RenderBackground(true);
+    
+    resumeColor = GREEN;
+    backColor = GREEN;
+
+    int resumeStringWidth = MeasureText("Resume", CalculateObjectSizeY(72.f));
+    resumeRec = {CalculateXCoord(100/2) - CalculateObjectSizeX(resumeStringWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(72.f/2),CalculateObjectSizeX(resumeStringWidth), CalculateObjectSizeY(72.f)};
+    DrawText("Resume", CalculateXCoord(100/2) - CalculateObjectSizeX(resumeStringWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(72.f/2), CalculateObjectSizeY(72.f), resumeColor);
+
+    int backToMenuStringWidth = MeasureText("Exit to menu", CalculateObjectSizeY(72.f));
+    backRec = {CalculateXCoord(100/2) - CalculateObjectSizeX(backToMenuStringWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(72.f/2) + CalculateObjectSizeY(100.f),CalculateObjectSizeX(backToMenuStringWidth), CalculateObjectSizeY(72.f)};
+    DrawText("Exit to menu", CalculateXCoord(100/2) - CalculateObjectSizeX(backToMenuStringWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(72.f/2) + CalculateObjectSizeY(100.f), CalculateObjectSizeY(72.f), backColor);
+}
+
+void Game::UpdatePauseGame()
+{
+    mousePoint = GetMousePosition();
+    if(CheckCollisionPointRec(mousePoint,resumeRec))
+    {
+        resumeColor = DARKGREEN;
+        if(IsKeyPressed(MOUSE_LEFT_BUTTON)) paused = false;
+    }
+    else if(CheckCollisionPointRec(mousePoint,backRec))
+    {
+        backColor = DARKGREEN;
+        if(IsKeyPressed(MOUSE_LEFT_BUTTON))
+        {
+            UnloadGame();
+            LoadMenu();
+        }
+        
+    }
+}
+
 // Clear remenants of texture from memory
 void Game::UnloadGame()
 {

@@ -89,7 +89,9 @@ void DrawGame()
         {
 
             // Clear remenants of texture from memory
+            tools.UnloadMultipleEnemies();
             player.UnloadPlayer();
+
             game.UnloadGame();
 
             game.InitMenu();
@@ -128,7 +130,7 @@ void DrawGame()
     //////////////////////////////////
     ///       GAME IS ACTIVE       ///
     //////////////////////////////////
-        if (!player.gameOver)
+        if (!player.gameOver && !game.paused)
         {
             game.RenderBackground();
 
@@ -173,12 +175,17 @@ void DrawGame()
                 }
             }
 
+            if(IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
+            {
+                game.PauseGame();
+            }
+
             game.DrawGameUI(player.health, player.score);
         }
         //////////////////////////////////
         ///          GAME OVER         ///
         //////////////////////////////////
-        else
+        else if(player.gameOver)
         {
             
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
@@ -190,16 +197,7 @@ void DrawGame()
             }
             if (IsKeyPressed(KEY_ESCAPE))
             {
-                for (int i = 0; i < tools.enemies.size(); i++)
-                {
-                    player.leftBullets.clear();
-                    player.rightBullets.clear();
-                    tools.enemies[i].UnloadEnemy();
-                    tools.enemies[i].ResetDefaultEnenmy();
-                    tools.enemies[i].enemyBullets.clear();
-                }
-
-                tools.enemies.clear();
+                tools.UnloadMultipleEnemies();
                 player.UnloadPlayer();
                 game.UnloadGame();
                 game.isGameActive = false;
@@ -207,6 +205,14 @@ void DrawGame()
             }
 
             game.DrawGameOver(highscores, settings, player.score);
+        }
+        //////////////////////////////////
+        ///           PAUSE            ///
+        //////////////////////////////////
+        else if(game.paused)
+        {
+            game.DrawPauseGame();
+            game.UpdatePauseGame();
         }
     }
     //////////////////////////////////
