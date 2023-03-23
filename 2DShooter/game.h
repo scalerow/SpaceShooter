@@ -32,11 +32,12 @@ public:
     void PauseGame();
     void DrawGameUI(int &health, int &score);
     void DrawPauseGame();
-    void DrawGameOver(HighScore &highscores,Settings &settings, int &score);
+    void DrawGameOver(HighScore &highscores, Settings &settings, int &score);
     void RenderBackground(bool menu = false);
 
-    void UpdatePauseGame(); 
+    void UpdatePauseGame();
 
+    void ResetGame();
     void UnloadGame();
 };
 
