@@ -27,10 +27,34 @@ void MainMenu::InitMenu()
     menuBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
 
+void MainMenu::DrawMainMenu()
+{
+    // Play button
+        Rectangle startButtonPos = {CalculateXCoord((100 / 2.f) - 13.f), CalculateYCoord(100 / 2.f), CalculateObjectSizeX(500), CalculateObjectSizeY(120)};
+        DrawRectangleLinesEx(startButtonPos, 10, playButtonColor);
+        Vector2 startButtonTextPos = {50.f - 6.5f, 50.f + 1.3f};
+        DrawText("PLAY", CalculateXCoord(startButtonTextPos.x), CalculateYCoord(startButtonTextPos.y), CalculateObjectSizeY(96.f), playButtonColor);
+        PlayAction(startButtonPos);
+        // Settings button
+        float settingsWidth = MeasureText("SETTINGS", CalculateObjectSizeY(72));
+        Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + CalculateYCoord(27.77f), settingsWidth, CalculateObjectSizeY(72.f)};
+        Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y, rectSettings.width, rectSettings.height};
+        DrawText("SETTINGS", rectSettings.x, rectSettings.y, CalculateObjectSizeY(72), settingsButtonColor);
+        SettingsAction(settingsHitbox);
+#ifndef PLATFORM_WEB
+        // Exit button
+        float exitWidth = MeasureText("EXIT", CalculateObjectSizeY(72));
+        Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + CalculateYCoord(37.03f), exitWidth, CalculateObjectSizeY(72)};
+        Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y, rectExit.width, rectExit.height};
+        DrawText("EXIT", rectExit.x, rectExit.y, CalculateObjectSizeY(72), exitButtonColor);
+        ExitAction(exitHitbox);
+#endif
+}
+
 // Initialize the playbutton and its actions
 void MainMenu::PlayAction(Rectangle btnBounds)
 {
-    Vector2 mousePoint = GetMousePosition();
+    mousePoint = GetMousePosition();
 
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
@@ -56,7 +80,7 @@ void MainMenu::PlayAction(Rectangle btnBounds)
 
 void MainMenu::SettingsAction(Rectangle btnBounds)
 {
-    Vector2 mousePoint = GetMousePosition();
+     mousePoint = GetMousePosition();
 
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
@@ -80,7 +104,7 @@ void MainMenu::SettingsAction(Rectangle btnBounds)
 
 void MainMenu::ExitAction(Rectangle btnBounds)
 {
-    Vector2 mousePoint = GetMousePosition();
+    mousePoint = GetMousePosition();
     // Check button state
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
