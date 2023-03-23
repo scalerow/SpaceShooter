@@ -4,6 +4,8 @@
 #include "raylib.h"
 #include "mainmenu.h"
 #include "player.h"
+#include "highscore.h"
+#include "settings.h"
 
 class Game : public MainMenu
 {
@@ -22,6 +24,8 @@ public:
     virtual ~Game();
 
     void InitGame();
+    void DrawGameUI(int &health, int &score);
+    void DrawGameOver(HighScore &highscores,Settings &settings, int &score);
     void RenderBackground(bool menu = false);
     void UnloadGame();
 };

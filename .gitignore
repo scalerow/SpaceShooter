@@ -36,3 +36,6 @@ webbuild*
 *.exe
 *.out
 *.app
+
+# Config
+*.xml
