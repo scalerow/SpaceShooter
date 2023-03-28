@@ -2,6 +2,8 @@
 
 HighScore::HighScore()
 {
+    highscoreUpdated = false;
+    newHighscoreEntry = false;
 }
 
 HighScore::~HighScore()

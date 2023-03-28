@@ -17,10 +17,14 @@ public:
     Color settingsButtonColor;
     bool shouldExit;
     bool isMenuActive;
+    Vector2 mousePoint;
 
     MainMenu(float &width, float &height);
     ~MainMenu();
     void InitMenu();
+
+    void DrawMainMenu();
+
     void PlayAction(Rectangle btnBounds);
     void SettingsAction(Rectangle btnBounds);
     void ExitAction(Rectangle btnBounds);

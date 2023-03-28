@@ -194,7 +194,7 @@ void Player::UpdateLeftBullet()
             bullet.x = position.x + CalculateObjectSizeX(32.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
-            bullet.bulletDamage = 1;
+            bullet.bulletDamage = 8;
             leftBullets.push_back(bullet);
             leftShotTimer = 0;
         }
@@ -231,7 +231,7 @@ void Player::UpdateRightBullet()
             bullet.x = position.x + CalculateObjectSizeX(62.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
-            bullet.bulletDamage = 10;
+            bullet.bulletDamage = 8;
             rightBullets.push_back(bullet);
             rightShotTimer = 0;
         }
@@ -300,6 +300,8 @@ void Player::FillDebris(int particleAmount)
 // Clear remenants of texture from memory
 void Player::UnloadPlayer()
 {
+    leftBullets.clear();
+    rightBullets.clear();
     UnloadTexture(playerTexture);
     UnloadTexture(playerBulletTexture);
 }

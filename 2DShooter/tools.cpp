@@ -60,6 +60,19 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
     }
 }
 
+void Tools::UnloadMultipleEnemies()
+{
+    for (int i = 0; i < enemies.size(); i++)
+    {
+        
+        enemies[i].UnloadEnemy();
+        enemies[i].ResetDefaultEnenmy();
+        enemies[i].enemyBullets.clear();
+    }
+    enemies.clear();
+
+}
+
 // void Tools::FillParticles(std::vector<Debris> &debris)
 // {
 //     for(int i = 0; i < 100; i++)

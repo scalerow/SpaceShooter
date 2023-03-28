@@ -186,6 +186,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
 
 void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
 {
+
     float delta = GetFrameTime();
     float bloom = 8.f;
     for (int i = 0; i < enemyDebris.size(); i++)

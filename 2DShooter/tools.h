@@ -22,6 +22,7 @@ public:
     ~Tools();
     void InitEnemyBulletTexture();
     void CreateMultipleEnemies(std::vector<int> &xPositions);
+    void UnloadMultipleEnemies();
     void InitSpecialAttack(Vector2 position);
     // void FillParticles(vector<Debris> &debris);
     // float Distance(float x, float y);
