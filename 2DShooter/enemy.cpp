@@ -52,6 +52,16 @@ Texture2D Enemy::LoadEnemyTexture()
 
     return text;
 }
+
+void Enemy::InitBoss( float posX, int health, int speed)
+{
+    enemyTexture = LoadTexture("media\\boss_2.png");
+    health = health;
+    position = {posX, 0};
+    health = health;
+    speed = speed;
+}
+
 // Initialize the plane for the game
 void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D &texture)
 {

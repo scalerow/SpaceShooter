@@ -34,6 +34,8 @@ public:
     void EnemyExplosion(float explosionArea, float debrisSize);
     void FillDebris(int particleAmount);
 
+    void InitBoss(float posX, int health, int speed);
+
     void InitDefaultEnemyDefaults(int pos, Texture2D& texture);
     Texture2D LoadEnemyTexture();
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
