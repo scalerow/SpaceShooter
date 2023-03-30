@@ -21,6 +21,8 @@ public:
     float radius;
     int health;
     bool playerActive;
+    int currentLevel;
+    int playerNumber;
     Texture2D playerTexture;
     Texture2D playerBulletTexture;
     std::vector<Bullet> rightBullets;
