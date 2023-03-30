@@ -11,6 +11,7 @@
 #include <exception>
 #include <iostream>
 #include "highscore.h"
+
 namespace pt = boost::property_tree;
 
 class Settings
@@ -35,7 +36,7 @@ public:
     // load/save settings to file
     void loadSettings(const std::string &filename, std::vector<int> &highscores);
     void saveSettings(const std::string &filename);
-    void saveSettings(const std::string &filename, std::vector<int> &highscores);
+    void saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData);
 
     void InitSettings();
     void InitGameSettings();

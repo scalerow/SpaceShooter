@@ -201,7 +201,7 @@ void Settings::saveSettings(const std::string &filename)
     }
 }
 
-void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores)
+void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData)
 {
     try
     {
@@ -211,13 +211,29 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
         
         if (highscores.size() > 0)
         {
-
             tree.get_child("settings.highscores").erase("highscore");
 
             std::sort(highscores.begin(), highscores.end(), std::greater<int>());
             BOOST_FOREACH (int highscore, highscores)
             {
                 tree.add("settings.highscores.highscore", highscore);
+            }
+        }
+
+        if (playerData.size() > 0)
+        {
+            tree.get_child("settings.playerdata").erase("player");
+
+            BOOST_FOREACH (PlayerData player,playerData)
+            {   
+                char stringPlayerLevel[50 + sizeof(char)] = "";
+                sprintf(stringPlayerLevel, "settings.playerdata.player%d.level", player.playerNumber);
+                tree.add(stringPlayerLevel, player.currentLevel);
+                
+                char stringPlayerHealth[50 + sizeof(char)] = "";
+                sprintf(stringPlayerHealth, "settings.playerdata.player%d.health", player.playerNumber);
+                tree.add(stringPlayerHealth, player.health);
+                
             }
         }
         // Write property tree to XML file

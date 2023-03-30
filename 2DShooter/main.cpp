@@ -85,7 +85,7 @@ void DrawGame()
     BeginDrawing();
     ClearBackground(BLACK);
 
-    if (!game.activateGame && !game.activateMenu && !game.activateSettings)
+    if (!game.activateGame && !game.activateMenu && !game.activateSettings && !game.activateLoadGame && !game.activateNewGame)
     {
         game.LoadMenu();
     }
@@ -115,6 +115,20 @@ void DrawGame()
 
         game.RenderBackground(true);
         game.DrawMainMenu();
+    }
+    else if (game.activateLoadGame)
+    {
+    }
+    else if (game.activateNewGame)
+    {
+        if (!game.isNewGameActive)
+        {
+            game.InitNewGame();
+        }
+
+        game.NewPlayerName();
+        game.RenderBackground(true);
+        game.DrawNewGameMenu();
     }
     //////////////////////////////////
     ///           GAME             ///

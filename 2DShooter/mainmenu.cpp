@@ -4,6 +4,8 @@ MainMenu::MainMenu(float &width, float &height) : Home{width, height}
 {
     isMenuActive = false;
     shouldExit = false;
+    isNewGameActive = false;
+    isLoadGameActive = false;
 }
 
 MainMenu::~MainMenu()
@@ -21,34 +23,170 @@ void MainMenu::InitMenu()
     Vector2 backgroundPos = {0, 0};
     UnloadImage(background);
 
-    playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    loadButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     menuTexture = backgroundTxr;
     menuBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
 
+void MainMenu::InitNewGame() 
+{
+    isNewGameActive = true;
+}
+
 void MainMenu::DrawMainMenu()
 {
     // Play button
-        Rectangle startButtonPos = {CalculateXCoord((100 / 2.f) - 13.f), CalculateYCoord(100 / 2.f), CalculateObjectSizeX(500), CalculateObjectSizeY(120)};
-        DrawRectangleLinesEx(startButtonPos, 10, playButtonColor);
-        Vector2 startButtonTextPos = {50.f - 6.5f, 50.f + 1.3f};
-        DrawText("PLAY", CalculateXCoord(startButtonTextPos.x), CalculateYCoord(startButtonTextPos.y), CalculateObjectSizeY(96.f), playButtonColor);
-        PlayAction(startButtonPos);
-        // Settings button
-        float settingsWidth = MeasureText("SETTINGS", CalculateObjectSizeY(72));
-        Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + CalculateYCoord(27.77f), settingsWidth, CalculateObjectSizeY(72.f)};
-        Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y, rectSettings.width, rectSettings.height};
-        DrawText("SETTINGS", rectSettings.x, rectSettings.y, CalculateObjectSizeY(72), settingsButtonColor);
-        SettingsAction(settingsHitbox);
+    Rectangle startButtonPos = {CalculateXCoord((100 / 2.f) - 13.f), CalculateYCoord(100 / 2.f), CalculateObjectSizeX(500), CalculateObjectSizeY(120)};
+    //DrawRectangleLinesEx(startButtonPos, 10, playButtonColor);
+    Vector2 startButtonTextPos = {50.f - 6.5f, 50.f + 1.3f};
+    int newGameWidth = MeasureText("NEW GAME", CalculateObjectSizeY(96.f));
+    Rectangle newGameButton = {CalculateXCoord(100.f / 2.f) - (CalculateObjectSizeX(newGameWidth)/2), CalculateYCoord(100.f / 2.f) , CalculateObjectSizeX(newGameWidth), CalculateObjectSizeY(96.f)};
+    DrawText("NEW GAME", newGameButton.x, newGameButton.y, newGameButton.height, newGameButtonColor);
+    // Rectangle newGameRec = {newGameButton.x - CalculateObjectSizeX(20), newGameButton.y - CalculateObjectSizeY(20) ,newGameButton.width + CalculateObjectSizeX(40), newGameButton.height + CalculateObjectSizeY(40)};
+    // DrawRectangleLinesEx(newGameRec, 10, playButtonColor);
+    NewGameAction(newGameButton);
+
+    int loadGameWidth = MeasureText("LOAD GAME", CalculateObjectSizeY(96.f));
+    Rectangle loadGameButton = {CalculateXCoord(100.f / 2.f) - (CalculateObjectSizeX(loadGameWidth)/2), CalculateYCoord(100.f / 2.f) + CalculateObjectSizeY(115), CalculateObjectSizeX(loadGameWidth), CalculateObjectSizeY(96.f)};
+    DrawText("LOAD GAME", loadGameButton.x, loadGameButton.y, loadGameButton.height, loadButtonColor);
+    // Rectangle loadGameRec = {loadGameButton.x - CalculateObjectSizeX(20), loadGameButton.y - CalculateObjectSizeY(20) ,loadGameButton.width + CalculateObjectSizeX(40), loadGameButton.height + CalculateObjectSizeY(40)};
+    // DrawRectangleLinesEx(loadGameRec, 10, playButtonColor);
+    LoadGameAction(loadGameButton);
+
+    // Settings button
+    float settingsWidth = MeasureText("SETTINGS", CalculateObjectSizeY(72));
+    Rectangle rectSettings = Rectangle{(screenWidth / 2.f) - (settingsWidth / 2), (screenHeight / 2.f) + CalculateYCoord(27.77f), settingsWidth, CalculateObjectSizeY(72.f)};
+    Rectangle settingsHitbox = Rectangle{rectSettings.x, rectSettings.y, rectSettings.width, rectSettings.height};
+    DrawText("SETTINGS", rectSettings.x, rectSettings.y, CalculateObjectSizeY(72), settingsButtonColor);
+    SettingsAction(settingsHitbox);
 #ifndef PLATFORM_WEB
-        // Exit button
-        float exitWidth = MeasureText("EXIT", CalculateObjectSizeY(72));
-        Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + CalculateYCoord(37.03f), exitWidth, CalculateObjectSizeY(72)};
-        Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y, rectExit.width, rectExit.height};
-        DrawText("EXIT", rectExit.x, rectExit.y, CalculateObjectSizeY(72), exitButtonColor);
-        ExitAction(exitHitbox);
+    // Exit button
+    float exitWidth = MeasureText("EXIT", CalculateObjectSizeY(72));
+    Rectangle rectExit = Rectangle{(screenWidth / 2.f) - (exitWidth / 2), (screenHeight / 2.f) + CalculateYCoord(37.03f), exitWidth, CalculateObjectSizeY(72)};
+    Rectangle exitHitbox = Rectangle{rectExit.x, rectExit.y, rectExit.width, rectExit.height};
+    DrawText("EXIT", rectExit.x, rectExit.y, CalculateObjectSizeY(72), exitButtonColor);
+    ExitAction(exitHitbox);
 #endif
+    Rectangle menuRec = {loadGameButton.x - CalculateObjectSizeX(40), newGameButton.y - CalculateObjectSizeY(40), loadGameButton.width + CalculateObjectSizeX(80), CalculateObjectSizeY(550.f)};
+    DrawRectangleLinesEx(menuRec, 10.f, GREEN);
+}
+
+void MainMenu::DrawNewGameMenu() 
+{
+    int enterNameWidth = MeasureText("ENTER NAME:", CalculateObjectSizeY(120.f));
+    DrawText("ENTER NAME:",CalculateXCoord(100/2) - CalculateObjectSizeX(enterNameWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(200), CalculateObjectSizeY(120.f), GREEN);
+    int measureNameWidth = MeasureText(playerName, CalculateObjectSizeY(96));
+        
+    DrawTextEx(GetFontDefault(), playerName, {inputLines[0].x + CalculateObjectSizeX(15), CalculateYCoord(100/2) + CalculateObjectSizeY(120)}, CalculateObjectSizeY(96),CalculateObjectSizeX(45), GREEN);
+    for(int i = 0; i < 6; i++)
+    {
+        if(inputLines.size() <= 6 && i != 0)
+        {
+            Vector4 inputLine;
+            inputLine.x = inputLines[i-1].x + CalculateObjectSizeX(100);
+            inputLine.z = inputLines[i-1].z + CalculateObjectSizeX(100);
+            inputLine.y = inputLines[i-1].y;
+            inputLine.w = inputLines[i-1].w;
+            inputLines.push_back(inputLine);
+        }
+
+        if(!std::isalpha(playerName[i]))
+        {
+            DrawLineEx({inputLines[i].x, inputLines[i].y}, {inputLines[i].z, inputLines[i].w}, 10, GREEN);
+        }
+        
+    }
+    
+}
+
+void MainMenu::NewPlayerName()
+{
+    int key = GetCharPressed();
+
+            // Check if more characters have been pressed on the same frame
+            while (key > 0)
+            {
+                // NOTE: Only allow keys in range [32..125]
+                if ((key >= 32) && (key <= 125) && (letterCount < 6))
+                {
+                    playerName[letterCount] = (char)key;
+                    playerName[letterCount+1] = '\0'; // Add null terminator at the end of the string.
+                    letterCount++;
+                }
+
+                key = GetCharPressed();  // Check next character in the queue
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE))
+            {
+                letterCount--;
+                if (letterCount < 0) letterCount = 0;
+                playerName[letterCount] = '\0';
+            }
+
+}
+
+void MainMenu::DrawLoadGameMenu() 
+{
+
+}
+
+// Initialize the playbutton and its actions
+void MainMenu::NewGameAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            Vector4 inputStart = {CalculateXCoord(100/2) - CalculateObjectSizeX(300), CalculateYCoord(100/2) + CalculateObjectSizeY(200), CalculateXCoord(100/2) - CalculateObjectSizeX(210), CalculateYCoord(100/2) +  CalculateObjectSizeY(200)};
+            inputLines.push_back(inputStart);
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            isMenuActive = false;
+            NewGame();
+            
+        }
+        else
+        {
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+    }
+    else
+    {
+        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+// Initialize the playbutton and its actions
+void MainMenu::LoadGameAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+            loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        else
+        {
+            loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            isMenuActive = false;
+            LoadGame();
+        }
+    }
+    else
+    {
+        loadButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
 }
 
 // Initialize the playbutton and its actions
@@ -60,10 +198,10 @@ void MainMenu::PlayAction(Rectangle btnBounds)
     if (CheckCollisionPointRec(mousePoint, btnBounds))
     {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-            playButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         else
         {
-            playButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         }
 
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
@@ -74,7 +212,7 @@ void MainMenu::PlayAction(Rectangle btnBounds)
     }
     else
     {
-        playButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     }
 }
 

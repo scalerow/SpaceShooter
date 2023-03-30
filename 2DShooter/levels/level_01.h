@@ -4,13 +4,27 @@
 #include <raylib.h>
 #include "enemy.h"
 #include "gameobjects.h"
+#include <vector>
 
-Enemy bossEnemy;
+class Level_01
+{
+private:
+    /* data */
+public:
+std::vector<Enemy> enemies;
+Texture2D defaultEnemyTexture;
+Texture2D defaultEnemyBulletTexture;
+Enemy boss;
 
-void SpawnBoss();
-void UpdateBoss();
-void isBossHit();
+    Level_01();
+    ~Level_01();
 
-void LevelComplete();
+    void DrawMultipleEnemies(std::vector<int> &xPositions);
+    void UnloadMultipleEnemies();
+    void SpawnBoss();
+    void UpdateBoss();
+    void isBossHit();
+    void LevelComplete();
+};
 
 #endif

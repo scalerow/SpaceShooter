@@ -1,7 +1,7 @@
 #include "gameobjects.h"
 
 struct Debris debris;
-
+struct PlayerData playerData;
 // Both one percent and one pixel shouldnt be initialized everytime this runs
 
 // For calculating X positions based on percentage
@@ -58,7 +58,7 @@ float CalculateObjectSizeY(float y)
 
 
 
-Texture2D LoadEnemyTexture()
+Texture2D LoadDefaultEnemyTexture()
 {
     Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
     ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
@@ -66,4 +66,14 @@ Texture2D LoadEnemyTexture()
     UnloadImage(defaultEnemyImg);
 
     return text;
+}
+
+Texture2D InitDefaultEnemyBulletTexture()
+{
+    Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
+    ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
+    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
+    UnloadImage(defaultEnemyBulletImg);
+    
+    return defaultenemyBulletTexture;
 }
