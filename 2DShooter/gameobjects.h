@@ -14,6 +14,7 @@ struct PlayerData
     int health;
     int currentLevel;
     int playerNumber;
+    char playerName[6 + 1] = "\0";
 };
 
 float CalculateXCoord(float x);

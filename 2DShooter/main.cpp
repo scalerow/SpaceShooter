@@ -120,6 +120,7 @@ void DrawGame()
         }
 
         game.NewPlayerName();
+        game.NewGameActions();
         game.RenderBackground(true);
         game.DrawNewGameMenu();
     }

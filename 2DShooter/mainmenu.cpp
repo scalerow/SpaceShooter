@@ -27,6 +27,8 @@ void MainMenu::InitMenu()
     loadButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    newGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     menuTexture = backgroundTxr;
     menuBackgroudPosition = {backgroundPos.x, backgroundPos.y};
 }
@@ -77,10 +79,11 @@ void MainMenu::DrawMainMenu()
 void MainMenu::DrawNewGameMenu() 
 {
     int enterNameWidth = MeasureText("ENTER NAME:", CalculateObjectSizeY(120.f));
-    DrawText("ENTER NAME:",CalculateXCoord(100/2) - CalculateObjectSizeX(enterNameWidth/2), CalculateYCoord(100/2) - CalculateObjectSizeY(200), CalculateObjectSizeY(120.f), GREEN);
+    DrawText("ENTER NAME:",CalculateXCoord(100/2) - CalculateObjectSizeX(enterNameWidth/2), CalculateYCoord(100/8), CalculateObjectSizeY(120.f), GREEN);
     int measureNameWidth = MeasureText(playerName, CalculateObjectSizeY(96));
-        
-    DrawTextEx(GetFontDefault(), playerName, {inputLines[0].x + CalculateObjectSizeX(15), CalculateYCoord(100/2) + CalculateObjectSizeY(120)}, CalculateObjectSizeY(96),CalculateObjectSizeX(45), GREEN);
+
+    DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x - 50), CalculateYCoord(100/2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);    
+    DrawTextEx(GetFontDefault(), playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100/2)}, CalculateObjectSizeY(96.f),CalculateObjectSizeX(45.f), GREEN);
     for(int i = 0; i < 6; i++)
     {
         if(inputLines.size() <= 6 && i != 0)
@@ -95,11 +98,70 @@ void MainMenu::DrawNewGameMenu()
 
         if(!std::isalpha(playerName[i]))
         {
-            DrawLineEx({inputLines[i].x, inputLines[i].y}, {inputLines[i].z, inputLines[i].w}, 10, GREEN);
+            DrawLineEx({CalculateObjectSizeX(inputLines[i].x), CalculateObjectSizeY(inputLines[i].y)}, {CalculateObjectSizeX(inputLines[i].z), CalculateObjectSizeY(inputLines[i].w)}, 10, GREEN);
         }
-        
     }
-    
+
+    int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
+
+    //ReadyButton
+    DrawText("READY", CalculateXCoord((100/4) * 3) - readyStringWidth, CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameReadyButtonColor);
+
+    //BackButton
+    DrawText("BACK", CalculateXCoord(100/4), CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameBackButtonColor);
+}
+
+void MainMenu::NewGameActions()
+{   
+    mousePoint = GetMousePosition();
+
+    int backStringWidth = MeasureText("BACK", CalculateObjectSizeY(96));
+    Rectangle backRec = {CalculateXCoord(100/4), CalculateYCoord((100/8) * 7), (float)backStringWidth, CalculateObjectSizeY(96)};
+
+    int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
+    Rectangle readyRec = {CalculateXCoord((100/4) * 3) - (float)readyStringWidth, CalculateYCoord((100/8) * 7), (float)readyStringWidth, CalculateObjectSizeY(96)};
+
+    if(CheckCollisionPointRec(mousePoint, backRec))
+    {
+         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            newGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            LoadMenu();
+        }
+        else
+        {
+            newGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+    }
+    else  newGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    if(CheckCollisionPointRec(mousePoint,readyRec))
+    {
+         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            if(playerData.size() == 0)
+            {
+                DrawRectangle(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), BLACK);
+                DrawRectangleLines(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), RED);
+                int headerStringWidth = MeasureText("You have five saved games - please remove one to continue", CalculateObjectSizeY(72));
+                DrawText("You have five saved games - please remove one to continue", CalculateXCoord(100/2) -  (headerStringWidth/2), CalculateYCoord(100/4),CalculateObjectSizeY(72),RED);
+                for(int i = 0; i <= playerData.size(); i++)
+                {
+                   //DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+                   DrawText("JAFFA", CalculateXCoord(100/2) - (MeasureText("JAFFA", CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+                }
+            }
+            else LoadGame();
+        }
+        else
+        {
+            newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+    }
+    else 
+    {
+        newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
 }
 
 void MainMenu::NewPlayerName()
@@ -144,10 +206,14 @@ void MainMenu::NewGameAction(Rectangle btnBounds)
     {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
-            Vector4 inputStart = {CalculateXCoord(100/2) - CalculateObjectSizeX(300), CalculateYCoord(100/2) + CalculateObjectSizeY(200), CalculateXCoord(100/2) - CalculateObjectSizeX(210), CalculateYCoord(100/2) +  CalculateObjectSizeY(200)};
+            Vector4 inputStart = {CalculateXCoord(100/2) - CalculateObjectSizeX(300), CalculateYCoord(100/2) + CalculateObjectSizeY(80), CalculateXCoord(100/2) - CalculateObjectSizeX(210), CalculateYCoord(100/2) +  CalculateObjectSizeY(80)};
             inputLines.push_back(inputStart);
             newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
             isMenuActive = false;
+            for(int i=0; i <= 6; i++)
+            {
+                playerName[i] =  '\0';
+            }
             NewGame();
             
         }

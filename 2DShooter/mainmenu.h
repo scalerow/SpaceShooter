@@ -19,6 +19,8 @@ public:
     Color loadButtonColor;
     Color exitButtonColor;
     Color settingsButtonColor;
+    Color newGameBackButtonColor;
+    Color newGameReadyButtonColor;
     bool shouldExit;
     bool isMenuActive;
     bool isNewGameActive;
@@ -27,6 +29,7 @@ public:
     char playerName[6 + 1] = "\0";  
     int letterCount = 0;
     std::vector<Vector4> inputLines;
+    std::vector<PlayerData> playerData;
 
 
     MainMenu(float &width, float &height);
@@ -34,17 +37,23 @@ public:
     void InitMenu();
     void InitNewGame();
 
+    //MainMenu
     void DrawMainMenu();
-    void DrawLoadGameMenu();
-    void DrawNewGameMenu();
-
-    void NewPlayerName();
-
     void LoadGameAction(Rectangle btnBounds);
     void NewGameAction(Rectangle btnBounds);
     void PlayAction(Rectangle btnBounds);
     void SettingsAction(Rectangle btnBounds);
     void ExitAction(Rectangle btnBounds);
+
+    //LoadGameMenu
+    void DrawLoadGameMenu();
+    
+    //NewGameMenu
+    void DrawNewGameMenu();
+    void NewPlayerName();
+    void NewGameActions();
+
+    
     void UnloadMenu();
 };
 
