@@ -36,6 +36,7 @@ void MainMenu::InitMenu()
 void MainMenu::InitNewGame() 
 {
     isNewGameActive = true;
+    isNewPlayerAllowed = true;
 }
 
 void MainMenu::DrawMainMenu()
@@ -139,16 +140,21 @@ void MainMenu::NewGameActions()
          if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
             newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            if(playerData.size() == 0)
+            if(playerData.size() == 0) // == 5
             {
-                DrawRectangle(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), BLACK);
-                DrawRectangleLines(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), RED);
-                int headerStringWidth = MeasureText("You have five saved games - please remove one to continue", CalculateObjectSizeY(72));
-                DrawText("You have five saved games - please remove one to continue", CalculateXCoord(100/2) -  (headerStringWidth/2), CalculateYCoord(100/4),CalculateObjectSizeY(72),RED);
-                for(int i = 0; i <= playerData.size(); i++)
+                isNewPlayerAllowed = false;
+                while(!isNewPlayerAllowed)
                 {
-                   //DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
-                   DrawText("JAFFA", CalculateXCoord(100/2) - (MeasureText("JAFFA", CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+                    DrawRectangle(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), BLACK);
+                    DrawRectangleLines(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), RED);
+                    int headerStringWidth = MeasureText("You have five saved games - please remove one to continue", CalculateObjectSizeY(72));
+                    DrawText("You have five saved games - please remove one to continue", CalculateXCoord(100/2) -  (headerStringWidth/2), CalculateYCoord(100/4),CalculateObjectSizeY(72),RED);
+                    for(int i = 0; i <= playerData.size(); i++)
+                    {
+                        
+                    //DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+                    DrawText("JAFFA", CalculateXCoord(100/2) - (MeasureText("JAFFA", CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+                    }
                 }
             }
             else LoadGame();
