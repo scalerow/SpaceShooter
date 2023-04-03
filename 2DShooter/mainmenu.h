@@ -13,22 +13,29 @@ class MainMenu : public Home
 private:
     /* data */
 public:
+    //Background used for menu
     Texture2D menuTexture;
     Vector2 menuBackgroudPosition;
+    //Color handling of buttons
     Color newGameButtonColor;
     Color loadButtonColor;
     Color exitButtonColor;
     Color settingsButtonColor;
     Color newGameBackButtonColor;
     Color newGameReadyButtonColor;
+    //Used for buttonclick events
+    Vector2 mousePoint;
+    //MenuAction booleans
     bool shouldExit;
     bool isMenuActive;
     bool isNewGameActive;
     bool isLoadGameActive;
-    Vector2 mousePoint;
+    //New game related
     char playerName[6 + 1] = "\0";  
     int letterCount = 0;
     std::vector<Vector4> inputLines;
+    //Game saves related
+    bool isNewPlayerAllowed;
     std::vector<PlayerData> playerData;
 
 
