@@ -59,6 +59,7 @@ public:
     void DrawNewGameMenu();
     void NewPlayerName();
     void NewGameActions();
+    void DrawOverwriteExisting();
 
     
     void UnloadMenu();

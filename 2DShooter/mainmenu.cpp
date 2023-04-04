@@ -79,37 +79,45 @@ void MainMenu::DrawMainMenu()
 
 void MainMenu::DrawNewGameMenu() 
 {
-    int enterNameWidth = MeasureText("ENTER NAME:", CalculateObjectSizeY(120.f));
-    DrawText("ENTER NAME:",CalculateXCoord(100/2) - CalculateObjectSizeX(enterNameWidth/2), CalculateYCoord(100/8), CalculateObjectSizeY(120.f), GREEN);
-    int measureNameWidth = MeasureText(playerName, CalculateObjectSizeY(96));
-
-    DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x - 50), CalculateYCoord(100/2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);    
-    DrawTextEx(GetFontDefault(), playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100/2)}, CalculateObjectSizeY(96.f),CalculateObjectSizeX(45.f), GREEN);
-    for(int i = 0; i < 6; i++)
+    if(!isNewPlayerAllowed)
     {
-        if(inputLines.size() <= 6 && i != 0)
-        {
-            Vector4 inputLine;
-            inputLine.x = inputLines[i-1].x + CalculateObjectSizeX(100);
-            inputLine.z = inputLines[i-1].z + CalculateObjectSizeX(100);
-            inputLine.y = inputLines[i-1].y;
-            inputLine.w = inputLines[i-1].w;
-            inputLines.push_back(inputLine);
-        }
-
-        if(!std::isalpha(playerName[i]))
-        {
-            DrawLineEx({CalculateObjectSizeX(inputLines[i].x), CalculateObjectSizeY(inputLines[i].y)}, {CalculateObjectSizeX(inputLines[i].z), CalculateObjectSizeY(inputLines[i].w)}, 10, GREEN);
-        }
+        DrawOverwriteExisting();
     }
+    else 
+    {
 
-    int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
+        int enterNameWidth = MeasureText("ENTER NAME:", CalculateObjectSizeY(120.f));
+        DrawText("ENTER NAME:",CalculateXCoord(100/2) - CalculateObjectSizeX(enterNameWidth/2), CalculateYCoord(100/8), CalculateObjectSizeY(120.f), GREEN);
+        int measureNameWidth = MeasureText(playerName, CalculateObjectSizeY(96));
 
-    //ReadyButton
-    DrawText("READY", CalculateXCoord((100/4) * 3) - readyStringWidth, CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameReadyButtonColor);
+        DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x - 50), CalculateYCoord(100/2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);    
+        DrawTextEx(GetFontDefault(), playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100/2)}, CalculateObjectSizeY(96.f),CalculateObjectSizeX(45.f), GREEN);
+        for(int i = 0; i < 6; i++)
+        {
+            if(inputLines.size() <= 6 && i != 0)
+            {
+                Vector4 inputLine;
+                inputLine.x = inputLines[i-1].x + CalculateObjectSizeX(100);
+                inputLine.z = inputLines[i-1].z + CalculateObjectSizeX(100);
+                inputLine.y = inputLines[i-1].y;
+                inputLine.w = inputLines[i-1].w;
+                inputLines.push_back(inputLine);
+            }
 
-    //BackButton
-    DrawText("BACK", CalculateXCoord(100/4), CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameBackButtonColor);
+            if(!std::isalpha(playerName[i]))
+            {
+                DrawLineEx({CalculateObjectSizeX(inputLines[i].x), CalculateObjectSizeY(inputLines[i].y)}, {CalculateObjectSizeX(inputLines[i].z), CalculateObjectSizeY(inputLines[i].w)}, 10, GREEN);
+            }
+        }
+
+        int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
+
+        //ReadyButton
+        DrawText("READY", CalculateXCoord((100/4) * 3) - readyStringWidth, CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameReadyButtonColor);
+
+        //BackButton
+        DrawText("BACK", CalculateXCoord(100/4), CalculateYCoord((100/8) * 7), CalculateObjectSizeY(96), newGameBackButtonColor);
+    }
 }
 
 void MainMenu::NewGameActions()
@@ -140,22 +148,9 @@ void MainMenu::NewGameActions()
          if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
             newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            if(playerData.size() == 0) // == 5
+            if(playerData.size() == 1) // == 5
             {
                 isNewPlayerAllowed = false;
-                while(!isNewPlayerAllowed)
-                {
-                    DrawRectangle(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), BLACK);
-                    DrawRectangleLines(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), RED);
-                    int headerStringWidth = MeasureText("You have five saved games - please remove one to continue", CalculateObjectSizeY(72));
-                    DrawText("You have five saved games - please remove one to continue", CalculateXCoord(100/2) -  (headerStringWidth/2), CalculateYCoord(100/4),CalculateObjectSizeY(72),RED);
-                    for(int i = 0; i <= playerData.size(); i++)
-                    {
-                        
-                    //DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
-                    DrawText("JAFFA", CalculateXCoord(100/2) - (MeasureText("JAFFA", CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
-                    }
-                }
             }
             else LoadGame();
         }
@@ -169,6 +164,29 @@ void MainMenu::NewGameActions()
         newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     }
 }
+
+void MainMenu::DrawOverwriteExisting()
+{
+    DrawRectangle(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), BLACK);
+    DrawRectangleLines(CalculateXCoord(100/4), CalculateYCoord(100/4), CalculateXCoord(100/2), CalculateYCoord(100/2), RED);
+    int headerStringWidth = MeasureText("You have five saved games", CalculateObjectSizeY(48)); 
+    int headerSecondLineWidth = MeasureText("please remove one to continue", CalculateObjectSizeY(48));
+    DrawText("You have five saved games", CalculateXCoord(100/2) -  (headerStringWidth/2), CalculateYCoord(100/4),CalculateObjectSizeY(48),RED);
+    DrawText("please remove one to continue", CalculateXCoord(100/2) -  (headerSecondLineWidth/2), CalculateYCoord(100/4) + CalculateObjectSizeY(55),CalculateObjectSizeY(48),RED);
+    DrawLineEx({CalculateXCoord((100/32) * 9),CalculateYCoord(100/4) + CalculateObjectSizeY(110)},{CalculateXCoord((100/32) * 24),CalculateYCoord(100/4) + CalculateObjectSizeY(110)},CalculateObjectSizeY(5),RED);
+    for(int i = 0; i < playerData.size(); i++)
+    {
+        char playerNumber[3 + sizeof(char)] = "";
+        sprintf(playerNumber, "%d.", playerData[i].playerNumber);
+        //DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
+        int playerNameWidth = MeasureText(playerData[i].playerName, CalculateObjectSizeY(48));
+        DrawText(playerData[i].playerName, CalculateXCoord((100/8) * 3) - (playerNameWidth/2),CalculateYCoord(100/2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48),RED);
+        DrawText(playerNumber, CalculateXCoord(100/4) + CalculateObjectSizeX(10),CalculateYCoord(100/2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48),RED);
+        int savedDateWidth = MeasureText(playerData[i].lastSaved, CalculateObjectSizeY(48));        
+        DrawText(playerData[i].lastSaved, CalculateXCoord((100/4) * 3) - CalculateObjectSizeX(savedDateWidth + 10),CalculateYCoord(100/2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48),RED);
+    }
+}
+
 
 void MainMenu::NewPlayerName()
 {
