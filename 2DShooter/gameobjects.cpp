@@ -56,7 +56,20 @@ float CalculateObjectSizeY(float y)
     return (y / 100) * scaling;
 }
 
+char* GetDateTimeNow()
+{
+    time_t rawtime;
+  struct tm * timeinfo;
+  char buffer [80];
 
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+
+  strftime (buffer,80,"%x %X",timeinfo);
+  puts (buffer);
+
+  return buffer;
+}
 
 Texture2D LoadDefaultEnemyTexture()
 {

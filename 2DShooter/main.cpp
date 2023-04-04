@@ -124,6 +124,13 @@ void DrawGame()
         if (!game.isNewGameActive)
         {
             game.InitNewGame();
+            PlayerData pD;
+            pD.currentLevel = 1;
+            pD.health = 200;
+            std::strcpy(pD.playerName, "ROBIN");
+            pD.playerNumber = 1;
+            std::strcpy(pD.lastSaved, GetDateTimeNow());
+            game.playerData.push_back(pD);
         }
 
         game.NewPlayerName();
