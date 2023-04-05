@@ -10,7 +10,6 @@
 #include "tools.h"
 #include "settings.h"
 #include "gameobjects.h"
-#include <raygui.h>
 #include <string>
 
 #ifdef PLATFORM_WEB
@@ -107,25 +106,22 @@ void DrawGame()
 
         game.RenderBackground(true);
         game.DrawMainMenu();
-        
     }
-    else if(game.activateLoadGame)
+    else if (game.activateLoadGame)
     {
-
     }
-    else if(game.activateNewGame)
+    else if (game.activateNewGame)
     {
         if (!game.isNewGameActive)
         {
             game.InitNewGame();
             PlayerData pD;
-            pD.currentLevel =1;
+            pD.currentLevel = 1;
             pD.health = 200;
-            std::strcpy(pD.playerName,"ROBIN");
+            std::strcpy(pD.playerName, "ROBIN");
             pD.playerNumber = 1;
             std::strcpy(pD.lastSaved, GetDateTimeNow());
             game.playerData.push_back(pD);
-
         }
 
         game.NewPlayerName();
@@ -134,7 +130,7 @@ void DrawGame()
         game.DrawNewGameMenu();
     }
     //////////////////////////////////
-    ///           GAME             ///   
+    ///           GAME             ///
     //////////////////////////////////
     else if (game.activateGame)
     {
@@ -153,9 +149,9 @@ void DrawGame()
             game.InitGame();
             player.InitPlayer(screenHeight, screenWidth);
         }
-    //////////////////////////////////
-    ///       GAME IS ACTIVE       ///
-    //////////////////////////////////
+        //////////////////////////////////
+        ///       GAME IS ACTIVE       ///
+        //////////////////////////////////
         if (!player.gameOver && !game.paused)
         {
             game.RenderBackground();
@@ -201,7 +197,7 @@ void DrawGame()
                 }
             }
 
-            if(IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
+            if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
             {
                 game.PauseGame();
             }
@@ -211,9 +207,9 @@ void DrawGame()
         //////////////////////////////////
         ///          GAME OVER         ///
         //////////////////////////////////
-        else if(player.gameOver)
+        else if (player.gameOver)
         {
-            
+
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
             {
                 // tools.enemies.clear();
@@ -235,7 +231,7 @@ void DrawGame()
         //////////////////////////////////
         ///           PAUSE            ///
         //////////////////////////////////
-        else if(game.paused)
+        else if (game.paused)
         {
             game.DrawPauseGame();
             game.UpdatePauseGame();
