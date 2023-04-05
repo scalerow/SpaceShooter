@@ -130,6 +130,14 @@ void MainMenu::NewGameActions()
     int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
     Rectangle readyRec = {CalculateXCoord((100 / 4) * 3) - (float)readyStringWidth, CalculateYCoord((100 / 8) * 7), (float)readyStringWidth, CalculateObjectSizeY(96)};
 
+    if(!isNewPlayerAllowed) 
+    {
+        if(CheckCollisionPointRec(mousePoint, {}))
+        {
+            
+        }
+    }
+
     // KEYBOARD ACTIONS
     // BACK BUTTON
     if (IsKeyReleased(KEY_ESCAPE))

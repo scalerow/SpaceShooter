@@ -38,7 +38,6 @@ public:
     bool isNewPlayerAllowed;
     std::vector<PlayerData> playerData;
 
-
     MainMenu(float &width, float &height);
     ~MainMenu();
     void InitMenu();
