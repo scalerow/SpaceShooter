@@ -10,6 +10,7 @@
 #include "tools.h"
 #include "settings.h"
 #include "gameobjects.h"
+#include "components.h"
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
@@ -53,6 +54,15 @@ int main(void)
     settings.InitGameSettings();
 
     SetTargetFPS(60);
+    vector<Components::ListObject> inputObjects;
+    for (int i = 0; i <= 4; i++)
+    {
+        Components::ListObject obj;
+        obj.key = i;
+        obj.value = "Jaffa";
+        inputObjects.push_back(obj);
+    }
+
     while (!game.shouldExit)
     {
         DrawGame();
@@ -105,10 +115,9 @@ void DrawGame()
 
         game.RenderBackground(true);
         game.DrawMainMenu();
-        
     }
     //////////////////////////////////
-    ///           GAME             ///   
+    ///           GAME             ///
     //////////////////////////////////
     else if (game.activateGame)
     {
@@ -127,9 +136,9 @@ void DrawGame()
             game.InitGame();
             player.InitPlayer(screenHeight, screenWidth);
         }
-    //////////////////////////////////
-    ///       GAME IS ACTIVE       ///
-    //////////////////////////////////
+        //////////////////////////////////
+        ///       GAME IS ACTIVE       ///
+        //////////////////////////////////
         if (!player.gameOver && !game.paused)
         {
             game.RenderBackground();
@@ -175,7 +184,7 @@ void DrawGame()
                 }
             }
 
-            if(IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
+            if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
             {
                 game.PauseGame();
             }
@@ -185,9 +194,9 @@ void DrawGame()
         //////////////////////////////////
         ///          GAME OVER         ///
         //////////////////////////////////
-        else if(player.gameOver)
+        else if (player.gameOver)
         {
-            
+
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
             {
                 // tools.enemies.clear();
@@ -209,7 +218,7 @@ void DrawGame()
         //////////////////////////////////
         ///           PAUSE            ///
         //////////////////////////////////
-        else if(game.paused)
+        else if (game.paused)
         {
             game.DrawPauseGame();
             game.UpdatePauseGame();

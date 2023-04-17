@@ -29,7 +29,8 @@
                 "${fileDirname}\\tools.cpp",
                 "${fileDirname}\\settings.cpp",
                 "${fileDirname}\\gameobjects.cpp",
-                "${fileDirname}\\highscore.cpp"
+                "${fileDirname}\\highscore.cpp",
+                "${fileDirname}\\components.cpp"
 
 
             ],

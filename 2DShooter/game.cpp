@@ -56,12 +56,16 @@ void Game::DrawGameUI(int &health, int &score)
     DrawText(stringPlayerHealth, CalculateXCoord(100 - 10.416f) - healthStringWidth, CalculateYCoord(88.7f), CalculateObjectSizeY(72.f), WHITE);
 }
 
+// For ARCADE MODE
 void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
 {
+    // Diffuse background
     RenderBackground(true);
+    // Measuring the text GAME OVER to be able to position it correctly, than draw it
     int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(120.f));
     DrawText("GAME OVER", CalculateXCoord(100 / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(120.f), RED);
 
+    // Check if highscore is updated for this round - if it isnt (which it shouldnt be), updates highscore and save it to config file
     if (!highscores.highscoreUpdated)
     {
         highscores.UpdateHighscores(score);
@@ -70,28 +74,36 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
 #endif
     }
 
+    // Checking if theres a new highscore entry - if it is, change the color on highscore line
     Color highscoreAchievedTextColor = highscores.newHighscoreEntry ? Color({110, 20, 143, 255}) : RED;
 
+    // Creating char array of last score, measure the width of relevant text and draws it
     char stringPlayerScore[15 + sizeof(char)] = "";
     sprintf(stringPlayerScore, "Score: %d", score);
     int scoreStringWidth = MeasureText(stringPlayerScore, CalculateObjectSizeY(100));
     DrawText(stringPlayerScore, CalculateXCoord(100 / 2) - (scoreStringWidth / 2), CalculateYCoord(100 / 2) - CalculateYCoord(18.56f), CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
 
+    // Header for highscore-table is measured for positioning, then drawn - along with a line to separate it from the actual list of highscores
     int highscoreLabelWidth = MeasureText("Highscores", CalculateObjectSizeY(72.f));
     DrawText("Highscores", CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2), CalculateYCoord(100 / 2) - CalculateYCoord(4.26f), CalculateObjectSizeY(72.f), RED);
     DrawLineEx({CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), CalculateYCoord(100 / 2) + CalculateYCoord(3.f)}, {CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f), CalculateYCoord(100 / 2) + CalculateYCoord(3.f)}, 8.f, RED);
 
+    // Init an int for positioning of each line of highscore, is appended to.
     int highscoresPosition = CalculateYCoord(100 / 2) + CalculateYCoord(3.f);
     for (int i = 0; i < highscores.highScores.size(); i++)
     {
+        // Appends to highscore position to make it ready for next line
         highscoresPosition += CalculateYCoord(7.08f);
 
+        // Measuring highscore, highscore-position
         char scoreString[15 + sizeof(char)] = "";
         sprintf(scoreString, "%d", highscores.highScores[i]);
         char scorePosString[5 + sizeof(char)] = "";
         sprintf(scorePosString, "%d.", i + 1);
         int scoreStringWidth = MeasureText(scoreString, CalculateObjectSizeY(48.f));
         int scorePosStringWidth = MeasureText(scorePosString, CalculateObjectSizeY(48.f));
+
+        // Checking if the new score is among the highscores, to color it differently (this soultion isnt that well thought through) Drawing the list of highscores
         if (highscores.highScores[i] == score)
         {
             DrawText(scoreString, CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), highscoreAchievedTextColor);
@@ -104,6 +116,7 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
         }
     }
 
+    // Measuring and drawing info text
     int subTextWidth = MeasureText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", CalculateObjectSizeY(36.f));
     DrawText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(100 - 4.63f), CalculateObjectSizeY(36.f), RED);
 }

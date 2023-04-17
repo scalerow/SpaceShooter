@@ -1,87 +1,118 @@
 #include "components.h"
+#include <raylib.h>
 
 using namespace Components;
 
 struct ListObject;
 
-ListBox::ListBox()
+ListBox::ListBox() : Events{}
 {
-}
-
-ListBox::ListBox()
-{
-    ListBoxDraw();
-    Rectangle test = {0, 0, 0, 0};
-    ListBoxActions(Clicking);
 }
 
 ListBox::~ListBox()
 {
 }
 
-void ListBox::ListBoxActions(void (*func)())
+void ListBox::ListBoxInitialize()
+{
+    if (inputObject.size() == 0)
+    {
+        return;
+    }
+    textActionColor = ColorAlpha(textColor, 120);
+    textActiveColor = textColor;
+    if (clickableRecs.size() < inputObject.size())
+    {
+        listRectangle.width = width;
+        for (int i = 0; i < inputObject.size(); i++)
+        {
+            float rectHeight = (inputObject.size() * fontSize) + (8 * inputObject.size());
+            Rectangle lineRec = {position.x, (position.y) + ((fontSize + 5) * inputObject[i].key), (float)width, rectHeight};
+            clickableRecs.push_back(lineRec);
+        }
+    }
+    float rectHeight = (inputObject.size() * fontSize) + (8 * inputObject.size());
+    listRectangle = {position.x, position.y, (float)width, rectHeight};
+}
+
+bool ListBox::ListBoxAction(ListObject &obj)
 {
     mousePoint = GetMousePosition();
-    
-    for (int i = 0; 0 <= clickableRecs.size(); i++)
-    {   
-         Events::DefaultEvent event =  Events::ClickRectangleEvent(clickableRecs[i]);
-        if (event.click)
-        {
-            func();
-        }
-        if(event.hover)
-        {
-            BeginBlendMode(BLEND_ADD_COLORS);
-                ColorAlphaBlend(textColor, textColor,DARKGRAY);
-            EndBlendMode();
-        }
+
+    DefaultEvent event = HandleRectangleEvent(clickableRecs[obj.key]);
+
+    if (event.click)
+    {
+        itemClicked.key = obj.key;
+        itemClicked.value = obj.value;
+        textActiveColor = textActionColor;
+        return event.click;
+    }
+    else
+    {
+        return false;
+    }
+    if (event.hover)
+    {
+        textActiveColor = textActionColor;
+    }
+    else
+    {
+        textActiveColor = textColor;
     }
 }
 
-void ListBox::ListBoxDraw()
+void ListBox::ListBoxDrawItem(ListObject &obj)
 {
-    int rectHeight = (inputObject.size() * fontSize) + (5 * inputObject.size());
-    Rectangle listRect = {position.x, position.y, width, rectHeight};
+    Vector2 linePos = {position.x, (position.y + 10) + ((fontSize + 5) * obj.key)};
+    if (includeIndex)
+    {
+        char indexString[5 + sizeof(char)] = "";
+        sprintf(indexString, "%d", obj.key);
+        DrawText(indexString, linePos.x + 10, linePos.y, fontSize, textActiveColor);
+    }
+    int valueWidth = MeasureText(obj.value.c_str(), fontSize);
+    DrawText(obj.value.c_str(), (linePos.x - 10) + (listRectangle.width - valueWidth), linePos.y, fontSize, textActiveColor);
+}
 
+void ListBox::ListBoxRectangleDraw()
+{
     if (!transparent)
     {
-        DrawRectangleRec(listRect, fillColor);
+        DrawRectangleRec(listRectangle, fillColor);
     }
 
-    DrawRectangleLinesEx(listRect, 5, outlineColor);
+    DrawRectangleLinesEx(listRectangle, 5, outlineColor);
+}
+
+void ListBox::HandleListBox()
+{
+    ListBoxRectangleDraw();
 
     for (int i = 0; i < inputObject.size(); i++)
     {
-        if (includeIndex)
-        {
-            char indexString[5 + sizeof(char)] = "";
-            sprintf(indexString, "%d", inputObject[i].key);
-            DrawText(indexString, position.x + 10, position.y + ((fontSize + 5) * i), fontSize, textColor);
-        }
-        int valueWidth = MeasureText(inputObject[i].value.c_str(), fontSize);
-        DrawText(inputObject[i].value.c_str(), (position.x - 10) + (listRect.width - valueWidth), position.y + ((fontSize + 5) * i), fontSize, textColor);
+        ListBoxAction(inputObject[i]);
+        ListBoxDrawItem(inputObject[i]);
     }
 }
 
-Events::Events(){}
-Events::~Events(){}
-
+Events::Events() {}
+Events::~Events() {}
 
 struct Events::DefaultEvent;
 
-Events::DefaultEvent Events::ClickRectangleEvent(Rectangle clickArea) 
+Events::DefaultEvent Events::HandleRectangleEvent(Rectangle clickArea)
 {
     DefaultEvent rectangeEvent;
     rectangeEvent.click = false;
     rectangeEvent.hover = false;
 
-    mousePoint = GetMousePosition();     
-    if(CheckCollisionPointRec(mousePoint, clickArea))
+    mousePoint = GetMousePosition();
+    if (CheckCollisionPointRec(mousePoint, clickArea))
     {
         rectangeEvent.hover = true;
 
-        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         {
             rectangeEvent.click = true;
         }
