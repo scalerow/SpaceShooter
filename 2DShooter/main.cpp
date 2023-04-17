@@ -11,6 +11,7 @@
 #include "settings.h"
 #include "gameobjects.h"
 #include "components.h"
+#include <string>
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
