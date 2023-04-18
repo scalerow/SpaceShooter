@@ -39,9 +39,10 @@ bool ListBox::ListBoxAction(ListObject &obj)
 {
     mousePoint = GetMousePosition();
 
-    DefaultEvent event = HandleRectangleEvent(clickableRecs[obj.key]);
+    HandleRectangleEvent(
+        clickableRecs[obj.key], eventData.Callback);
 
-    if (event.click)
+    if (eventData.Callback.)
     {
         itemClicked.key = obj.key;
         itemClicked.value = obj.value;
@@ -101,24 +102,24 @@ Events::~Events() {}
 
 struct Events::DefaultEvent;
 
-Events::DefaultEvent Events::HandleRectangleEvent(Rectangle clickArea)
+void Events::HandleRectangleEvent(Rectangle &hitBox, DefaultEvent &event, const std::function<void()> &verifyEvent)
 {
-    DefaultEvent rectangeEvent;
-    rectangeEvent.click = false;
-    rectangeEvent.hover = false;
+    event.click = false;
+    event.hover = false;
 
     mousePoint = GetMousePosition();
-    if (CheckCollisionPointRec(mousePoint, clickArea))
+    if (CheckCollisionPointRec(mousePoint, hitBox))
     {
-        rectangeEvent.hover = true;
+
+        event.hover = true;
+        verifyEvent(rectangeEvent);
 
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         {
-            rectangeEvent.click = true;
+            event.click = true;
+            verifyEvent(rectangeEvent);
         }
     }
-
-    return rectangeEvent;
 }
 
 void Clicking()

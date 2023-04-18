@@ -7,34 +7,35 @@
 #include "gameobjects.h"
 #include <vector>
 #include <ctype.h>
+#include "components.h"
 
 class MainMenu : public Home
 {
 private:
     /* data */
 public:
-    //Background used for menu
+    // Background used for menu
     Texture2D menuTexture;
     Vector2 menuBackgroudPosition;
-    //Color handling of buttons
+    // Color handling of buttons
     Color newGameButtonColor;
     Color loadButtonColor;
     Color exitButtonColor;
     Color settingsButtonColor;
     Color newGameBackButtonColor;
     Color newGameReadyButtonColor;
-    //Used for buttonclick events
+    // Used for buttonclick events
     Vector2 mousePoint;
-    //MenuAction booleans
+    // MenuAction booleans
     bool shouldExit;
     bool isMenuActive;
     bool isNewGameActive;
     bool isLoadGameActive;
-    //New game related
-    char playerName[6 + 1] = "\0";  
+    // New game related
+    char playerName[6 + 1] = "\0";
     int letterCount = 0;
     std::vector<Vector4> inputLines;
-    //Game saves related
+    // Game saves related
     bool isNewPlayerAllowed;
     std::vector<PlayerData> playerData;
 
@@ -43,7 +44,7 @@ public:
     void InitMenu();
     void InitNewGame();
 
-    //MainMenu
+    // MainMenu
     void DrawMainMenu();
     void LoadGameAction(Rectangle btnBounds);
     void NewGameAction(Rectangle btnBounds);
@@ -51,16 +52,15 @@ public:
     void SettingsAction(Rectangle btnBounds);
     void ExitAction(Rectangle btnBounds);
 
-    //LoadGameMenu
+    // LoadGameMenu
     void DrawLoadGameMenu();
-    
-    //NewGameMenu
+
+    // NewGameMenu
     void DrawNewGameMenu();
     void NewPlayerName();
     void NewGameActions();
     void DrawOverwriteExisting();
 
-    
     void UnloadMenu();
 };
 

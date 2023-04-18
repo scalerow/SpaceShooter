@@ -1,4 +1,5 @@
 #include "mainmenu.h"
+#include <memory>
 
 MainMenu::MainMenu(float &width, float &height) : Home{width, height}
 {
@@ -77,6 +78,7 @@ void MainMenu::DrawMainMenu()
     DrawRectangleLinesEx(menuRec, 10.f, GREEN);
 }
 
+// This should be made into a reusable component, to utilize it in arcade mode when getting a highscore
 void MainMenu::DrawNewGameMenu()
 {
     if (!isNewPlayerAllowed)
@@ -130,11 +132,10 @@ void MainMenu::NewGameActions()
     int readyStringWidth = MeasureText("READY", CalculateObjectSizeY(96));
     Rectangle readyRec = {CalculateXCoord((100 / 4) * 3) - (float)readyStringWidth, CalculateYCoord((100 / 8) * 7), (float)readyStringWidth, CalculateObjectSizeY(96)};
 
-    if(!isNewPlayerAllowed) 
+    if (!isNewPlayerAllowed)
     {
-        if(CheckCollisionPointRec(mousePoint, {}))
+        if (CheckCollisionPointRec(mousePoint, {}))
         {
-            
         }
     }
 
@@ -218,6 +219,7 @@ void MainMenu::NewGameActions()
 
 void MainMenu::DrawOverwriteExisting()
 {
+
     DrawRectangle(CalculateXCoord(100 / 4), CalculateYCoord(100 / 4), CalculateXCoord(100 / 2), CalculateYCoord(100 / 2), BLACK);
     DrawRectangleLines(CalculateXCoord(100 / 4), CalculateYCoord(100 / 4), CalculateXCoord(100 / 2), CalculateYCoord(100 / 2), RED);
     int headerStringWidth = MeasureText("You have five saved games", CalculateObjectSizeY(48));

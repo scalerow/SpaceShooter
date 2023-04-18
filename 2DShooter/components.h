@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 #include "gameobjects.h"
 
 namespace Components
@@ -24,7 +25,7 @@ namespace Components
         Events();
         ~Events();
 
-        DefaultEvent HandleRectangleEvent(Rectangle clickArea);
+        void HandleRectangleEvent(Rectangle &hitBox, DefaultEvent event, const std::function<void()> &verifyHit);
     };
 #endif
 
@@ -51,6 +52,12 @@ namespace Components
         Vector2 mousePoint;
         std::vector<Rectangle> clickableRecs;
         Rectangle listRectangle;
+        struct EventData
+        {
+            std::function<void()> Callback;
+            DefaultEvent eventType;
+        };
+        EventData eventData;
         Color textActiveColor;
         void ListBoxDrawItem(ListObject &obj);
         bool ListBoxAction(ListObject &obj);
