@@ -16,16 +16,10 @@ namespace Components
     private:
     public:
         Vector2 mousePoint;
-        struct DefaultEvent
-        {
-            bool hover = false;
-            bool click = false;
-        };
-
         Events();
         ~Events();
 
-        void HandleRectangleEvent(Rectangle &hitBox, DefaultEvent event, const std::function<void()> &verifyHit);
+        void HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bool)> &click, const std::function<void(bool)> &hover);
     };
 #endif
 
@@ -33,6 +27,12 @@ namespace Components
     {
         int key;
         std::string value;
+    };
+
+    struct HoveringItem
+    {
+        bool hovering = false;
+        int index = 0;
     };
 
 #ifndef LISTBOX_H
@@ -52,20 +52,14 @@ namespace Components
         Vector2 mousePoint;
         std::vector<Rectangle> clickableRecs;
         Rectangle listRectangle;
-        struct EventData
-        {
-            std::function<void()> Callback;
-            DefaultEvent eventType;
-        };
-        EventData eventData;
         Color textActiveColor;
         void ListBoxDrawItem(ListObject &obj);
-        bool ListBoxAction(ListObject &obj);
+        void ListBoxAction(ListObject &obj);
         void ListBoxRectangleDraw();
+        HoveringItem hoveringItem;
 
     public:
-        std::vector<ListObject> inputObject;
-        bool isItemClicked;
+        std::vector<ListObject> data;
         ListObject itemClicked;
         Vector2 position;
         int width = 500;
@@ -81,6 +75,7 @@ namespace Components
         void HandleListBox();
         void ListBoxInitialize();
         ListBox();
+        ListBox(std::vector<ListObject> initData, int initWidth, int initFontSize, Vector2 initPosition, bool includeIndex);
         ~ListBox();
     };
 #endif

@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 #include <time.h>
-#include <stdio.h> 
+#include <stdio.h>
 
 struct Debris
 {
@@ -11,7 +11,7 @@ struct Debris
     Vector2 Position;
 };
 
-struct PlayerData 
+struct PlayerData
 {
     int health;
     int currentLevel;
@@ -26,7 +26,7 @@ float CalculateByPixelsX(float x);
 float CalculateByPixelsY(float y);
 float CalculateObjectSizeX(float x);
 float CalculateObjectSizeY(float y);
-char* GetDateTimeNow();
+char *GetDateTimeNow();
 
 Texture2D LoadDefaultEnemyTexture();
 Texture2D InitDefaultEnemyBulletTexture();

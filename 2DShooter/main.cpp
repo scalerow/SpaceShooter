@@ -63,10 +63,18 @@ int main(void)
         obj.value = "Jaffa";
         inputObjects.push_back(obj);
     }
+    Components::ListBox listBox = Components::ListBox(inputObjects, 400, 25, {(screenWidth / 2) - 200, screenHeight / 2}, true);
 
     while (!game.shouldExit)
     {
-        DrawGame();
+        BeginDrawing();
+        ClearBackground(BLACK);
+        listBox.HandleListBox();
+        char indexClicked[15 + sizeof(char)] = "";
+        sprintf(indexClicked, "ItemClicked: %d", listBox.itemClicked.key);
+        DrawText(indexClicked, (screenWidth / 2) - 200, (screenHeight / 4) * 3, 48, YELLOW);
+        EndDrawing();
+        // DrawGame();
     }
 #endif
     UnloadTexture(game.gameTexture);

@@ -56,19 +56,19 @@ float CalculateObjectSizeY(float y)
     return (y / 100) * scaling;
 }
 
-char* GetDateTimeNow()
+char *GetDateTimeNow()
 {
     time_t rawtime;
-  struct tm * timeinfo;
-  char buffer [80];
+    struct tm *timeinfo;
+    char buffer[80];
 
-  time (&rawtime);
-  timeinfo = localtime (&rawtime);
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
 
-  strftime (buffer,80,"%x %X",timeinfo);
-  puts (buffer);
+    strftime(buffer, 80, "%x %X", timeinfo);
+    puts(buffer);
 
-  return buffer;
+    return buffer;
 }
 
 Texture2D LoadDefaultEnemyTexture()
@@ -87,6 +87,6 @@ Texture2D InitDefaultEnemyBulletTexture()
     ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
-    
+
     return defaultenemyBulletTexture;
 }
