@@ -4,6 +4,7 @@
 using namespace Components;
 
 struct ListObject;
+struct EventType;
 
 ListBox::ListBox() : Events{}
 {
@@ -17,20 +18,23 @@ ListBox::~ListBox()
 {
 }
 
+// Initializes and calaculates hitboxes and other data
 void ListBox::ListBoxInitialize()
 {
     if (data.size() == 0)
     {
         return;
     }
+    // Set init color for text
     textActiveColor = textColor;
+
+    // Creates rectangle hitboxes for listbox-data
     if (clickableRecs.size() < data.size())
     {
         listRectangle.width = width;
         for (int i = 0; i < data.size(); i++)
         {
-            float rectHeight = (data.size() * fontSize) + (8 * data.size());
-            Rectangle lineRec = {position.x, (position.y) + ((fontSize + 5) * data[i].key), (float)width, rectHeight};
+            Rectangle lineRec = {position.x, (position.y + 10) + ((fontSize + 5) * data[i].key), (float)width, fontSize};
             clickableRecs.push_back(lineRec);
         }
     }
@@ -38,63 +42,39 @@ void ListBox::ListBoxInitialize()
     listRectangle = {position.x, position.y, (float)width, rectHeight};
 }
 
-void ListBox::ListBoxAction(ListObject &obj)
+// Handle click and hover events in listbox
+void ListBox::ListBoxAction(ListObject &obj, int &index)
 {
-    bool isClicked = false;
-    bool isHovering = false;
-
-    auto click = [&isClicked](bool click) -> bool
+    auto click = [&](bool click) -> void
     {
-        isClicked = click;
-        return click;
+        obj.eventType.click = click;
     };
-    auto hover = [&isHovering](bool hover) -> bool
+    auto hover = [&](bool hover) -> void
     {
-        isHovering = hover;
-        return hover;
+        obj.eventType.hover = hover;
     };
 
     HandleRectangleEvent(
         clickableRecs[obj.key], click, hover);
-
-    if (isClicked)
-    {
-        itemClicked.key = obj.key;
-        itemClicked.value = obj.value;
-        textActiveColor = textActionColor;
-    }
-    else
-    {
-        textActiveColor = textColor;
-    }
-
-    if (isHovering)
-    {
-        hoveringItem.hovering = true;
-        hoveringItem.index = obj.key;
-    }
-    else
-    {
-        hoveringItem.hovering = false;
-        hoveringItem.index = obj.key;
-    }
 }
 
+// Draw items in listbox
 void ListBox::ListBoxDrawItem(ListObject &obj)
 {
-    bool hovering = hoveringItem.hovering && hoveringItem.index == obj.key;
+    bool action = obj.eventType.click || obj.eventType.hover;
 
     Vector2 linePos = {position.x, (position.y + 10) + ((fontSize + 5) * obj.key)};
     if (includeIndex)
     {
         char indexString[5 + sizeof(char)] = "";
         sprintf(indexString, "%d", obj.key);
-        DrawText(indexString, linePos.x + 10, linePos.y, fontSize, hovering ? textActionColor : textActiveColor);
+        DrawText(indexString, linePos.x + 10, linePos.y, fontSize, action ? textActionColor : textActiveColor);
     }
     int valueWidth = MeasureText(obj.value.c_str(), fontSize);
-    DrawText(obj.value.c_str(), (linePos.x - 10) + (listRectangle.width - valueWidth), linePos.y, fontSize, hovering ? textActionColor : textActiveColor);
+    DrawText(obj.value.c_str(), (linePos.x - 10) + (listRectangle.width - valueWidth), linePos.y, fontSize, action ? textActionColor : textActiveColor);
 }
 
+// Draws outline of listbox
 void ListBox::ListBoxRectangleDraw()
 {
     if (!transparent)
@@ -105,13 +85,14 @@ void ListBox::ListBoxRectangleDraw()
     DrawRectangleLinesEx(listRectangle, 5, outlineColor);
 }
 
+// Use listbox
 void ListBox::HandleListBox()
 {
     ListBoxRectangleDraw();
 
     for (int i = 0; i < data.size(); i++)
     {
-        ListBoxAction(data[i]);
+        ListBoxAction(data[i], i);
         ListBoxDrawItem(data[i]);
     }
 }
@@ -124,6 +105,7 @@ void Events::HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bo
     mousePoint = GetMousePosition();
     if (CheckCollisionPointRec(mousePoint, hitBox))
     {
+        hover(true);
 
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         {
@@ -131,17 +113,12 @@ void Events::HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bo
         }
         else
         {
-            hover(true);
             click(false);
         }
     }
     else
     {
         hover(false);
+        click(false);
     }
-}
-
-void Clicking()
-{
-    printf("I've clicked something");
 }

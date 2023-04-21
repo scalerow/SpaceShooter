@@ -22,19 +22,17 @@ namespace Components
         void HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bool)> &click, const std::function<void(bool)> &hover);
     };
 #endif
-
+    struct EventType
+    {
+        bool hover;
+        bool click;
+    };
     struct ListObject
     {
         int key;
         std::string value;
+        EventType eventType;
     };
-
-    struct HoveringItem
-    {
-        bool hovering = false;
-        int index = 0;
-    };
-
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
@@ -54,20 +52,18 @@ namespace Components
         Rectangle listRectangle;
         Color textActiveColor;
         void ListBoxDrawItem(ListObject &obj);
-        void ListBoxAction(ListObject &obj);
+        void ListBoxAction(ListObject &obj, int &index);
         void ListBoxRectangleDraw();
-        HoveringItem hoveringItem;
 
     public:
         std::vector<ListObject> data;
-        ListObject itemClicked;
         Vector2 position;
         int width = 500;
         int fontSize = 16;
         bool includeIndex = true;
         bool transparent = false;
 
-        Color textActionColor = DARKGREEN;
+        Color textActionColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         Color outlineColor = GREEN;
         Color fillColor = BLANK;
         Color textColor = GREEN;
