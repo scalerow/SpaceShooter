@@ -25,7 +25,6 @@ SpaceShooter with arcade mode and campaign mode in progress
 - [Getting Started](#getting_started)
 - [Deployment](#deployment)
 - [Built Using](#built_using)
-- [TODO](#tasks)
 - [Authors](#authors)
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
@@ -45,5 +44,3 @@ raylib and boost
 ## ✍️ Authors <a name = "authors"></a>
 
 - [@scalerow](https://github.com/scalerow) - Idea & Initial work
-
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
