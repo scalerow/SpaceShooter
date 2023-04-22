@@ -28,6 +28,9 @@
 # VCPKG
 vcpkg*
 
+# VCPKG
+Examples*
+
 # Build
 build*
 webbuild*

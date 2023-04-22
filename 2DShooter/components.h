@@ -14,8 +14,8 @@ namespace Components
     class Events
     {
     private:
-    public:
         Vector2 mousePoint;
+    public:
         Events();
         ~Events();
 
@@ -38,16 +38,11 @@ namespace Components
 
     /*
     EXAMPLE OF LISTBOX INIT USING DEFAULT COLORS AND SIZE
-        Components::ListBox myListBox = Components::ListBox();
-        myListBox.position = {screenWidth / 2, screenHeight / 2};
-        myListBox.inputObject = inputObjects;
-        myListBox.fontSize = 40;
-        myListBox.ListBoxInitialize();
+        Components::ListBox listBox = Components::ListBox(inputObjects, 400, 25, {(screenWidth / 2) - 200, screenHeight / 2}, true);
     */
     class ListBox : public Events
     {
     private:
-        Vector2 mousePoint;
         std::vector<Rectangle> clickableRecs;
         Rectangle listRectangle;
         Color textActiveColor;

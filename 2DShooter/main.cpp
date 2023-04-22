@@ -55,33 +55,10 @@ int main(void)
     settings.InitGameSettings();
 
     SetTargetFPS(60);
-    vector<Components::ListObject> inputObjects;
-    for (int i = 0; i <= 4; i++)
-    {
-        Components::ListObject obj;
-        obj.key = i;
-        obj.value = "Jaffa";
-        obj.eventType = {};
-        inputObjects.push_back(obj);
-    }
-    Components::ListBox listBox = Components::ListBox(inputObjects, 400, 25, {(screenWidth / 2) - 200, screenHeight / 2}, true);
-    int itemClicked = 0;
-    int previuoslyClickedItem = 0;
+    
     while (!game.shouldExit)
     {
-        BeginDrawing();
-        ClearBackground(BLACK);
-        listBox.HandleListBox();
-        char indexClicked[15 + sizeof(char)] = "";
-        for (int i = 0; i <= listBox.data.size(); i++)
-        {
-            listBox.data[i].eventType.click ? previuoslyClickedItem = listBox.data[i].key : itemClicked = previuoslyClickedItem;
-        }
-        sprintf(indexClicked, "ItemClicked: %d", itemClicked);
-        DrawText(indexClicked, (screenWidth / 2) - 200, (screenHeight / 4) * 3, 48, YELLOW);
-
-        EndDrawing();
-        // DrawGame();
+        DrawGame();
     }
 #endif
     UnloadTexture(game.gameTexture);
