@@ -8,7 +8,7 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/scalerow/SpaceShooter/issues)
+[![GitHub Issues]](https://github.com/scalerow/SpaceShooter/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/scalerow/SpaceShooter/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
@@ -26,7 +26,7 @@ SpaceShooter with arcade mode and campaign mode in progress
 - [Getting Started](#getting_started)
 - [Deployment](#deployment)
 - [Built Using](#built_using)
-- [TODO](./TODO.md)
+- [TODO](#tasks)
 - [Authors](#authors)
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
@@ -37,6 +37,19 @@ SpaceShooter with arcade mode and campaign mode in progress
 ### Prerequisites
 
 raylib and boost
+
+## Task list <a name = "tasks"></a>
+
+- [ ] #26
+- [ ] #25
+- [ ] #22
+- [ ] #20
+- [ ] #18
+- [ ] #15
+- [ ] #14
+- [ ] #7
+- [ ] #6
+- [ ] #5
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
