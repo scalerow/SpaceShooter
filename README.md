@@ -30,7 +30,7 @@ SpaceShooter with arcade mode and campaign mode in progress
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
-### Install raylib - checkout [raylig wiki](https://github.com/raysan5/raylib/wiki) for instructions.
+### Install raylib - checkout [raylib wiki](https://github.com/raysan5/raylib/wiki) for instructions.
 ### [Install boost](https://www.boost.org/) 
 
 ### Prerequisites
