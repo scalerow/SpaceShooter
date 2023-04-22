@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 #include "gameobjects.h"
 
 namespace Components
@@ -13,60 +14,51 @@ namespace Components
     class Events
     {
     private:
-    public:
         Vector2 mousePoint;
-        struct DefaultEvent
-        {
-            bool hover = false;
-            bool click = false;
-        };
-
+    public:
         Events();
         ~Events();
 
-        DefaultEvent HandleRectangleEvent(Rectangle clickArea);
+        void HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bool)> &click, const std::function<void(bool)> &hover);
     };
 #endif
-
+    struct EventType
+    {
+        bool hover;
+        bool click;
+    };
     struct ListObject
     {
         int key;
         std::string value;
+        EventType eventType;
     };
-
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
     /*
     EXAMPLE OF LISTBOX INIT USING DEFAULT COLORS AND SIZE
-        Components::ListBox myListBox = Components::ListBox();
-        myListBox.position = {screenWidth / 2, screenHeight / 2};
-        myListBox.inputObject = inputObjects;
-        myListBox.fontSize = 40;
-        myListBox.ListBoxInitialize();
+        Components::ListBox listBox = Components::ListBox(inputObjects, 400, 25, {(screenWidth / 2) - 200, screenHeight / 2}, true);
     */
     class ListBox : public Events
     {
     private:
-        Vector2 mousePoint;
         std::vector<Rectangle> clickableRecs;
         Rectangle listRectangle;
         Color textActiveColor;
         void ListBoxDrawItem(ListObject &obj);
-        bool ListBoxAction(ListObject &obj);
+        void ListBoxAction(ListObject &obj, int &index);
         void ListBoxRectangleDraw();
 
     public:
-        std::vector<ListObject> inputObject;
-        bool isItemClicked;
-        ListObject itemClicked;
+        std::vector<ListObject> data;
         Vector2 position;
         int width = 500;
         int fontSize = 16;
         bool includeIndex = true;
         bool transparent = false;
 
-        Color textActionColor = DARKGREEN;
+        Color textActionColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         Color outlineColor = GREEN;
         Color fillColor = BLANK;
         Color textColor = GREEN;
@@ -74,6 +66,7 @@ namespace Components
         void HandleListBox();
         void ListBoxInitialize();
         ListBox();
+        ListBox(std::vector<ListObject> initData, int initWidth, int initFontSize, Vector2 initPosition, bool includeIndex);
         ~ListBox();
     };
 #endif

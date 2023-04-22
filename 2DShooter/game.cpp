@@ -70,7 +70,13 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     {
         highscores.UpdateHighscores(score);
 #ifndef PLATFORM_WEB
-        settings.saveSettings("config.xml", highscores.highScores);
+    PlayerData pData;
+    pData.currentLevel = 1;
+    pData.health = 100;
+    pData.playerNumber = 3;
+    std::vector<PlayerData> pdatas;
+    pdatas.push_back(pData);
+        settings.saveSettings("config.xml", highscores.highScores, pdatas);
 #endif
     }
 

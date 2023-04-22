@@ -4,77 +4,77 @@
 using namespace Components;
 
 struct ListObject;
+struct EventType;
 
 ListBox::ListBox() : Events{}
 {
+}
+ListBox::ListBox(std::vector<ListObject> initData, int initWidth, int initFontSize, Vector2 initPosition, bool includeIndex) : data(initData), width(initWidth), fontSize(initFontSize), position(initPosition), includeIndex(includeIndex)
+{
+    ListBoxInitialize();
 }
 
 ListBox::~ListBox()
 {
 }
 
+// Initializes and calaculates hitboxes and other data
 void ListBox::ListBoxInitialize()
 {
-    if (inputObject.size() == 0)
+    if (data.size() == 0)
     {
         return;
     }
-    textActionColor = ColorAlpha(textColor, 120);
+    // Set init color for text
     textActiveColor = textColor;
-    if (clickableRecs.size() < inputObject.size())
+
+    // Creates rectangle hitboxes for listbox-data
+    if (clickableRecs.size() < data.size())
     {
         listRectangle.width = width;
-        for (int i = 0; i < inputObject.size(); i++)
+        for (int i = 0; i < data.size(); i++)
         {
-            float rectHeight = (inputObject.size() * fontSize) + (8 * inputObject.size());
-            Rectangle lineRec = {position.x, (position.y) + ((fontSize + 5) * inputObject[i].key), (float)width, rectHeight};
+            Rectangle lineRec = {position.x, (position.y + 10.f) + (((float)fontSize + 5.f) * data[i].key), (float)width, (float)fontSize};
             clickableRecs.push_back(lineRec);
         }
     }
-    float rectHeight = (inputObject.size() * fontSize) + (8 * inputObject.size());
+    float rectHeight = (data.size() * fontSize) + (8 * data.size());
     listRectangle = {position.x, position.y, (float)width, rectHeight};
 }
 
-bool ListBox::ListBoxAction(ListObject &obj)
+// Handle click and hover events in listbox
+void ListBox::ListBoxAction(ListObject &obj, int &index)
 {
-    mousePoint = GetMousePosition();
+    auto click = [&](bool click) -> void
+    {
+        obj.eventType.click = click;
+    };
+    auto hover = [&](bool hover) -> void
+    {
+        obj.eventType.hover = hover;
+    };
 
-    DefaultEvent event = HandleRectangleEvent(clickableRecs[obj.key]);
-
-    if (event.click)
-    {
-        itemClicked.key = obj.key;
-        itemClicked.value = obj.value;
-        textActiveColor = textActionColor;
-        return event.click;
-    }
-    else
-    {
-        return false;
-    }
-    if (event.hover)
-    {
-        textActiveColor = textActionColor;
-    }
-    else
-    {
-        textActiveColor = textColor;
-    }
+    HandleRectangleEvent(
+        clickableRecs[obj.key], click, hover);
 }
 
+// Draw items in listbox
 void ListBox::ListBoxDrawItem(ListObject &obj)
 {
+    bool action = obj.eventType.click || obj.eventType.hover;
+
     Vector2 linePos = {position.x, (position.y + 10) + ((fontSize + 5) * obj.key)};
     if (includeIndex)
     {
         char indexString[5 + sizeof(char)] = "";
         sprintf(indexString, "%d", obj.key);
-        DrawText(indexString, linePos.x + 10, linePos.y, fontSize, textActiveColor);
+        DrawText(indexString, linePos.x + 10, linePos.y, fontSize, action ? textActionColor : textActiveColor);
     }
     int valueWidth = MeasureText(obj.value.c_str(), fontSize);
-    DrawText(obj.value.c_str(), (linePos.x - 10) + (listRectangle.width - valueWidth), linePos.y, fontSize, textActiveColor);
+    DrawText(obj.value.c_str(), (linePos.x - 10) + (listRectangle.width - valueWidth), linePos.y, fontSize, action ? textActionColor : textActiveColor);
 }
 
+// Draws outline of listbox
 void ListBox::ListBoxRectangleDraw()
 {
     if (!transparent)
@@ -85,43 +85,41 @@ void ListBox::ListBoxRectangleDraw()
     DrawRectangleLinesEx(listRectangle, 5, outlineColor);
 }
 
+// Use listbox
 void ListBox::HandleListBox()
 {
     ListBoxRectangleDraw();
 
-    for (int i = 0; i < inputObject.size(); i++)
+    for (int i = 0; i < data.size(); i++)
     {
-        ListBoxAction(inputObject[i]);
-        ListBoxDrawItem(inputObject[i]);
+        ListBoxAction(data[i], i);
+        ListBoxDrawItem(data[i]);
     }
 }
 
 Events::Events() {}
 Events::~Events() {}
 
-struct Events::DefaultEvent;
-
-Events::DefaultEvent Events::HandleRectangleEvent(Rectangle clickArea)
+//Rectangle event handler
+void Events::HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bool)> &click, const std::function<void(bool)> &hover)
 {
-    DefaultEvent rectangeEvent;
-    rectangeEvent.click = false;
-    rectangeEvent.hover = false;
-
     mousePoint = GetMousePosition();
-    if (CheckCollisionPointRec(mousePoint, clickArea))
+    if (CheckCollisionPointRec(mousePoint, hitBox))
     {
-        rectangeEvent.hover = true;
+        hover(true);
 
         if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         {
-            rectangeEvent.click = true;
+            click(true);
+        }
+        else
+        {
+            click(false);
         }
     }
-
-    return rectangeEvent;
-}
-
-void Clicking()
-{
-    printf("I've clicked something");
+    else
+    {
+        hover(false);
+        click(false);
+    }
 }

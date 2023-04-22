@@ -11,6 +11,7 @@
 #include "settings.h"
 #include "gameobjects.h"
 #include "components.h"
+#include <string>
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
@@ -54,15 +55,7 @@ int main(void)
     settings.InitGameSettings();
 
     SetTargetFPS(60);
-    vector<Components::ListObject> inputObjects;
-    for (int i = 0; i <= 4; i++)
-    {
-        Components::ListObject obj;
-        obj.key = i;
-        obj.value = "Jaffa";
-        inputObjects.push_back(obj);
-    }
-
+    
     while (!game.shouldExit)
     {
         DrawGame();
@@ -85,7 +78,7 @@ void DrawGame()
     BeginDrawing();
     ClearBackground(BLACK);
 
-    if (!game.activateGame && !game.activateMenu && !game.activateSettings)
+    if (!game.activateGame && !game.activateMenu && !game.activateSettings && !game.activateLoadGame && !game.activateNewGame)
     {
         game.LoadMenu();
     }
@@ -115,6 +108,28 @@ void DrawGame()
 
         game.RenderBackground(true);
         game.DrawMainMenu();
+    }
+    else if (game.activateLoadGame)
+    {
+    }
+    else if (game.activateNewGame)
+    {
+        if (!game.isNewGameActive)
+        {
+            game.InitNewGame();
+            PlayerData pD;
+            pD.currentLevel = 1;
+            pD.health = 200;
+            std::strcpy(pD.playerName, "ROBIN");
+            pD.playerNumber = 1;
+            std::strcpy(pD.lastSaved, GetDateTimeNow());
+            game.playerData.push_back(pD);
+        }
+
+        game.NewPlayerName();
+        game.NewGameActions();
+        game.RenderBackground(true);
+        game.DrawNewGameMenu();
     }
     //////////////////////////////////
     ///           GAME             ///

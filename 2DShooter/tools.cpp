@@ -21,7 +21,7 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
 {
     if (enemies.size() <= 0)
     {
-        defaultEnemyTexture = LoadEnemyTexture();
+        defaultEnemyTexture = LoadDefaultEnemyTexture();
         InitEnemyBulletTexture();
     }
     for (int i = 0; i < 4; i++)
