@@ -73,7 +73,7 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     PlayerData pData;
     pData.currentLevel = 1;
     pData.health = 100;
-    pData.playerNumber = 3;
+    pData.playerId = 3;
     std::vector<PlayerData> pdatas;
     pdatas.push_back(pData);
         settings.saveSettings("config.xml", highscores.highScores, pdatas);

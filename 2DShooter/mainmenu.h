@@ -8,11 +8,16 @@
 #include <vector>
 #include <ctype.h>
 #include "components.h"
+#include <algorithm>
+#include <cstring>
 
 class MainMenu : public Home
 {
 private:
-    /* data */
+    std::vector<Components::ListObject> overWriteList = {};
+    Components::ListBox listBox;
+
+    bool compareListObject(const PlayerData& a, const PlayerData& b);
 public:
     // Background used for menu
     Texture2D menuTexture;
@@ -32,7 +37,7 @@ public:
     bool isNewGameActive;
     bool isLoadGameActive;
     // New game related
-    char playerName[6 + 1] = "\0";
+    PlayerData newPlayer;
     int letterCount = 0;
     std::vector<Vector4> inputLines;
     // Game saves related

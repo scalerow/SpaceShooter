@@ -13,9 +13,9 @@ struct Debris
 
 struct PlayerData
 {
-    int health;
-    int currentLevel;
-    int playerNumber;
+    int health = 100;
+    int currentLevel = 1;
+    int playerId;
     char playerName[6 + 1] = "\0";
     char lastSaved[80];
 };

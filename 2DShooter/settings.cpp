@@ -227,11 +227,11 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
             BOOST_FOREACH (PlayerData player,playerData)
             {   
                 char stringPlayerLevel[50 + sizeof(char)] = "";
-                sprintf(stringPlayerLevel, "settings.playerdata.player%d.level", player.playerNumber);
+                sprintf(stringPlayerLevel, "settings.playerdata.player%d.level", player.playerId);
                 tree.add(stringPlayerLevel, player.currentLevel);
                 
                 char stringPlayerHealth[50 + sizeof(char)] = "";
-                sprintf(stringPlayerHealth, "settings.playerdata.player%d.health", player.playerNumber);
+                sprintf(stringPlayerHealth, "settings.playerdata.player%d.health", player.playerId);
                 tree.add(stringPlayerHealth, player.health);
                 
             }
