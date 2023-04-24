@@ -227,13 +227,20 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
             BOOST_FOREACH (PlayerData player,playerData)
             {   
                 char stringPlayerLevel[50 + sizeof(char)] = "";
-                sprintf(stringPlayerLevel, "settings.playerdata.player%d.level", player.playerId);
+                sprintf(stringPlayerLevel, "settings.playerdata.%d.level", player.playerId);
                 tree.add(stringPlayerLevel, player.currentLevel);
                 
                 char stringPlayerHealth[50 + sizeof(char)] = "";
-                sprintf(stringPlayerHealth, "settings.playerdata.player%d.health", player.playerId);
+                sprintf(stringPlayerHealth, "settings.playerdata.%d.health", player.playerId);
                 tree.add(stringPlayerHealth, player.health);
                 
+                char stringPlayerName[50 + sizeof(char)] = "";
+                sprintf(stringPlayerName, "settings.playerdata.%d.name", player.playerId);
+                tree.add(stringPlayerName, player.playerName);
+
+                char stringPlayerLastSaved[50 + sizeof(char)] = "";
+                sprintf(stringPlayerLastSaved, "settings.playerdata.%d.saved", player.playerId);
+                tree.add(stringPlayerLastSaved, player.lastSaved);
             }
         }
         // Write property tree to XML file

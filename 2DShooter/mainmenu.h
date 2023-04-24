@@ -16,7 +16,10 @@ class MainMenu : public Home
 private:
     std::vector<Components::ListObject> overWriteList = {};
     Components::ListBox listBox;
+    Components::ListObject overWriteSelected;
 
+    void ReplaceSavedGameAction();
+    void DrawReplaceSavedGame();
     bool compareListObject(const PlayerData& a, const PlayerData& b);
 public:
     // Background used for menu

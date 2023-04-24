@@ -138,30 +138,8 @@ void MainMenu::NewGameActions()
         {
             if(listBox.data[i].eventType.click)
             {   
-                std::sort(playerData.begin(), playerData.end(), [](const PlayerData &a, const PlayerData &b){return a.playerId < b.playerId;});
-                newPlayer.playerId = playerData[playerData.size() -1].playerId + 1;
-                //Find playerData with the same playerId as the clicked item in list
-                auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData& obj){return obj.playerId == listBox.data[i].key;});
+                overWriteSelected = listBox.data[i];
                 
-                //Used for demonstrational purposes, to find the item in the list and use it to replace it realtime in the list
-                auto matchList = std::find_if(overWriteList.begin(), overWriteList.end(), [&](const Components::ListObject& obj){return obj.key == listBox.data[i].key;});
-                
-                //If theres a match, replace the player with the newly created player
-                if(matchPlayer != playerData.end())
-                {
-                    matchPlayer -> currentLevel = newPlayer.currentLevel;
-                    matchPlayer -> health = newPlayer.health;
-                    matchPlayer -> playerId = newPlayer.playerId;
-                    std::strcpy(matchPlayer -> playerName, newPlayer.playerName);
-                }
-                //Replaces item in the actual list, to visualize the effect of replacing player.
-                if(matchList != overWriteList.end())
-                {
-                    std::string playerName = newPlayer.playerName;
-                    matchList -> key = newPlayer.playerId;
-                    matchList -> value = playerName + "  " + newPlayer.lastSaved;
-                    listBox.data = overWriteList;
-                }
             }
         }
     }
@@ -287,6 +265,28 @@ void MainMenu::DrawOverwriteExisting()
     if(playerData.size() == listBox.data.size() && playerData.size() != 0)
     {
         listBox.HandleListBox();
+    }
+}
+
+void MainMenu::DrawReplaceSavedGame()
+{
+
+}
+
+void MainMenu::ReplaceSavedGameAction() 
+{
+    std::sort(playerData.begin(), playerData.end(), [](const PlayerData &a, const PlayerData &b){return a.playerId < b.playerId;});
+    newPlayer.playerId = playerData[playerData.size() -1].playerId + 1;
+    //Find playerData with the same playerId as the clicked item in list
+    auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData& obj){return obj.playerId == overWriteSelected.key;});
+    
+    //If theres a match, replace the player with the newly created player
+    if(matchPlayer != playerData.end())
+    {
+        matchPlayer -> currentLevel = newPlayer.currentLevel;
+        matchPlayer -> health = newPlayer.health;
+        matchPlayer -> playerId = newPlayer.playerId;
+        std::strcpy(matchPlayer -> playerName, newPlayer.playerName);
     }
 }
 
