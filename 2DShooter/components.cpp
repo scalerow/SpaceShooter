@@ -34,7 +34,7 @@ void ListBox::ListBoxInitialize()
         listRectangle.width = width;
         for (int i = 0; i < data.size(); i++)
         {
-            Rectangle lineRec = {position.x, (position.y + 10.f) + (((float)fontSize + 5.f) * data[i].key), (float)width, (float)fontSize};
+            Rectangle lineRec = {position.x, (position.y + 10.f) + (((float)fontSize + 5.f) * i), (float)width, (float)fontSize};
             clickableRecs.push_back(lineRec);
         }
     }
@@ -55,15 +55,15 @@ void ListBox::ListBoxAction(ListObject &obj, int &index)
     };
 
     HandleRectangleEvent(
-        clickableRecs[obj.key], click, hover);
+        clickableRecs[index], click, hover);
 }
 
 // Draw items in listbox
-void ListBox::ListBoxDrawItem(ListObject &obj)
+void ListBox::ListBoxDrawItem(ListObject &obj, int &lineNumber)
 {
     bool action = obj.eventType.click || obj.eventType.hover;
 
-    Vector2 linePos = {position.x, (position.y + 10) + ((fontSize + 5) * obj.key)};
+    Vector2 linePos = {position.x, (position.y + 10) + ((fontSize + 5) * lineNumber)};
     if (includeIndex)
     {
         char indexString[5 + sizeof(char)] = "";
@@ -93,14 +93,14 @@ void ListBox::HandleListBox()
     for (int i = 0; i < data.size(); i++)
     {
         ListBoxAction(data[i], i);
-        ListBoxDrawItem(data[i]);
+        ListBoxDrawItem(data[i], i);
     }
 }
 
 Events::Events() {}
 Events::~Events() {}
 
-//Rectangle event handler
+// Rectangle event handler
 void Events::HandleRectangleEvent(Rectangle &hitBox, const std::function<void(bool)> &click, const std::function<void(bool)> &hover)
 {
     mousePoint = GetMousePosition();

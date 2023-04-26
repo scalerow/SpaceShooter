@@ -181,7 +181,7 @@ void MainMenu::NewGameActions()
             {
                 activePlayer.playerId = IncrementPlayerId();
             }
-
+            ClearNewGameListData();
             playerData.push_back(activePlayer);
             LoadGame();
         }
@@ -224,6 +224,7 @@ void MainMenu::NewGameActions()
                 // If there is less than 5 saved games, start game with the new "save"
                 std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
                 playerData.push_back(activePlayer);
+                ClearNewGameListData();
                 LoadGame();
             }
         }
@@ -294,7 +295,9 @@ void MainMenu::ReplaceSavedGameAction()
     std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
     // Find playerData with the same playerId as the clicked item in list
     OverwritePlayerDataInList(playerData, activePlayer, overWriteSelected.key);
-
+    isNewPlayerAllowed = true;
+    overWriteList = {};
+    listBox = {};
     LoadGame();
 }
 
@@ -502,6 +505,12 @@ int MainMenu::IncrementPlayerId()
     int newPlayerId = playerData[playerData.size() - 1].playerId + 1;
 
     return newPlayerId;
+}
+
+void MainMenu::ClearNewGameListData()
+{
+    overWriteList = {};
+    listBox = {};
 }
 
 // Clear remenants of texture from memory

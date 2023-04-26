@@ -15,6 +15,7 @@ namespace Components
     {
     private:
         Vector2 mousePoint;
+
     public:
         Events();
         ~Events();
@@ -46,7 +47,7 @@ namespace Components
         std::vector<Rectangle> clickableRecs;
         Rectangle listRectangle;
         Color textActiveColor;
-        void ListBoxDrawItem(ListObject &obj);
+        void ListBoxDrawItem(ListObject &obj, int &lineNumber);
         void ListBoxAction(ListObject &obj, int &index);
         void ListBoxRectangleDraw();
 

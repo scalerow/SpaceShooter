@@ -26,6 +26,7 @@ private:
     void ReplaceSavedGameAction();
     void DrawReplaceSavedGame();
     int IncrementPlayerId();
+    void ClearNewGameListData();
 
 public:
     // Background used for menu
