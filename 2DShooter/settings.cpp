@@ -155,9 +155,6 @@ void Settings::LoadPlayerData(std::vector<PlayerData> &playerData)
 {
     try
     {
-        fullscreen = tree.get<bool>("settings.fullscreen");
-        soundActive = tree.get<bool>("settings.sound");
-
         BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.playerdata"))
         {
 
@@ -184,10 +181,8 @@ void Settings::LoadHighscores(std::vector<int> &highscores)
 {
     try
     {
-        fullscreen = tree.get<bool>("settings.fullscreen");
-        soundActive = tree.get<bool>("settings.sound");
 
-        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.playerData"))
+        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.highscores"))
         {
             int score = stoi(value.second.data());
             // The data function is used to access the data stored in a node.
@@ -216,6 +211,16 @@ void Settings::loadSettings(const std::string &filename, std::vector<int> &highs
     // Use get_child to find the node containing the modules, and iterate over
     // its children. If the path cannot be resolved, get_child throws.
     // A C++11 for-range loop would also work.
+    try
+    {
+        fullscreen = tree.get<bool>("settings.fullscreen");
+        soundActive = tree.get<bool>("settings.sound");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
     LoadHighscores(highscores);
     LoadPlayerData(playerData);
 }

@@ -133,8 +133,9 @@ void DrawGame()
         {
             game.UnloadMenu();
             highscores.highscoreUpdated = false;
+            settings.saveSettings("config.xml", highscores.highScores, game.playerData);
             game.InitGame();
-            player.InitPlayer(screenHeight, screenWidth);
+            player.InitPlayer(screenHeight, screenWidth, game.activePlayer);
         }
 
         if (IsWindowResized())
@@ -142,7 +143,7 @@ void DrawGame()
             screenHeight = GetScreenHeight();
             screenWidth = GetScreenWidth();
             game.InitGame();
-            player.InitPlayer(screenHeight, screenWidth);
+            player.InitPlayer(screenHeight, screenWidth, game.activePlayer);
         }
         //////////////////////////////////
         ///       GAME IS ACTIVE       ///

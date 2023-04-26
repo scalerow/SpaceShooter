@@ -38,7 +38,7 @@ public:
     Player();
     ~Player();
 
-    void InitPlayer(float screenHeight, float screenWidth);
+    void InitPlayer(float screenHeight, float screenWidth, PlayerData &activePlayer);
     void UpdatePlayer(float delta, Vector4 flightArea);
     void UpdateRightBullet();
     void UpdateLeftBullet();

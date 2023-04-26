@@ -10,13 +10,13 @@ Player::~Player()
 }
 
 // Initialize the plane for the game
-void Player::InitPlayer(float screenHeight, float screenWidth)
+void Player::InitPlayer(float screenHeight, float screenWidth, PlayerData &activePlayer)
 {
 
     Image planeImg = LoadImage("./media/space_plane_1.png");
     ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
     Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
-    
+
     Image bulletImg = LoadImage("./media/bullet_0.png");
     ImageResize(&bulletImg, CalculateObjectSizeX(bulletImg.width), CalculateObjectSizeY(bulletImg.height));
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
@@ -29,7 +29,7 @@ void Player::InitPlayer(float screenHeight, float screenWidth)
     gameOver = false;
     leftShotTimer = 0;
     rightShotTimer = 0;
-    health = 150;
+    health = activePlayer.health;
     score = 0;
     velocity = {400.f, 300.f};
     acceleration = {0.f, 0.f};
