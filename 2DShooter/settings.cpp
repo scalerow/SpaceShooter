@@ -151,28 +151,43 @@ void Settings::BackToMenu(Rectangle bounds)
     }
 }
 
-void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores)
+void Settings::LoadPlayerData(std::vector<PlayerData> &playerData)
 {
-    // Parse the XML into the property tree.
-    pt::read_xml(filename, tree);
-
-    // Use the throwing version of get to find the debug filename.
-    // If the path cannot be resolved, an exception is thrown.
-    
-    // highscores.push_back(tree.get<int>("settings.highscores"));
-
-    // Use the default-value version of get to find the debug level.
-    // Note that the default value is used to deduce the target type.
-
-    // Use get_child to find the node containing the modules, and iterate over
-    // its children. If the path cannot be resolved, get_child throws.
-    // A C++11 for-range loop would also work.
     try
     {
-        fullscreen = tree.get<bool>("settings.fullscreen"); 
+        fullscreen = tree.get<bool>("settings.fullscreen");
         soundActive = tree.get<bool>("settings.sound");
 
-        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.highscores"))
+        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.playerdata"))
+        {
+
+            PlayerData player;
+            std::string playerName = value.second.get<std::string>("playerName");
+            std::strcpy(player.playerName, playerName.c_str());
+            player.currentLevel = value.second.get<int>("currentLevel");
+            player.playerId = value.second.get<int>("playerId");
+            player.health = value.second.get<int>("health");
+            std::string lastSaved = value.second.get<std::string>("lastSaved");
+            std::strcpy(player.lastSaved, lastSaved.c_str());
+
+            // The data function is used to access the data stored in a node.
+            playerData.push_back(player);
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void Settings::LoadHighscores(std::vector<int> &highscores)
+{
+    try
+    {
+        fullscreen = tree.get<bool>("settings.fullscreen");
+        soundActive = tree.get<bool>("settings.sound");
+
+        BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.playerData"))
         {
             int score = stoi(value.second.data());
             // The data function is used to access the data stored in a node.
@@ -185,6 +200,26 @@ void Settings::loadSettings(const std::string &filename, std::vector<int> &highs
     }
 }
 
+void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData)
+{
+    // Parse the XML into the property tree.
+    pt::read_xml(filename, tree);
+
+    // Use the throwing version of get to find the debug filename.
+    // If the path cannot be resolved, an exception is thrown.
+
+    // highscores.push_back(tree.get<int>("settings.highscores"));
+
+    // Use the default-value version of get to find the debug level.
+    // Note that the default value is used to deduce the target type.
+
+    // Use get_child to find the node containing the modules, and iterate over
+    // its children. If the path cannot be resolved, get_child throws.
+    // A C++11 for-range loop would also work.
+    LoadHighscores(highscores);
+    LoadPlayerData(playerData);
+}
+
 void Settings::saveSettings(const std::string &filename)
 {
     try
@@ -195,7 +230,7 @@ void Settings::saveSettings(const std::string &filename)
         // Write property tree to XML file
         pt::write_xml(filename, tree);
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
@@ -208,7 +243,7 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
         tree.put("settings.filename", configFileName);
         tree.put("settings.fullscreen", fullscreen);
         tree.put("settings.sound", soundActive);
-        
+
         if (highscores.size() > 0)
         {
             tree.get_child("settings.highscores").erase("highscore");
@@ -222,31 +257,35 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
 
         if (playerData.size() > 0)
         {
-            tree.get_child("settings.playerdata").erase("player");
+            tree.get_child("settings").erase("playerdata");
 
-            BOOST_FOREACH (PlayerData player,playerData)
-            {   
+            BOOST_FOREACH (PlayerData player, playerData)
+            {
+                char stringPlayerId[50 + sizeof(char)] = "";
+                sprintf(stringPlayerId, "settings.playerdata.%d.playerId", player.playerId);
+                tree.add(stringPlayerId, player.playerId);
+
                 char stringPlayerLevel[50 + sizeof(char)] = "";
-                sprintf(stringPlayerLevel, "settings.playerdata.%d.level", player.playerId);
+                sprintf(stringPlayerLevel, "settings.playerdata.%d.currentLevel", player.playerId);
                 tree.add(stringPlayerLevel, player.currentLevel);
-                
+
                 char stringPlayerHealth[50 + sizeof(char)] = "";
                 sprintf(stringPlayerHealth, "settings.playerdata.%d.health", player.playerId);
                 tree.add(stringPlayerHealth, player.health);
-                
+
                 char stringPlayerName[50 + sizeof(char)] = "";
-                sprintf(stringPlayerName, "settings.playerdata.%d.name", player.playerId);
+                sprintf(stringPlayerName, "settings.playerdata.%d.playerName", player.playerId);
                 tree.add(stringPlayerName, player.playerName);
 
                 char stringPlayerLastSaved[50 + sizeof(char)] = "";
-                sprintf(stringPlayerLastSaved, "settings.playerdata.%d.saved", player.playerId);
+                sprintf(stringPlayerLastSaved, "settings.playerdata.%d.lastSaved", player.playerId);
                 tree.add(stringPlayerLastSaved, player.lastSaved);
             }
         }
         // Write property tree to XML file
         pt::write_xml(filename, tree);
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }

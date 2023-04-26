@@ -13,7 +13,7 @@ struct Debris
 
 struct PlayerData
 {
-    int health = 100;
+    int health = 150;
     int currentLevel = 1;
     int playerId;
     char playerName[6 + 1] = "\0";

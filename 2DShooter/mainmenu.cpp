@@ -16,6 +16,8 @@ MainMenu::~MainMenu()
 // Initialize mainmenu
 void MainMenu::InitMenu()
 {
+    activePlayer = {};
+    letterCount = 0;
     isMenuActive = true;
     Image background = LoadImage("./media/space_background_menu.png");
     ImageResize(&background, CalculateObjectSizeX(background.width), CalculateObjectSizeY(background.height));
@@ -90,10 +92,10 @@ void MainMenu::DrawNewGameMenu()
 
         int enterNameWidth = MeasureText("ENTER NAME:", CalculateObjectSizeY(120.f));
         DrawText("ENTER NAME:", CalculateXCoord(100 / 2) - CalculateObjectSizeX(enterNameWidth / 2), CalculateYCoord(100 / 8), CalculateObjectSizeY(120.f), GREEN);
-        int measureNameWidth = MeasureText(newPlayer.playerName, CalculateObjectSizeY(96));
+        int measureNameWidth = MeasureText(activePlayer.playerName, CalculateObjectSizeY(96));
 
         DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x - 50), CalculateYCoord(100 / 2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);
-        DrawTextEx(GetFontDefault(), newPlayer.playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100 / 2)}, CalculateObjectSizeY(96.f), CalculateObjectSizeX(45.f), GREEN);
+        DrawTextEx(GetFontDefault(), activePlayer.playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100 / 2)}, CalculateObjectSizeY(96.f), CalculateObjectSizeX(45.f), GREEN);
         for (int i = 0; i < 6; i++)
         {
             if (inputLines.size() <= 6 && i != 0)
@@ -106,7 +108,7 @@ void MainMenu::DrawNewGameMenu()
                 inputLines.push_back(inputLine);
             }
 
-            if (!std::isalpha(newPlayer.playerName[i]))
+            if (!std::isalpha(activePlayer.playerName[i]))
             {
                 DrawLineEx({CalculateObjectSizeX(inputLines[i].x), CalculateObjectSizeY(inputLines[i].y)}, {CalculateObjectSizeX(inputLines[i].z), CalculateObjectSizeY(inputLines[i].w)}, 10, GREEN);
             }
@@ -134,12 +136,12 @@ void MainMenu::NewGameActions()
 
     if (!isNewPlayerAllowed)
     {
-        for(int i = 0; i < listBox.data.size(); i++)
+        for (int i = 0; i < listBox.data.size(); i++)
         {
-            if(listBox.data[i].eventType.click)
-            {   
+            if (listBox.data[i].eventType.click)
+            {
                 overWriteSelected = listBox.data[i];
-                
+                ReplaceSavedGameAction();
             }
         }
     }
@@ -169,7 +171,20 @@ void MainMenu::NewGameActions()
             isNewPlayerAllowed = false;
         }
         else
+        {
+            std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
+            if (playerData.size() == 0)
+            {
+                activePlayer.playerId = 0;
+            }
+            else
+            {
+                activePlayer.playerId = IncrementPlayerId();
+            }
+
+            playerData.push_back(activePlayer);
             LoadGame();
+        }
     }
 
     // MOUSE ACTIONS
@@ -207,6 +222,8 @@ void MainMenu::NewGameActions()
             else
             {
                 // If there is less than 5 saved games, start game with the new "save"
+                std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
+                playerData.push_back(activePlayer);
                 LoadGame();
             }
         }
@@ -234,22 +251,20 @@ void MainMenu::DrawOverwriteExisting()
     DrawLineEx({CalculateXCoord((100 / 32) * 9), CalculateYCoord(100 / 4) + CalculateObjectSizeY(110)}, {CalculateXCoord((100 / 32) * 24), CalculateYCoord(100 / 4) + CalculateObjectSizeY(110)}, CalculateObjectSizeY(5), RED);
     for (int i = 0; overWriteList.size() < playerData.size() && playerData.size(); i++)
     {
-        if(overWriteList.size() < playerData.size())
+        if (overWriteList.size() < playerData.size())
         {
             Components::ListObject overwriteItem;
             overwriteItem.key = playerData[i].playerId;
             std::string playerName = playerData[i].playerName;
             overwriteItem.value = playerName + "  " + playerData[i].lastSaved;
             overWriteList.push_back(overwriteItem);
-
-            
         }
-        if(overWriteList.size() == playerData.size())
+        if (overWriteList.size() == playerData.size())
         {
-            listBox = Components::ListBox(overWriteList, CalculateObjectSizeX((screenWidth/2) - 50), CalculateObjectSizeY(48), {CalculateXCoord((100 / 8) * 2.2), CalculateYCoord(100 / 2.5)},true);
+            listBox = Components::ListBox(overWriteList, CalculateObjectSizeX((screenWidth / 2) - 50), CalculateObjectSizeY(48), {CalculateXCoord((100 / 8) * 2.2), CalculateYCoord(100 / 2.5)}, true);
             listBox.outlineColor = BLANK;
             listBox.textColor = RED;
-            listBox.textActionColor = CLITERAL(Color){140,0,9,255};
+            listBox.textActionColor = CLITERAL(Color){140, 0, 9, 255};
             listBox.ListBoxInitialize();
         }
         // char playerNumber[3 + sizeof(char)] = "";
@@ -261,8 +276,8 @@ void MainMenu::DrawOverwriteExisting()
         // int savedDateWidth = MeasureText(playerData[i].lastSaved, CalculateObjectSizeY(48));
         // DrawText(playerData[i].lastSaved, CalculateXCoord((100 / 4) * 3) - CalculateObjectSizeX(savedDateWidth + 10), CalculateYCoord(100 / 2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48), RED);
     }
-    
-    if(playerData.size() == listBox.data.size() && playerData.size() != 0)
+
+    if (playerData.size() == listBox.data.size() && playerData.size() != 0)
     {
         listBox.HandleListBox();
     }
@@ -270,24 +285,17 @@ void MainMenu::DrawOverwriteExisting()
 
 void MainMenu::DrawReplaceSavedGame()
 {
-
 }
 
-void MainMenu::ReplaceSavedGameAction() 
+void MainMenu::ReplaceSavedGameAction()
 {
-    std::sort(playerData.begin(), playerData.end(), [](const PlayerData &a, const PlayerData &b){return a.playerId < b.playerId;});
-    newPlayer.playerId = playerData[playerData.size() -1].playerId + 1;
-    //Find playerData with the same playerId as the clicked item in list
-    auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData& obj){return obj.playerId == overWriteSelected.key;});
-    
-    //If theres a match, replace the player with the newly created player
-    if(matchPlayer != playerData.end())
-    {
-        matchPlayer -> currentLevel = newPlayer.currentLevel;
-        matchPlayer -> health = newPlayer.health;
-        matchPlayer -> playerId = newPlayer.playerId;
-        std::strcpy(matchPlayer -> playerName, newPlayer.playerName);
-    }
+
+    activePlayer.playerId = IncrementPlayerId();
+    std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
+    // Find playerData with the same playerId as the clicked item in list
+    OverwritePlayerDataInList(playerData, activePlayer, overWriteSelected.key);
+
+    LoadGame();
 }
 
 void MainMenu::NewPlayerName()
@@ -300,8 +308,8 @@ void MainMenu::NewPlayerName()
         // NOTE: Only allow keys in range [32..125]
         if ((key >= 32) && (key <= 125) && (letterCount < 6))
         {
-            newPlayer.playerName[letterCount] = (char)key;
-            newPlayer.playerName[letterCount + 1] = '\0'; // Add null terminator at the end of the string.
+            activePlayer.playerName[letterCount] = (char)key;
+            activePlayer.playerName[letterCount + 1] = '\0'; // Add null terminator at the end of the string.
             letterCount++;
         }
 
@@ -313,7 +321,7 @@ void MainMenu::NewPlayerName()
         letterCount--;
         if (letterCount < 0)
             letterCount = 0;
-        newPlayer.playerName[letterCount] = '\0';
+        activePlayer.playerName[letterCount] = '\0';
     }
 }
 
@@ -337,7 +345,7 @@ void MainMenu::NewGameAction(Rectangle btnBounds)
             isMenuActive = false;
             for (int i = 0; i <= 6; i++)
             {
-                newPlayer.playerName[i] = '\0';
+                activePlayer.playerName[i] = '\0';
             }
             NewGame();
         }
@@ -454,9 +462,46 @@ void MainMenu::ExitAction(Rectangle btnBounds)
     }
 }
 
-//Sorting in asc order based on int prop in ListObject
-bool compareListObject(const PlayerData& a, const PlayerData& b) {
-    return a.playerId < b.playerId;
+void MainMenu::OverwritePlayerDataInList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer, int &selectedEntry)
+{
+    auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData &obj)
+                                    { return obj.playerId == selectedEntry; });
+
+    // If theres a match, replace the player with the newly created player
+    if (matchPlayer != playerData.end())
+    {
+        matchPlayer->currentLevel = currentPlayer.currentLevel;
+        matchPlayer->health = currentPlayer.health;
+        matchPlayer->playerId = currentPlayer.playerId;
+        std::strcpy(matchPlayer->lastSaved, currentPlayer.lastSaved);
+        std::strcpy(matchPlayer->playerName, currentPlayer.playerName);
+    }
+}
+
+// Update entry of Playerdatas
+void MainMenu::UpdatePlayerDataList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer)
+{
+    auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData &obj)
+                                    { return obj.playerId == currentPlayer.playerId; });
+
+    // If theres a match, replace the player with the newly created player
+    if (matchPlayer != playerData.end())
+    {
+        matchPlayer->currentLevel = currentPlayer.currentLevel;
+        matchPlayer->health = currentPlayer.health;
+        matchPlayer->playerId = currentPlayer.playerId;
+        std::strcpy(matchPlayer->playerName, currentPlayer.playerName);
+    }
+}
+
+// Sorting in asc order based on int prop in ListObject
+int MainMenu::IncrementPlayerId()
+{
+    std::sort(playerData.begin(), playerData.end(), [](const PlayerData &a, const PlayerData &b)
+              { return a.playerId < b.playerId; });
+    int newPlayerId = playerData[playerData.size() - 1].playerId + 1;
+
+    return newPlayerId;
 }
 
 // Clear remenants of texture from memory

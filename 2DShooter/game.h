@@ -10,6 +10,8 @@
 class Game : public MainMenu
 {
 private:
+    bool isGameSaved;
+
 public:
     int shotTimerRight;
     int shotTimerLeft;

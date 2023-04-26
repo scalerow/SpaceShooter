@@ -14,7 +14,7 @@ Game::~Game()
 void Game::InitGame()
 {
     isGameActive = true;
-
+    isGameSaved = false;
     Image background = LoadImage("./media/space_background.png");
     ImageResize(&background, CalculateObjectSizeX(background.width), CalculateObjectSizeY(background.height));
     Texture2D backgroundTxr = LoadTextureFromImage(background);
@@ -69,16 +69,18 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     if (!highscores.highscoreUpdated)
     {
         highscores.UpdateHighscores(score);
-#ifndef PLATFORM_WEB
-    PlayerData pData;
-    pData.currentLevel = 1;
-    pData.health = 100;
-    pData.playerId = 3;
-    std::vector<PlayerData> pdatas;
-    pdatas.push_back(pData);
-        settings.saveSettings("config.xml", highscores.highScores, pdatas);
-#endif
     }
+
+#ifndef PLATFORM_WEB
+    if (!isGameSaved)
+    {
+        activePlayer.currentLevel = 1; // this wll be the current level when thats implemented, really not neccessary now.
+        std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
+        UpdatePlayerDataList(playerData, activePlayer);
+        settings.saveSettings("config.xml", highscores.highScores, playerData);
+        isGameSaved = true;
+    }
+#endif
 
     // Checking if theres a new highscore entry - if it is, change the color on highscore line
     Color highscoreAchievedTextColor = highscores.newHighscoreEntry ? Color({110, 20, 143, 255}) : RED;

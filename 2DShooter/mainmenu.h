@@ -13,6 +13,11 @@
 
 class MainMenu : public Home
 {
+protected:
+    // PlayerDataRelated
+    void OverwritePlayerDataInList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer, int &selectedEntry);
+    void UpdatePlayerDataList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer);
+
 private:
     std::vector<Components::ListObject> overWriteList = {};
     Components::ListBox listBox;
@@ -20,7 +25,8 @@ private:
 
     void ReplaceSavedGameAction();
     void DrawReplaceSavedGame();
-    bool compareListObject(const PlayerData& a, const PlayerData& b);
+    int IncrementPlayerId();
+
 public:
     // Background used for menu
     Texture2D menuTexture;
@@ -40,11 +46,11 @@ public:
     bool isNewGameActive;
     bool isLoadGameActive;
     // New game related
-    PlayerData newPlayer;
+    PlayerData activePlayer;
     int letterCount = 0;
     std::vector<Vector4> inputLines;
     // Game saves related
-    bool isNewPlayerAllowed;
+    bool isNewPlayerAllowed = false;
     std::vector<PlayerData> playerData;
 
     MainMenu(float &width, float &height);

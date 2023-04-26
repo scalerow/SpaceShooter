@@ -51,11 +51,11 @@ int main(void)
 #else
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetWindowMinSize(480, 272);
-    settings.loadSettings("config.xml", highscores.highScores);
+    settings.loadSettings("config.xml", highscores.highScores, game.playerData);
     settings.InitGameSettings();
 
     SetTargetFPS(60);
-    
+
     while (!game.shouldExit)
     {
         DrawGame();
@@ -117,19 +117,10 @@ void DrawGame()
         if (!game.isNewGameActive)
         {
             game.InitNewGame();
-            for(int i = 0; i < 5; i++)
-            {
-                PlayerData pD;
-                pD.currentLevel = 1;
-                pD.health = 200;
-                std::strcpy(pD.playerName, "ROBIN");
-                pD.playerId = i;
-                std::strcpy(pD.lastSaved, GetDateTimeNow());
-                game.playerData.push_back(pD);    
-            }
         }
+
         game.NewPlayerName();
-        game.NewGameActions(); 
+        game.NewGameActions();
         game.RenderBackground(true);
         game.DrawNewGameMenu();
     }
@@ -213,6 +204,7 @@ void DrawGame()
         //////////////////////////////////
         else if (player.gameOver)
         {
+            game.DrawGameOver(highscores, settings, player.score);
 
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
             {
@@ -229,8 +221,6 @@ void DrawGame()
                 game.isGameActive = false;
                 game.LoadMenu();
             }
-
-            game.DrawGameOver(highscores, settings, player.score);
         }
         //////////////////////////////////
         ///           PAUSE            ///
