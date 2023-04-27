@@ -40,21 +40,21 @@ void Game::RenderBackground(bool menu)
     }
 }
 
-void Game::DrawGameUI(int &health, int &score)
+void Game::DrawGameUI(int &currentHealth, int &totalHealth, int &score)
 {
-    char stringPlayerHealth[15 + sizeof(char)] = "";
-    sprintf(stringPlayerHealth, "%d", health);
-    int healthStringWidth = MeasureText(stringPlayerHealth, CalculateObjectSizeY(72));
+    char stringPlayerHealth[3 + sizeof(char)] = "";
+    sprintf(stringPlayerHealth, "%i", currentHealth);
+    int healthStringWidth = MeasureText(stringPlayerHealth, CalculateObjectSizeY(72.f));
     char stringPlayerScore[15 + sizeof(char)] = "";
     sprintf(stringPlayerScore, "Score: %d", score);
-    DrawText(stringPlayerScore, CalculateXCoord(100 - 23.4375f), CalculateYCoord(4.63f), CalculateObjectSizeY(72.f), GREEN);
+    DrawText(stringPlayerScore, CalculateXCoord((100 / 4) * 3), CalculateYCoord(4.63f), CalculateObjectSizeY(72.f), GREEN);
 
     // Healthbar
-    DrawRectangleLines(CalculateXCoord(100 - 23.4375f), CalculateYCoord(88.7f), CalculateObjectSizeX(400.f), CalculateObjectSizeY(72.f), GREEN);
+    DrawRectangleLines(CalculateXCoord((100 / 4) * 3), CalculateYCoord(88.7f), CalculateObjectSizeX(400.f), CalculateObjectSizeY(72.f), GREEN);
     // Healtbar filler
-    DrawRectangle(CalculateXCoord(100 - 23.4375f), CalculateYCoord(88.7f), CalculateObjectSizeX((400.f / 150.f) * (float)health), CalculateObjectSizeY(72.f), GREEN);
+    DrawRectangle(CalculateXCoord((100 / 4) * 3), CalculateYCoord(88.7f), CalculateObjectSizeX((400.f / totalHealth) * (float)currentHealth), CalculateObjectSizeY(72.f), GREEN);
     // Health plain text
-    DrawText(stringPlayerHealth, CalculateXCoord(100 - 10.416f) - healthStringWidth, CalculateYCoord(88.7f), CalculateObjectSizeY(72.f), WHITE);
+    DrawText(stringPlayerHealth, (CalculateXCoord((100 / 4) * 3) + CalculateObjectSizeX(200.f)) - (healthStringWidth / 2), CalculateYCoord(88.7f), CalculateObjectSizeY(72.f), WHITE);
 }
 
 // For ARCADE MODE

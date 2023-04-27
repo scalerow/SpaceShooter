@@ -32,7 +32,7 @@ public:
 
     void InitGame();
     void PauseGame();
-    void DrawGameUI(int &health, int &score);
+    void DrawGameUI(int &currentHealth, int &totalHealth, int &score);
     void DrawPauseGame();
     void DrawGameOver(HighScore &highscores, Settings &settings, int &score);
     void RenderBackground(bool menu = false);

@@ -25,8 +25,8 @@ namespace Components
 #endif
     struct EventType
     {
-        bool hover;
-        bool click;
+        bool hover = false;
+        bool click = false;
     };
     struct ListObject
     {

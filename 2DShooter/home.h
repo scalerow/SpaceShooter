@@ -18,7 +18,7 @@ public:
 
     void LoadMenu();
     void LoadGame();
-    void SelectLoadGame();
+    void LoadSelectGame();
     void NewGame();
     void LoadSettings();
 };

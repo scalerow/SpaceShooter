@@ -33,7 +33,7 @@ void Home::NewGame()
     activateNewGame = true;
     activateLoadGame = false;
 }
-void Home::SelectLoadGame()
+void Home::LoadSelectGame()
 {
     activateGame = false;
     activateSettings = false;

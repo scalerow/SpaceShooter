@@ -19,14 +19,14 @@ protected:
     void UpdatePlayerDataList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer);
 
 private:
-    std::vector<Components::ListObject> overWriteList = {};
+    std::vector<Components::ListObject> savedGamesList = {};
     Components::ListBox listBox;
     Components::ListObject overWriteSelected;
 
     void ReplaceSavedGameAction();
-    void DrawReplaceSavedGame();
     int IncrementPlayerId();
-    void ClearNewGameListData();
+    void ClearListData();
+    void SetActivePlayer(int &selectedKey);
 
 public:
     // Background used for menu
@@ -39,13 +39,14 @@ public:
     Color settingsButtonColor;
     Color newGameBackButtonColor;
     Color newGameReadyButtonColor;
+    Color loadGameBackButtonColor;
     // Used for buttonclick events
     Vector2 mousePoint;
     // MenuAction booleans
     bool shouldExit;
     bool isMenuActive;
     bool isNewGameActive;
-    bool isLoadGameActive;
+    bool isLoadSelectGameActive;
     // New game related
     PlayerData activePlayer;
     int letterCount = 0;
@@ -68,7 +69,10 @@ public:
     void ExitAction(Rectangle btnBounds);
 
     // LoadGameMenu
-    void DrawLoadGameMenu();
+    void DrawLoadSelectGameMenu();
+    void LoadSelectGameActions();
+    void InitLoadSelectedGame();
+    void UnloadLoadSelectGame();
 
     // NewGameMenu
     void DrawNewGameMenu();

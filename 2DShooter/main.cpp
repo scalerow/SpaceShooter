@@ -111,6 +111,13 @@ void DrawGame()
     }
     else if (game.activateLoadGame)
     {
+        if (!game.isLoadSelectGameActive)
+        {
+            game.InitLoadSelectedGame();
+        }
+        game.RenderBackground(true);
+        game.LoadSelectGameActions();
+        game.DrawLoadSelectGameMenu();
     }
     else if (game.activateNewGame)
     {
@@ -198,7 +205,7 @@ void DrawGame()
                 game.PauseGame();
             }
 
-            game.DrawGameUI(player.health, player.score);
+            game.DrawGameUI(player.health, game.activePlayer.health, player.score);
         }
         //////////////////////////////////
         ///          GAME OVER         ///

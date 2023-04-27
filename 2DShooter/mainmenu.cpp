@@ -6,12 +6,17 @@ MainMenu::MainMenu(float &width, float &height) : Home{width, height}
     isMenuActive = false;
     shouldExit = false;
     isNewGameActive = false;
-    isLoadGameActive = false;
+    isLoadSelectGameActive = false;
 }
 
 MainMenu::~MainMenu()
 {
 }
+
+///////////////////////////////////////////
+///////// MainMenu related  ///////////////
+///////////////////////////////////////////
+#pragma region mainmenu
 
 // Initialize mainmenu
 void MainMenu::InitMenu()
@@ -34,12 +39,6 @@ void MainMenu::InitMenu()
     newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     menuTexture = backgroundTxr;
     menuBackgroudPosition = {backgroundPos.x, backgroundPos.y};
-}
-
-void MainMenu::InitNewGame()
-{
-    isNewGameActive = true;
-    isNewPlayerAllowed = true;
 }
 
 void MainMenu::DrawMainMenu()
@@ -78,6 +77,165 @@ void MainMenu::DrawMainMenu()
 #endif
     Rectangle menuRec = {loadGameButton.x - CalculateObjectSizeX(40), newGameButton.y - CalculateObjectSizeY(40), loadGameButton.width + CalculateObjectSizeX(80), CalculateObjectSizeY(550.f)};
     DrawRectangleLinesEx(menuRec, 10.f, GREEN);
+}
+
+#pragma endregion
+
+///////////////////////////////////////////
+///////// MainMenu actions  ///////////////
+///////////////////////////////////////////
+
+#pragma region mainmenu_actions
+
+// Initialize the playbutton and its actions
+void MainMenu::NewGameAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            Vector4 inputStart = {CalculateXCoord(100 / 2) - CalculateObjectSizeX(300), CalculateYCoord(100 / 2) + CalculateObjectSizeY(80), CalculateXCoord(100 / 2) - CalculateObjectSizeX(210), CalculateYCoord(100 / 2) + CalculateObjectSizeY(80)};
+            inputLines.push_back(inputStart);
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            isMenuActive = false;
+            for (int i = 0; i <= 6; i++)
+            {
+                activePlayer.playerName[i] = '\0';
+            }
+            NewGame();
+        }
+        else
+        {
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+    }
+    else
+    {
+        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+// Initialize the playbutton and its actions
+void MainMenu::LoadGameAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    if (playerData.size() != 0)
+    {
+        // Check button state
+        if (CheckCollisionPointRec(mousePoint, btnBounds))
+        {
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+            {
+                loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+                isMenuActive = false;
+                LoadSelectGame();
+            }
+            else
+            {
+                loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            }
+        }
+        else
+        {
+            loadButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+        }
+    }
+    else
+    {
+        loadButtonColor = loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGRAY);
+    }
+}
+
+// Initialize the playbutton and its actions
+void MainMenu::PlayAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        else
+        {
+            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            isMenuActive = false;
+            LoadGame();
+        }
+    }
+    else
+    {
+        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+void MainMenu::SettingsAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            isMenuActive = false;
+            LoadSettings();
+        }
+        else
+        {
+            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+    }
+    else
+    {
+        settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+
+void MainMenu::ExitAction(Rectangle btnBounds)
+{
+    mousePoint = GetMousePosition();
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    {
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        else
+        {
+            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+        {
+            shouldExit = true;
+        }
+    }
+    else
+    {
+        exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+    }
+}
+#pragma endregion
+
+///////////////////////////////////////////
+///////// New Game related  ///////////////
+///////////////////////////////////////////
+#pragma region new_game
+
+// Init new game menu
+void MainMenu::InitNewGame()
+{
+    isNewGameActive = true;
+    isNewPlayerAllowed = true;
 }
 
 // This should be made into a reusable component, to utilize it in arcade mode when getting a highscore
@@ -181,7 +339,7 @@ void MainMenu::NewGameActions()
             {
                 activePlayer.playerId = IncrementPlayerId();
             }
-            ClearNewGameListData();
+            ClearListData();
             playerData.push_back(activePlayer);
             LoadGame();
         }
@@ -224,7 +382,7 @@ void MainMenu::NewGameActions()
                 // If there is less than 5 saved games, start game with the new "save"
                 std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
                 playerData.push_back(activePlayer);
-                ClearNewGameListData();
+                ClearListData();
                 LoadGame();
             }
         }
@@ -250,42 +408,30 @@ void MainMenu::DrawOverwriteExisting()
     DrawText("You have five saved games", CalculateXCoord(100 / 2) - (headerStringWidth / 2), CalculateYCoord(100 / 4), CalculateObjectSizeY(48), RED);
     DrawText("please remove one to continue", CalculateXCoord(100 / 2) - (headerSecondLineWidth / 2), CalculateYCoord(100 / 4) + CalculateObjectSizeY(55), CalculateObjectSizeY(48), RED);
     DrawLineEx({CalculateXCoord((100 / 32) * 9), CalculateYCoord(100 / 4) + CalculateObjectSizeY(110)}, {CalculateXCoord((100 / 32) * 24), CalculateYCoord(100 / 4) + CalculateObjectSizeY(110)}, CalculateObjectSizeY(5), RED);
-    for (int i = 0; overWriteList.size() < playerData.size() && playerData.size(); i++)
+    for (int i = 0; savedGamesList.size() < playerData.size() && playerData.size(); i++)
     {
-        if (overWriteList.size() < playerData.size())
+        if (savedGamesList.size() < playerData.size())
         {
             Components::ListObject overwriteItem;
             overwriteItem.key = playerData[i].playerId;
             std::string playerName = playerData[i].playerName;
             overwriteItem.value = playerName + "  " + playerData[i].lastSaved;
-            overWriteList.push_back(overwriteItem);
+            savedGamesList.push_back(overwriteItem);
         }
-        if (overWriteList.size() == playerData.size())
+        if (savedGamesList.size() == playerData.size())
         {
-            listBox = Components::ListBox(overWriteList, CalculateObjectSizeX((screenWidth / 2) - 50), CalculateObjectSizeY(48), {CalculateXCoord((100 / 8) * 2.2), CalculateYCoord(100 / 2.5)}, true);
+            listBox = Components::ListBox(savedGamesList, CalculateObjectSizeX((screenWidth / 2) - 50), CalculateObjectSizeY(48), {CalculateXCoord((100 / 8) * 2.2), CalculateYCoord(100 / 2.5)}, true);
             listBox.outlineColor = BLANK;
             listBox.textColor = RED;
             listBox.textActionColor = CLITERAL(Color){140, 0, 9, 255};
             listBox.ListBoxInitialize();
         }
-        // char playerNumber[3 + sizeof(char)] = "";
-        // sprintf(playerNumber, "%d.", playerData[i].playerId);
-        // // DrawText(playerData[i].playerName, CalculateXCoord(100/2) - (MeasureText(playerData[i].playerName, CalculateObjectSizeY(72))/2),CalculateYCoord(100/3) + (i * CalculateObjectSizeY(80)), CalculateObjectSizeY(72),RED);
-        // int playerNameWidth = MeasureText(playerData[i].playerName, CalculateObjectSizeY(48));
-        // DrawText(playerData[i].playerName, CalculateXCoord((100 / 8) * 3) - (playerNameWidth / 2), CalculateYCoord(100 / 2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48), RED);
-        // DrawText(playerNumber, CalculateXCoord(100 / 4) + CalculateObjectSizeX(10), CalculateYCoord(100 / 2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48), RED);
-        // int savedDateWidth = MeasureText(playerData[i].lastSaved, CalculateObjectSizeY(48));
-        // DrawText(playerData[i].lastSaved, CalculateXCoord((100 / 4) * 3) - CalculateObjectSizeX(savedDateWidth + 10), CalculateYCoord(100 / 2.5) + (i * CalculateObjectSizeY(60)), CalculateObjectSizeY(48), RED);
     }
 
     if (playerData.size() == listBox.data.size() && playerData.size() != 0)
     {
         listBox.HandleListBox();
     }
-}
-
-void MainMenu::DrawReplaceSavedGame()
-{
 }
 
 void MainMenu::ReplaceSavedGameAction()
@@ -296,7 +442,7 @@ void MainMenu::ReplaceSavedGameAction()
     // Find playerData with the same playerId as the clicked item in list
     OverwritePlayerDataInList(playerData, activePlayer, overWriteSelected.key);
     isNewPlayerAllowed = true;
-    overWriteList = {};
+    savedGamesList = {};
     listBox = {};
     LoadGame();
 }
@@ -327,143 +473,109 @@ void MainMenu::NewPlayerName()
         activePlayer.playerName[letterCount] = '\0';
     }
 }
+#pragma endregion
 
-void MainMenu::DrawLoadGameMenu()
+///////////////////////////////////////////
+///////// Load Game related  //////////////
+///////////////////////////////////////////
+#pragma region load_game
+
+void MainMenu::InitLoadSelectedGame()
 {
+    loadGameBackButtonColor = GREEN;
+    if (savedGamesList.size() < playerData.size())
+    {
+        for (int i = 0; i < playerData.size(); i++)
+        {
+            Components::ListObject obj;
+            obj.key = playerData[i].playerId;
+            std::string playerName = playerData[i].playerName;
+            obj.value = playerName + "  " + playerData[i].lastSaved;
+            savedGamesList.push_back(obj);
+        }
+    }
+    listBox = Components::ListBox(savedGamesList, CalculateXCoord(100 / 2), CalculateObjectSizeY(48), {CalculateXCoord(100 / 4), CalculateYCoord((100 / 5) * 2)}, true);
+    listBox.fillColor = BLACK;
+    isLoadSelectGameActive = true;
 }
 
-// Initialize the playbutton and its actions
-void MainMenu::NewGameAction(Rectangle btnBounds)
+void MainMenu::DrawLoadSelectGameMenu()
+{
+    // Alternative rectangle around everything
+    // Rectangle rect = {CalculateXCoord((100 / 8) * 1.2), CalculateYCoord(100 / 16), CalculateXCoord((100 / 8) * 6), CalculateYCoord((100 / 16) * 15)};
+    //  DrawRectangleRec(rect, BLACK);
+    // DrawRectangleLinesEx(rect, 10, GREEN);
+
+    int headerTextWidth = MeasureText("Load Game", CalculateObjectSizeY(120));
+    DrawText("Load Game", CalculateXCoord(100 / 2) - (headerTextWidth / 2), CalculateYCoord(100 / 8), CalculateObjectSizeY(120), GREEN);
+
+    // List
+    listBox.HandleListBox();
+
+    // BackButton
+    int backWidth = MeasureText("BACK", CalculateObjectSizeY(96));
+    DrawText("BACK", CalculateXCoord(100 / 2) - (backWidth / 2), CalculateYCoord((100 / 8) * 7), CalculateObjectSizeY(96), loadGameBackButtonColor);
+}
+
+void MainMenu::LoadSelectGameActions()
 {
     mousePoint = GetMousePosition();
+    // KEYBOARD ACTIONS
+    // BACK BUTTON
+    if (IsKeyReleased(KEY_ESCAPE))
+    {
+        loadGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+        UnloadLoadSelectGame();
+        LoadMenu();
+    }
 
-    // Check button state
-    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    int backWidth = MeasureText("BACK", CalculateObjectSizeY(96));
+    // MOUSE ACTIONS
+    // BACK BUTTON
+    Rectangle backHitBox = {CalculateXCoord(100 / 2) - (backWidth / 2), CalculateYCoord((100 / 8) * 7), (float)backWidth, CalculateObjectSizeY(96)};
+    if (CheckCollisionPointRec(mousePoint, backHitBox))
     {
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
-            Vector4 inputStart = {CalculateXCoord(100 / 2) - CalculateObjectSizeX(300), CalculateYCoord(100 / 2) + CalculateObjectSizeY(80), CalculateXCoord(100 / 2) - CalculateObjectSizeX(210), CalculateYCoord(100 / 2) + CalculateObjectSizeY(80)};
-            inputLines.push_back(inputStart);
-            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            isMenuActive = false;
-            for (int i = 0; i <= 6; i++)
-            {
-                activePlayer.playerName[i] = '\0';
-            }
-            NewGame();
+            UnloadLoadSelectGame();
+            loadGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            LoadMenu();
         }
         else
         {
-            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
+            // Sets hovercolor
+            loadGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
         }
     }
     else
     {
-        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
+        loadGameBackButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
     }
-}
 
-// Initialize the playbutton and its actions
-void MainMenu::LoadGameAction(Rectangle btnBounds)
-{
-    mousePoint = GetMousePosition();
-
-    // Check button state
-    if (CheckCollisionPointRec(mousePoint, btnBounds))
+    for (int i = 0; i < listBox.data.size(); i++)
     {
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-            loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        else
+        if (listBox.data[i].eventType.click)
         {
-            loadButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        }
-
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-        {
-            isMenuActive = false;
+            SetActivePlayer(listBox.data[i].key);
+            UnloadLoadSelectGame();
             LoadGame();
         }
     }
-    else
-    {
-        loadButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
-    }
 }
 
-// Initialize the playbutton and its actions
-void MainMenu::PlayAction(Rectangle btnBounds)
+void MainMenu::UnloadLoadSelectGame()
 {
-    mousePoint = GetMousePosition();
-
-    // Check button state
-    if (CheckCollisionPointRec(mousePoint, btnBounds))
-    {
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        else
-        {
-            newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        }
-
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-        {
-            isMenuActive = false;
-            LoadGame();
-        }
-    }
-    else
-    {
-        newGameButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
-    }
+    isLoadSelectGameActive = false;
+    ClearListData();
 }
 
-void MainMenu::SettingsAction(Rectangle btnBounds)
-{
-    mousePoint = GetMousePosition();
+#pragma endregion
 
-    // Check button state
-    if (CheckCollisionPointRec(mousePoint, btnBounds))
-    {
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-        {
-            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            isMenuActive = false;
-            LoadSettings();
-        }
-        else
-        {
-            settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        }
-    }
-    else
-    {
-        settingsButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
-    }
-}
+///////////////////////////////////////////
+/////////Tools for submenues///////////////
+///////////////////////////////////////////
 
-void MainMenu::ExitAction(Rectangle btnBounds)
-{
-    mousePoint = GetMousePosition();
-    // Check button state
-    if (CheckCollisionPointRec(mousePoint, btnBounds))
-    {
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        else
-        {
-            exitButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-        }
-
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-        {
-            shouldExit = true;
-        }
-    }
-    else
-    {
-        exitButtonColor = ColorAlphaBlend(BLACK, WHITE, GREEN);
-    }
-}
+#pragma region sumenu_tools
 
 void MainMenu::OverwritePlayerDataInList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer, int &selectedEntry)
 {
@@ -497,6 +609,23 @@ void MainMenu::UpdatePlayerDataList(std::vector<PlayerData> &playerData, PlayerD
     }
 }
 
+// Select active player from playerData
+void MainMenu::SetActivePlayer(int &selectedKey)
+{
+    auto matchPlayer = std::find_if(playerData.begin(), playerData.end(), [&](const PlayerData &obj)
+                                    { return obj.playerId == selectedKey; });
+
+    // If theres a match, replace the player with the newly created player
+    if (matchPlayer != playerData.end())
+    {
+        activePlayer.currentLevel = matchPlayer->currentLevel;
+        activePlayer.health = matchPlayer->health;
+        activePlayer.playerId = matchPlayer->playerId;
+        std::strcpy(activePlayer.lastSaved, matchPlayer->lastSaved);
+        std::strcpy(activePlayer.playerName, matchPlayer->playerName);
+    }
+}
+
 // Sorting in asc order based on int prop in ListObject
 int MainMenu::IncrementPlayerId()
 {
@@ -507,11 +636,13 @@ int MainMenu::IncrementPlayerId()
     return newPlayerId;
 }
 
-void MainMenu::ClearNewGameListData()
+void MainMenu::ClearListData()
 {
-    overWriteList = {};
+    savedGamesList = {};
     listBox = {};
 }
+
+#pragma endregion
 
 // Clear remenants of texture from memory
 void MainMenu::UnloadMenu()
