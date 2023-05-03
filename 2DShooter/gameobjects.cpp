@@ -80,13 +80,3 @@ Texture2D LoadDefaultEnemyTexture()
 
     return text;
 }
-
-Texture2D InitDefaultEnemyBulletTexture()
-{
-    Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
-    ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
-    Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
-    UnloadImage(defaultEnemyBulletImg);
-
-    return defaultenemyBulletTexture;
-}

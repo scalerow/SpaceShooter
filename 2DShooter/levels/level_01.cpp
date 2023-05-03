@@ -1,17 +1,32 @@
 #include "level_01.h"
 
-void Level_01::SpawnBoss()
+Level_01::Level_01()
 {
-    boss.InitBoss(CalculateXCoord(100/2), 500, 2);
-
+}
+Level_01::~Level_01()
+{
 }
 
-void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions)
+void Level_01::SpawnBoss()
 {
-     if (enemies.size() <= 0)
+    boss.InitBoss(CalculateXCoord(100 / 2), 500, 2);
+}
+
+void Level_01::InitDefaultEnemyBulletTexture()
+{
+    Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
+    ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
+    Texture2D loadedDefaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
+    UnloadImage(defaultEnemyBulletImg);
+    defaultEnemyBulletTexture = loadedDefaultenemyBulletTexture;
+}
+
+void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
+{
+    if (enemies.size() <= 0)
     {
         defaultEnemyTexture = LoadDefaultEnemyTexture();
-        defaultEnemyBulletTexture = InitDefaultEnemyBulletTexture();
+        InitDefaultEnemyBulletTexture();
     }
     for (int i = 0; i < 4; i++)
     {
@@ -46,6 +61,10 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions)
         }
         enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, defaultEnemyBulletTexture);
 
+        if (enemies[i].health > 0 && enemies[i].active)
+        {
+            enemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
+        }
     }
 }
 
@@ -53,22 +72,22 @@ void Level_01::UnloadMultipleEnemies()
 {
     for (int i = 0; i < enemies.size(); i++)
     {
-        
+
         enemies[i].UnloadEnemy();
         enemies[i].ResetDefaultEnenmy();
         enemies[i].enemyBullets.clear();
     }
     enemies.clear();
-
 }
 
-void Level_01::UpdateBoss() 
+void Level_01::UpdateBoss()
 {
-
 }
 
 void Level_01::isBossHit()
-{}
+{
+}
 
 void Level_01::LevelComplete()
-{}
+{
+}

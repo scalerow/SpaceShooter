@@ -30,9 +30,9 @@
                 "${fileDirname}\\settings.cpp",
                 "${fileDirname}\\gameobjects.cpp",
                 "${fileDirname}\\highscore.cpp",
-                "${fileDirname}\\components.cpp"
-
-
+                "${fileDirname}\\components.cpp",
+                "${fileDirname}\\levels\\level_01.cpp",
+                "${fileDirname}\\levels\\level_02.cpp"
             ],
             "options": {
                 "cwd": "${fileDirname}"

@@ -30,6 +30,8 @@ void Player::InitPlayer(float screenHeight, float screenWidth, PlayerData &activ
     leftShotTimer = 0;
     rightShotTimer = 0;
     health = activePlayer.health;
+    currentLevel = activePlayer.currentLevel;
+    std::strcpy(name, activePlayer.playerName);
     score = 0;
     velocity = {400.f, 300.f};
     acceleration = {0.f, 0.f};
@@ -109,6 +111,21 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
         DrawTextureV(playerTexture, position, WHITE);
 }
 
+void Player::EnemiesAttackingAction(std::vector<Enemy> &enemies)
+{
+    for (int i = 0; i < enemies.size(); i++)
+    {
+        isHit(enemies[i].enemyBullets);
+        if (!playerActive)
+        {
+            leftBullets.clear();
+            rightBullets.clear();
+            enemies[i].ResetDefaultEnenmy();
+            enemies[i].enemyBullets.clear();
+        }
+    }
+}
+
 void Player::isHit(std::vector<Bullet> &bullets)
 {
     if (bullets.size() > 0 && playerActive)
@@ -139,12 +156,6 @@ void Player::isHit(std::vector<Bullet> &bullets)
             bool rightCornerBulletPlayerTip = CheckCollisionPointTriangle(Vector2{bulletPos.x + bulletSize.x, bulletPos.y + bulletSize.y}, playerTipTrianglePointOne, playerTipTrianglePointTwo, playerTipTrianglePointThree);
             bool leftCornerBulletPlayerMain = CheckCollisionPointTriangle(Vector2{bulletPos.x, bulletPos.y}, playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree);
             bool rightCornerBulletPlayerMain = CheckCollisionPointTriangle(Vector2{bulletPos.x + bulletSize.x, bulletPos.y + bulletSize.y}, playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree);
-
-            // Hitbox check for plane - comment out when done
-            // DrawRectangleRec(playerLeftGun, BLUE);
-            // DrawRectangleRec(playerRightGun, BLUE);
-            // DrawTriangle(playerMainTrianglePointOne, playerMainTrianglePointTwo, playerMainTrianglePointThree, GREEN);
-            // DrawTriangle(playerTipTrianglePointOne, playerTipTrianglePointTwo, playerTipTrianglePointThree, GREEN);
 
             if (gunleftCol || gunRightCol || leftCornerBulletPlayerMain || rightCornerBulletPlayerMain || leftCornerBulletPlayerTip || rightCornerBulletPlayerTip)
             {

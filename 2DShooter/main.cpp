@@ -12,6 +12,8 @@
 #include "gameobjects.h"
 #include "components.h"
 #include <string>
+#include ".\levels\level_01.h"
+#include ".\levels\level_02.h"
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
@@ -32,6 +34,8 @@ static Game game = Game(screenWidth, screenHeight);
 static Player player;
 static HighScore highscores;
 static Settings settings;
+static Level_01 level1;
+static Level_02 level2;
 
 static void DrawGame();
 
@@ -157,47 +161,43 @@ void DrawGame()
         //////////////////////////////////
         if (!player.gameOver && !game.paused)
         {
-            game.RenderBackground();
 
             // DrawTexture(player.planeTexture, player.position.x, player.position.y, WHITE);
             // DrawTexture(player.planeTexture, cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) - sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), sin((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2) + cos((player.rotation * DEG2RAD)) * (player.planeTexture.width / 2), WHITE);
-
-            player.UpdatePlayer(deltaTime, game.flightArea);
-            player.UpdateLeftBullet();
-            player.UpdateRightBullet();
-            tools.CreateMultipleEnemies(enemyPositions);
-
-            if (IsKeyDown(KEY_SPACE))
+            switch (player.currentLevel)
             {
-                tools.InitSpecialAttack(player.position);
-            }
-
-            if (tools.bullets.size() > 0)
+            case 1:
             {
-                for (int i = 0; i < tools.bullets.size(); i++)
+                game.RenderBackground();
+                level1.DrawMultipleEnemies(enemyPositions, player);
+                player.UpdatePlayer(deltaTime, game.flightArea);
+                player.UpdateLeftBullet();
+                player.UpdateRightBullet();
+                player.EnemiesAttackingAction(level1.enemies);
+                if (IsKeyReleased(KEY_K))
                 {
-                    tools.bullets[i].UpdateSpecialAttack(player.position);
+                    player.currentLevel = 2;
                 }
+                break;
             }
-
-            for (int i = 0; i < tools.enemies.size(); i++)
+            case 2:
             {
-                player.isHit(tools.enemies[i].enemyBullets);
-                if (!player.playerActive)
+                if (!level2.levelActive)
                 {
-                    player.leftBullets.clear();
-                    player.rightBullets.clear();
-                    tools.enemies[i].ResetDefaultEnenmy();
-                    tools.enemies[i].enemyBullets.clear();
+                    level2.InitLevel2();
                 }
+
+                level2.RenderBackground();
+                player.UpdatePlayer(deltaTime, game.flightArea);
+                player.UpdateLeftBullet();
+                player.UpdateRightBullet();
+                break;
             }
-
-            for (int i = 0; i < tools.enemies.size(); i++)
+            default:
             {
-                if (tools.enemies[i].health > 0 && tools.enemies[i].active)
-                {
-                    tools.enemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
-                }
+                DrawText("Playerdata error - no level found", CalculateXCoord(100 / 2), CalculateYCoord(100 / 2), CalculateObjectSizeY(120), RED);
+                break;
+            }
             }
 
             if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P))
