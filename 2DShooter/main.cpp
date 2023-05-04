@@ -36,7 +36,6 @@ static HighScore highscores;
 static Settings settings;
 static Level_01 level1;
 static Level_02 level2;
-
 static void DrawGame();
 
 int main(void)
@@ -59,7 +58,6 @@ int main(void)
     settings.InitGameSettings();
 
     SetTargetFPS(60);
-
     while (!game.shouldExit)
     {
         DrawGame();
@@ -170,10 +168,13 @@ void DrawGame()
             {
                 game.RenderBackground();
                 level1.DrawMultipleEnemies(enemyPositions, player);
+                level1.RandomEnemySpawn();
+                level1.DrawRandomEnemies(player);
+                level1.UpdateRandomEnemies();
                 player.UpdatePlayer(deltaTime, game.flightArea);
                 player.UpdateLeftBullet();
                 player.UpdateRightBullet();
-                player.EnemiesAttackingAction(level1.enemies);
+                player.EnemiesAttackingAction(level1.defaultEnemies);
                 if (IsKeyReleased(KEY_K))
                 {
                     player.currentLevel = 2;

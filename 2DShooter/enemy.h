@@ -10,12 +10,13 @@
 class Enemy
 {
 public:
-    int x;
-    int y;
     int health;
     bool active;
     int speed;
     bool isBoss;
+    int scoreValue;
+    int frameCounter = 0;
+    int currentFrame = 0;
     int defaultShotTimer;
     int spawnPosition;
     int defaultEnemyHoverRange;
@@ -29,16 +30,17 @@ public:
     ~Enemy();
     void update();
 
-    void hover(int position);
+    void hover(int enemyPos);
 
     void EnemyExplosion(float explosionArea, float debrisSize);
     void FillDebris(int particleAmount);
 
     void InitBoss(float posX, int health, int speed);
 
-    void InitDefaultEnemyDefaults(int pos, Texture2D& texture);
+    void InitDefaultEnemyDefaults(int pos, Texture2D &texture);
     Texture2D LoadEnemyTexture();
     void UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr);
+    void UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTimer, int frameCount, int frameCap);
     void ResetDefaultEnenmy();
 
     void isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);

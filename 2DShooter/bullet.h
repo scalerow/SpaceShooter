@@ -16,6 +16,8 @@ public:
     bool spActive;
     float spRotation;
     float spRadius;
+    int currentFrame;
+    int frameCounter;
 
     Bullet();
     ~Bullet();
@@ -32,6 +34,7 @@ public:
 
     void InitEnemyBullet(int positionX, Texture2D &btxtr);
     void updateEnemyBullet();
+    void UpdateAnimatedEnemyBullet(int &framesCount, int &frameCap);
     bool enemyBulletCollides();
 
     void UnloadBullet();

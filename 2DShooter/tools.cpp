@@ -48,15 +48,14 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
         // Hover and draw default enenmy movements
         if (enemies[i].active && enemies[i].health > 0)
         {
-            if (enemies[i].y <= 150)
-                enemies[i].y += enemies[i].speed;
+            if (enemies[i].position.y <= 150)
+                enemies[i].position.y += enemies[i].speed;
             else
                 enemies[i].hover(CalculateByPixelsX(xPositions[i]));
 
-            DrawTexture(enemies[i].enemyTexture, enemies[i].x, enemies[i].y, WHITE);
+            DrawTexture(enemies[i].enemyTexture, enemies[i].position.x, enemies[i].position.y, WHITE);
         }
-        enemies[i].UpdateEnemyDefaultAttack(enemies[i].x, enemyBulletTexture);
-
+        enemies[i].UpdateEnemyDefaultAttack(enemies[i].position.x, enemyBulletTexture);
     }
 }
 
@@ -64,13 +63,12 @@ void Tools::UnloadMultipleEnemies()
 {
     for (int i = 0; i < enemies.size(); i++)
     {
-        
+
         enemies[i].UnloadEnemy();
         enemies[i].ResetDefaultEnenmy();
         enemies[i].enemyBullets.clear();
     }
     enemies.clear();
-
 }
 
 // void Tools::FillParticles(std::vector<Debris> &debris)

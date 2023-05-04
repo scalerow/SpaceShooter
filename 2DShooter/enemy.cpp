@@ -4,6 +4,7 @@ Enemy::Enemy()
 {
     health = 100;
     defaultEnemyHoverRange = 50;
+    scoreValue = 110;
     isBoss = false;
     active = false;
     leftHover = false,
@@ -14,29 +15,29 @@ Enemy::~Enemy() {}
 
 void Enemy::update()
 {
-    y += speed;
+    position.y += speed;
 }
 
-void Enemy::hover(int position)
+void Enemy::hover(int enemyPos)
 {
-    int range[] = {position - defaultEnemyHoverRange, position + defaultEnemyHoverRange};
+    int range[] = {enemyPos - defaultEnemyHoverRange, enemyPos + defaultEnemyHoverRange};
 
-    if (leftHover && x > range[0])
+    if (leftHover && position.x > range[0])
     {
-        x -= speed;
+        position.x -= speed;
 
-        if (x == range[0])
+        if (position.x == range[0])
         {
             rightHover = true;
             leftHover = false;
         }
     }
 
-    if (rightHover && x <= range[1])
+    if (rightHover && position.x <= range[1])
     {
-        x += speed;
+        position.x += speed;
 
-        if (x == range[1])
+        if (position.x == range[1])
         {
             rightHover = false;
             leftHover = true;
@@ -53,7 +54,7 @@ Texture2D Enemy::LoadEnemyTexture()
     return text;
 }
 
-void Enemy::InitBoss( float posX, int health, int speed)
+void Enemy::InitBoss(float posX, int health, int speed)
 {
     enemyTexture = LoadTexture("media\\boss_2.png");
     health = health;
@@ -81,7 +82,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
         // Creating enemy hitbox
-        Vector2 enemyPos = {(float)x, (float)y};
+        Vector2 enemyPos = {(float)position.x, (float)position.y};
         Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
         Vector2 enemyTrianglePointOne = {enemyPos.x + CalculateObjectSizeX(4), enemyPos.y + CalculateObjectSizeY(26)};
         Vector2 enemyTrianglePointTwo = {enemyPos.x + CalculateObjectSizeX(49), enemyPos.y + CalculateObjectSizeY(106)};
@@ -101,7 +102,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             bool rightCornerBullet = CheckCollisionPointTriangle(Vector2{bulletRightPos.x + bulletRightSize.x, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
             if (leftCornerBullet || rightCornerBullet)
             {
-                if (y >= 150)
+                if (position.y >= 150)
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= rightBullets[x].bulletDamage;
@@ -133,7 +134,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
                     active = false;
 
                     // Increasing playerscore by whatever points is determined for default enemies
-                    playerScore += 110;
+                    playerScore += scoreValue;
                 }
             }
         }
@@ -152,7 +153,7 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             bool rightCornerBulllet = CheckCollisionPointTriangle(Vector2{bulletLeftPos.x + bulletLeftSize.x, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
             if (leftCornerBullet || rightCornerBulllet)
             {
-                if (y >= 150)
+                if (position.y >= 150)
                 {
                     // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
                     health -= leftBullets[x].bulletDamage;
@@ -210,8 +211,8 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
         bool xRange;
         bool yRange;
 
-        xRange = debri.Position.x < x - explosionArea || debri.Position.x > x + explosionArea;
-        yRange = debri.Position.y < y - explosionArea || debri.Position.y > y + explosionArea;
+        xRange = debri.Position.x < position.x - explosionArea || debri.Position.x > position.x + explosionArea;
+        yRange = debri.Position.y < position.y - explosionArea || debri.Position.y > position.y + explosionArea;
 
         if (xRange || yRange)
         {
@@ -237,7 +238,7 @@ void Enemy::FillDebris(int particleAmount)
         enemyDebris.push_back(
             Debris{
                 Vector2{debriSpeed * std::cos(direction), debriSpeed * std::sin(direction)},
-                Vector2{(float)x, (float)y}});
+                Vector2{position.x, position.y}});
     }
 }
 
@@ -247,7 +248,7 @@ void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)
     {
         defaultShotTimer++;
     }
-    if (defaultShotTimer >= 80 && active == true && y >= 150)
+    if (defaultShotTimer >= 80 && active == true && position.y >= 150)
     {
         Bullet bullet;
         bullet.InitEnemyBullet(posX + (enemyTexture.width / 2), btxtr);
@@ -270,10 +271,49 @@ void Enemy::UpdateEnemyDefaultAttack(int posX, Texture2D &btxtr)
     }
 }
 
+void Enemy::UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTimer, int frameCount, int frameCap)
+{
+    if (defaultShotTimer < shotTimer)
+    {
+        defaultShotTimer++;
+    }
+    if (defaultShotTimer >= shotTimer && active == true)
+    {
+        Bullet bullet;
+        bullet.InitEnemyBullet(posX + 50, btxtr);
+        bullet.y = posY + (enemyTexture.height);
+        bullet.bulletSpeed = 650;
+        bullet.bulletDamage = 15;
+        enemyBullets.push_back(bullet);
+        defaultShotTimer = 0;
+    }
+
+    for (int i = 0; i < enemyBullets.size(); i++)
+    {
+
+        if (!enemyBullets[i].enemyBulletCollides() && enemyBullets[i].bulletActive)
+        {
+            if (frameCount == 0 || frameCap == 0)
+            {
+                enemyBullets[i].updateEnemyBullet();
+                DrawTexture(enemyBullets[i].bulletTexture, enemyBullets[i].x, enemyBullets[i].y, WHITE);
+            }
+            else
+            {
+                enemyBullets[i].UpdateAnimatedEnemyBullet(frameCount, frameCap);
+            }
+        }
+        else
+        {
+            enemyBullets.erase(enemyBullets.begin() + i);
+        }
+    }
+}
+
 void Enemy::ResetDefaultEnenmy()
 {
     health = 100;
     active = false;
-    y = -100;
-    x = spawnPosition;
+    position.y = -100;
+    position.x = spawnPosition;
 }

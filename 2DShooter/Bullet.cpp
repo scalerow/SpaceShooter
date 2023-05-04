@@ -83,11 +83,30 @@ void Bullet::InitEnemyBullet(int positionX, Texture2D &bTxtr)
     y = 250;
     bulletDamage = 10;
     bulletActive = true;
+    frameCounter = 0;
+    currentFrame = 0;
+}
+
+void Bullet::UpdateAnimatedEnemyBullet(int &framesCount, int &frameCap)
+{
+    float frameWidth = (float)(bulletTexture.width / framesCount); // Sprite one frame rectangle width
+    float frameHeight = (float)(bulletTexture.height);
+
+    frameCounter++;
+    if (frameCounter >= frameCap)
+    {
+        frameCounter = 0;
+        currentFrame++;
+    }
+    Rectangle frameRec = {x, y, frameWidth, frameHeight};
+    frameRec.x = frameWidth * currentFrame;
+    frameRec.y = frameHeight;
+    DrawTextureRec(bulletTexture, frameRec, {x, y}, WHITE);
+    y += bulletSpeed * GetFrameTime();
 }
 
 void Bullet::updateEnemyBullet()
 {
-
     y += bulletSpeed;
 }
 
