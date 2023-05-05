@@ -6,6 +6,8 @@
 #include "..\player.h"
 #include "..\gameobjects.h"
 #include <vector>
+#include <iostream>
+#include <time.h>
 
 class Level_01
 {
@@ -20,6 +22,15 @@ private:
 
     bool randomEnemyBulletTextureLoaded = false;
     bool randomEnemyTextureLoaded = false;
+
+    const int randomEnemySpawnCount[3] = {1, 2, 3};
+    const int randomSpawnDelay = 40;
+    const std::string randomEnemySpawnPositions[4] = {"top-left", "top-right", "bottom-left", "bottom-right"};
+    int currentRandomEnemySpawnCount;
+    std::string currentRandomEnemySpawnPosition;
+
+    void SetRandomSpawnProps();
+    void CreateRandomSpawn(Vector2 spawnPos, Vector2 mapEdge);
 
 public:
     std::vector<Enemy> defaultEnemies;

@@ -74,7 +74,10 @@ void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D &texture)
 // Clear remenants of texture from memory
 void Enemy::UnloadEnemy()
 {
+
     UnloadTexture(enemyTexture);
+    enemyBullets.clear();
+    enemyDebris.clear();
 }
 
 void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
@@ -218,10 +221,6 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
         {
             enemyDebris.erase(enemyDebris.begin() + i);
         }
-        if (enemyDebris.empty())
-        {
-            ResetDefaultEnenmy();
-        }
     }
 }
 
@@ -282,7 +281,7 @@ void Enemy::UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTime
         Bullet bullet;
         bullet.InitEnemyBullet(posX + 50, btxtr);
         bullet.y = posY + (enemyTexture.height);
-        bullet.bulletSpeed = 650;
+        bullet.bulletSpeed = 500;
         bullet.bulletDamage = 15;
         enemyBullets.push_back(bullet);
         defaultShotTimer = 0;

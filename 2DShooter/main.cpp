@@ -66,6 +66,7 @@ int main(void)
     UnloadTexture(game.gameTexture);
     UnloadTexture(game.menuTexture);
     UnloadTexture(player.playerTexture);
+    level1.UnloadLevel1();
 
     CloseWindow();
 
@@ -94,10 +95,11 @@ void DrawGame()
         {
 
             // Clear remenants of texture from memory
-            tools.UnloadMultipleEnemies();
+            game.UnloadMenu();
             player.UnloadPlayer();
-
             game.UnloadGame();
+            level1.UnloadLevel1();
+            level1.UnloadMultipleEnemies();
 
             game.InitMenu();
         }
@@ -142,7 +144,9 @@ void DrawGame()
         {
             game.UnloadMenu();
             highscores.highscoreUpdated = false;
+#ifndef PLATFORM_WEB
             settings.saveSettings("config.xml", highscores.highScores, game.playerData);
+#endif
             game.InitGame();
             player.InitPlayer(screenHeight, screenWidth, game.activePlayer);
         }
@@ -175,6 +179,11 @@ void DrawGame()
                 player.UpdateLeftBullet();
                 player.UpdateRightBullet();
                 player.EnemiesAttackingAction(level1.defaultEnemies);
+                if (level1.randomEnemies.size() > 0)
+                {
+                    player.EnemiesAttackingAction(level1.randomEnemies);
+                }
+
                 if (IsKeyReleased(KEY_K))
                 {
                     player.currentLevel = 2;
@@ -218,13 +227,16 @@ void DrawGame()
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))
             {
                 // tools.enemies.clear();
+                level1.UnloadLevel1();
+                level1.UnloadMultipleEnemies();
                 player.UnloadPlayer();
                 game.isGameActive = false;
                 game.LoadGame();
             }
             if (IsKeyPressed(KEY_ESCAPE))
             {
-                tools.UnloadMultipleEnemies();
+                level1.UnloadLevel1();
+                level1.UnloadMultipleEnemies();
                 player.UnloadPlayer();
                 game.UnloadGame();
                 game.isGameActive = false;
@@ -250,6 +262,8 @@ void DrawGame()
             game.UnloadMenu();
             player.UnloadPlayer();
             game.UnloadGame();
+            level1.UnloadLevel1();
+            level1.UnloadMultipleEnemies();
             settings.InitSettings();
         }
 

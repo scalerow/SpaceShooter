@@ -23,6 +23,7 @@ public:
     Texture2D enemyTexture = {0, 0, 0, 0};
     bool textureLoaded;
     Vector2 position;
+    Vector2 outOufMap;
     std::vector<Bullet> enemyBullets;
     std::vector<Debris> enemyDebris;
 

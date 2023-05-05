@@ -35,7 +35,9 @@ void Settings::toggleSound(Rectangle bounds)
                 gameSound = LoadSound("../");
                 PlaySound(gameSound);
                 soundActive = IsSoundPlaying(gameSound);
+#ifndef PLATFORM_WEB
                 saveSettings(configFileName);
+#endif
             }
             else if (soundActive)
             {
@@ -67,7 +69,9 @@ void Settings::toggleFullscreen(Rectangle bounds)
             fullscreenButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
             ToggleFullscreen();
             fullscreen = IsWindowFullscreen();
+#ifndef PLATFORM_WEB
             saveSettings(configFileName);
+#endif
         }
 
         else
@@ -94,7 +98,9 @@ void Settings::DrawSettings()
     DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), GREEN);
     if (fullscreen)
     {
+#ifndef PLATFORM_WEB
         saveSettings(configFileName);
+#endif
         DrawRectangle(fullscreenButtonRect.x, fullscreenButtonRect.y, fullscreenButtonRect.width, fullscreenButtonRect.height, GREEN);
     }
     else if (!fullscreen)
@@ -108,7 +114,9 @@ void Settings::DrawSettings()
 
     if (soundActive)
     {
+#ifndef PLATFORM_WEB
         saveSettings(configFileName);
+#endif
         DrawRectangle(soundButtonRect.x, soundButtonRect.y, soundButtonRect.width, soundButtonRect.height, soundButtonColor);
     }
     else if (!soundActive)

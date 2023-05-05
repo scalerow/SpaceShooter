@@ -7,6 +7,17 @@ Level_01::~Level_01()
 {
 }
 
+void Level_01::SetRandomSpawnProps()
+{
+    srand(time(NULL));
+    int randomPositionIndex = rand() % 4;
+    int randomSpawnCountIndex = rand() % 3;
+
+    currentRandomEnemySpawnPosition = randomEnemySpawnPositions[randomPositionIndex];
+    //{0, 0}, {CalculateXCoord(100), 0}, {0, CalculateYCoord(100)}, {CalculateXCoord(100), CalculateYCoord(100)}
+    currentRandomEnemySpawnCount = randomEnemySpawnCount[randomSpawnCountIndex];
+}
+
 double Level_01::GetLastEnemySpawnedTime()
 {
     return randomEnemySpawnTimer;
@@ -17,27 +28,52 @@ void Level_01::SetLastEnemySpawnedTime(double lastTime)
     randomEnemySpawnTimer = lastTime;
 }
 
+void Level_01::CreateRandomSpawn(Vector2 spawnPos, Vector2 mapEdge)
+{
+    SetLastEnemySpawnedTime(GetTime());
+
+    Enemy randomEnemy;
+    randomEnemy.outOufMap = mapEdge;
+    randomEnemy.position = spawnPos;
+    ResetRandomEnemy(randomEnemy);
+
+    randomEnemies.push_back(randomEnemy);
+}
+
 void Level_01::RandomEnemySpawn()
 {
     double timeNow = GetTime();
 
-    if (randomEnemySpawnTimer + 10.00 <= timeNow)
+    if (!randomEnemyTextureLoaded)
     {
-        if (!randomEnemyTextureLoaded)
-        {
-            InitRandomEnemyTexture();
-            randomEnemyTextureLoaded = true;
-        }
-        if (!randomEnemyBulletTextureLoaded)
-        {
-            InitRandomEnemyBulletTexture();
-        }
+        InitRandomEnemyTexture();
+        randomEnemyTextureLoaded = true;
+    }
+    if (!randomEnemyBulletTextureLoaded)
+    {
+        InitRandomEnemyBulletTexture();
+    }
 
-        SetLastEnemySpawnedTime(GetTime());
-        Enemy randomEnemy;
-        ResetRandomEnemy(randomEnemy);
+    if (randomEnemySpawnTimer + 20.00 <= timeNow)
+    {
+        SetRandomSpawnProps();
 
-        randomEnemies.push_back(randomEnemy);
+        if (currentRandomEnemySpawnPosition.compare("top-left") == 0)
+        {
+            CreateRandomSpawn({0, 0}, {CalculateXCoord(100), CalculateYCoord(100)});
+        }
+        else if (currentRandomEnemySpawnPosition.compare("top-right") == 0)
+        {
+            CreateRandomSpawn({CalculateXCoord(100), 0}, {CalculateXCoord(0), CalculateYCoord(100)});
+        }
+        else if (currentRandomEnemySpawnPosition.compare("bottom-left") == 0)
+        {
+            CreateRandomSpawn({0, CalculateYCoord(100)}, {CalculateXCoord(100), CalculateYCoord(0)});
+        }
+        else if (currentRandomEnemySpawnPosition.compare("bottom-right") == 0)
+        {
+            CreateRandomSpawn({CalculateXCoord(100), CalculateYCoord(100)}, {0, 0});
+        }
     }
 }
 
@@ -51,15 +87,48 @@ void Level_01::UpdateRandomEnemies()
         {
             return;
         }
-
-        if (randomEnemies[i].position.x >= GetScreenWidth() || randomEnemies[i].position.y >= GetScreenHeight())
-        {
-            randomEnemies[i].active = false;
-        }
         else
         {
-            randomEnemies[i].position.x += (randomEnemies[i].speed * 1.5) * GetFrameTime();
-            randomEnemies[i].position.y += randomEnemies[i].speed * GetFrameTime();
+            if (currentRandomEnemySpawnPosition.compare("top-left") == 0)
+            {
+                if (randomEnemies[i].position.x > randomEnemies[i].outOufMap.x || randomEnemies[i].position.y > randomEnemies[i].outOufMap.y)
+                {
+                    randomEnemies[i].active = false;
+                    return;
+                }
+                randomEnemies[i].position.x += (randomEnemies[i].speed * 1.5) * GetFrameTime();
+                randomEnemies[i].position.y += randomEnemies[i].speed * GetFrameTime();
+            }
+            else if (currentRandomEnemySpawnPosition.compare("top-right") == 0)
+            {
+                if (randomEnemies[i].position.x < randomEnemies[i].outOufMap.x || randomEnemies[i].position.y > randomEnemies[i].outOufMap.y)
+                {
+                    randomEnemies[i].active = false;
+                    return;
+                }
+                randomEnemies[i].position.x -= (randomEnemies[i].speed * 1.5) * GetFrameTime();
+                randomEnemies[i].position.y += randomEnemies[i].speed * GetFrameTime();
+            }
+            else if (currentRandomEnemySpawnPosition.compare("bottom-left") == 0)
+            {
+                if (randomEnemies[i].position.x > randomEnemies[i].outOufMap.x || randomEnemies[i].position.y < randomEnemies[i].outOufMap.y)
+                {
+                    randomEnemies[i].active = false;
+                    return;
+                }
+                randomEnemies[i].position.x += (randomEnemies[i].speed * 1.5) * GetFrameTime();
+                randomEnemies[i].position.y -= randomEnemies[i].speed * GetFrameTime();
+            }
+            else if (currentRandomEnemySpawnPosition.compare("bottom-right") == 0)
+            {
+                if (randomEnemies[i].position.x < randomEnemies[i].outOufMap.x || randomEnemies[i].position.y < randomEnemies[i].outOufMap.y)
+                {
+                    randomEnemies[i].active = false;
+                    return;
+                }
+                randomEnemies[i].position.x -= (randomEnemies[i].speed * 1.5) * GetFrameTime();
+                randomEnemies[i].position.y -= randomEnemies[i].speed * GetFrameTime();
+            }
         }
     }
 }
@@ -76,28 +145,21 @@ void Level_01::DrawRandomEnemies(Player &player)
 
     for (int i = 0; i < randomEnemies.size(); i++)
     {
-        if (!randomEnemies[i].active)
-        {
-            randomEnemies.erase(randomEnemies.begin() + i);
-            return;
-        }
-
         randomEnemies[i].frameCounter++;
         if (randomEnemies[i].frameCounter >= 5)
         {
             randomEnemies[i].frameCounter = 0;
             randomEnemies[i].currentFrame++;
         }
-        Rectangle frameRec = {randomEnemies[i].position.x, randomEnemies[i].position.y, frameWidth, frameHeight};
-        frameRec.x = frameWidth * randomEnemies[i].currentFrame;
-        frameRec.y = frameHeight;
-        randomEnemies[i].UpdateEnemyAttack(randomEnemies[i].position.x, randomEnemies[i].position.y, randomEnemyBulletTexture, 50, 11, 3);
-        DrawTextureRec(randomEnemies[i].enemyTexture, frameRec, {randomEnemies[i].position.x, randomEnemies[i].position.y}, WHITE);
 
-        // Enemy killed and removed, explosion
-        if (randomEnemies[i].health <= 0 && !randomEnemies[i].active)
+        // Hover and draw default enenmy movements
+        if (randomEnemies[i].active && randomEnemies[i].health > 0)
         {
-            randomEnemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+            Rectangle frameRec = {randomEnemies[i].position.x, randomEnemies[i].position.y, frameWidth, frameHeight};
+            frameRec.x = frameWidth * randomEnemies[i].currentFrame;
+            frameRec.y = frameHeight;
+            randomEnemies[i].UpdateEnemyAttack(randomEnemies[i].position.x, randomEnemies[i].position.y, randomEnemyBulletTexture, 20, 11, 3);
+            DrawTextureRec(randomEnemies[i].enemyTexture, frameRec, {randomEnemies[i].position.x, randomEnemies[i].position.y}, WHITE);
         }
 
         // Checking if enemy is hit
@@ -105,12 +167,26 @@ void Level_01::DrawRandomEnemies(Player &player)
         {
             randomEnemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
         }
+
+        // Enemy killed and removed, explosion
+        if (randomEnemies[i].health <= 0 && !randomEnemies[i].active)
+        {
+            randomEnemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+        }
+
+        // Remove random enemy from list when inactive/dead
+        if (!randomEnemies[i].active && randomEnemies[i].enemyDebris.empty())
+        {
+            randomEnemies.erase(randomEnemies.begin() + i);
+            return;
+        }
     }
 }
 
 void Level_01::InitRandomEnemyBulletTexture()
 {
     Image randomBulletImg = LoadImage("./media/randomSpawnBullet.png");
+    ImageResize(&randomBulletImg, CalculateObjectSizeX(randomBulletImg.width), CalculateObjectSizeY(randomBulletImg.height));
     randomEnemyBulletTexture = LoadTextureFromImage(randomBulletImg);
     randomEnemyBulletTextureLoaded = true;
     UnloadImage(randomBulletImg);
@@ -119,6 +195,7 @@ void Level_01::InitRandomEnemyBulletTexture()
 void Level_01::InitRandomEnemyTexture()
 {
     Image randomEnemyImg = LoadImage("./media/randomEnemy1.png");
+    ImageResize(&randomEnemyImg, CalculateObjectSizeX(randomEnemyImg.width), CalculateObjectSizeY(randomEnemyImg.height));
     randomEnemyTexture = LoadTextureFromImage(randomEnemyImg);
     UnloadImage(randomEnemyImg);
 }
@@ -128,12 +205,10 @@ void Level_01::ResetRandomEnemy(Enemy &randomEnemy)
     randomEnemy.health = 200;
     randomEnemy.active = true;
     randomEnemy.enemyTexture = randomEnemyTexture;
-    randomEnemy.position = {100, 100};
     randomEnemy.speed = 100;
     randomEnemy.scoreValue = 250;
     randomEnemy.frameCounter = 0;
     randomEnemy.currentFrame = 0;
-    randomEnemy.active = true;
 }
 
 // DEFAULT ENEMY
@@ -172,6 +247,10 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
         if (defaultEnemies[i].health <= 0 && !defaultEnemies[i].active)
         {
             defaultEnemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+            if (defaultEnemies[i].enemyDebris.empty())
+            {
+                defaultEnemies[i].ResetDefaultEnenmy();
+            }
         }
 
         // Hover and draw default enenmy movements
@@ -203,9 +282,7 @@ void Level_01::UnloadMultipleEnemies()
 
         defaultEnemies[i].UnloadEnemy();
         defaultEnemies[i].ResetDefaultEnenmy();
-        defaultEnemies[i].enemyBullets.clear();
     }
-    defaultEnemies.clear();
 }
 //
 
@@ -232,6 +309,7 @@ void Level_01::UnloadLevel1()
     UnloadTexture(randomEnemyTexture);
     UnloadTexture(defaultEnemyBulletTexture);
     UnloadTexture(defaultEnemyTexture);
+    UnloadTexture(randomEnemyBulletTexture);
     randomEnemies.clear();
     defaultEnemies.clear();
 }
