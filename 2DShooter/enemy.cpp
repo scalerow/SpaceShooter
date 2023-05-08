@@ -80,7 +80,7 @@ void Enemy::UnloadEnemy()
     enemyDebris.clear();
 }
 
-void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
+void Enemy::isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
 {
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
@@ -105,30 +105,28 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             bool rightCornerBullet = CheckCollisionPointTriangle(Vector2{bulletRightPos.x + bulletRightSize.x, bulletRightPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
             if (leftCornerBullet || rightCornerBullet)
             {
-                if (position.y >= 150)
+                // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
+                health -= rightBullets[x].bulletDamage;
+                // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
+
+                for (int i = 3; i-- > 0;)
                 {
-                    // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
-                    health -= rightBullets[x].bulletDamage;
-                    // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
-
-                    for (int i = 3; i-- > 0;)
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
 
-                            DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                        }
-                        else
-                        {
-                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                            DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                        }
+                        DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
                     }
-
-                    rightBullets[x].bulletActive = false;
+                    else
+                    {
+                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    }
                 }
+
+                rightBullets[x].bulletActive = false;
+
                 rightBullets.erase(rightBullets.begin() + x);
 
                 if (health <= 0 && active)
@@ -156,30 +154,140 @@ void Enemy::isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBu
             bool rightCornerBulllet = CheckCollisionPointTriangle(Vector2{bulletLeftPos.x + bulletLeftSize.x, bulletLeftPos.y}, enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree);
             if (leftCornerBullet || rightCornerBulllet)
             {
-                if (position.y >= 150)
+                // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
+                health -= leftBullets[x].bulletDamage;
+                // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
+
+                for (int i = 3; i-- > 0;)
                 {
-                    // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
-                    health -= leftBullets[x].bulletDamage;
-                    // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
-                    // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
-
-                    for (int i = 3; i-- > 0;)
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
 
-                            DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                            DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
-                        }
-                        else
-                        {
-                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                            DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
-                        }
+                        DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
                     }
-
-                    leftBullets[x].bulletActive = false;
+                    else
+                    {
+                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    }
                 }
+
+                leftBullets[x].bulletActive = false;
+
+                leftBullets.erase(leftBullets.begin() + x);
+
+                if (health <= 0 && active)
+                {
+                    // Deactivates plane to remove it from screen
+                    active = false;
+                    // Increasing playerscore by whatever points is determined for default enemies
+                    playerScore += 110;
+                }
+            }
+        }
+        if (health <= 0)
+        {
+            FillDebris(40);
+        }
+    }
+}
+
+void Enemy::isCircleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
+{
+    if (leftBullets.size() > 0 && rightBullets.size() > 0)
+    {
+        // Creating enemy hitbox
+        Vector2 enemyCenter = {position.x + (enemyTexture.width / 2), position.y + (enemyTexture.height / 2)};
+        float enemyRadius = enemyTexture.width / 2;
+
+        // Determing collision between right playerbullet and enemy
+        for (int x = 0; x < rightBullets.size(); x++)
+        {
+            // For verifying hitbox, comment out when done
+            // DrawTriangle(enemyTrianglePointOne, enemyTrianglePointTwo, enemyTrianglePointThree, RED);
+            //  Creating bullet hitbox
+            Vector2 bulletRightPos = {(float)rightBullets[x].x, (float)rightBullets[x].y};
+            Vector2 bulletRightSize = {(float)rightBullets[x].bulletTexture.width, (float)rightBullets[x].bulletTexture.height};
+            Rectangle bulletRect = {bulletRightPos.x, bulletRightPos.y, bulletRightSize.x, bulletRightSize.y};
+
+            // Collision determination
+            bool bulletHit = CheckCollisionCircleRec(enemyCenter, enemyRadius, bulletRect);
+
+            if (bulletHit)
+            {
+                // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
+                health -= rightBullets[x].bulletDamage;
+                // DrawCircleGradient(bulletRightPos.x + 5, bulletRightPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                // DrawCircleV({bulletRightPos.x + 5, bulletRightPos.y + 10}, 4.f, RED);
+
+                for (int i = 3; i-- > 0;)
+                {
+                    if (i == 0)
+                    {
+
+                        DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                    }
+                    else
+                    {
+                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    }
+                }
+
+                rightBullets[x].bulletActive = false;
+
+                rightBullets.erase(rightBullets.begin() + x);
+
+                if (health <= 0 && active)
+                {
+                    // Deactivates plane to remove it from screen
+                    active = false;
+
+                    // Increasing playerscore by whatever points is determined for default enemies
+                    playerScore += scoreValue;
+                }
+            }
+        }
+
+        // Determing collision between left playerbullet and enemy
+        for (int x = 0; x < leftBullets.size(); x++)
+        {
+            // Creating bullet hitbox
+            Vector2 bulletLeftPos = {(float)leftBullets[x].x, (float)leftBullets[x].y};
+            Vector2 bulletLeftSize = {(float)leftBullets[x].bulletTexture.width, (float)leftBullets[x].bulletTexture.height};
+            Rectangle bulletRect = {bulletLeftPos.x, bulletLeftPos.y - 16, bulletLeftSize.x, bulletLeftSize.y};
+
+            // Collision determination
+            // if (CheckCollisionRecs(enemyRect, bulletRect))
+            bool bulletHit = CheckCollisionCircleRec(enemyCenter, enemyRadius, bulletRect);
+
+            if (bulletHit)
+            {
+                // Inflict damage according to bulletdamage, to enemy if hit and deactivate bullet
+                health -= leftBullets[x].bulletDamage;
+                // DrawCircleGradient(bulletLeftPos.x + 5, bulletLeftPos.y + 10, 10.f, Fade(RED, 0.6f), Fade(RED, 0.0f));
+                // DrawCircleV({bulletLeftPos.x + 5, bulletLeftPos.y + 10}, 4.f, RED);
+
+                for (int i = 3; i-- > 0;)
+                {
+                    if (i == 0)
+                    {
+
+                        DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                    }
+                    else
+                    {
+                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                    }
+                }
+
+                leftBullets[x].bulletActive = false;
+
                 leftBullets.erase(leftBullets.begin() + x);
 
                 if (health <= 0 && active)

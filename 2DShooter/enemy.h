@@ -44,7 +44,8 @@ public:
     void UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTimer, int frameCount, int frameCap);
     void ResetDefaultEnenmy();
 
-    void isHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);
+    void isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);
+    void isCircleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore);
     void UnloadEnemy();
 
 private:

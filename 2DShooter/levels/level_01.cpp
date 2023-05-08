@@ -44,12 +44,12 @@ void Level_01::RandomEnemySpawn()
 {
     double timeNow = GetTime();
 
-    if (!randomEnemyTextureLoaded)
+    if (!isRandomEnemyTextureLoaded)
     {
         InitRandomEnemyTexture();
-        randomEnemyTextureLoaded = true;
+        isRandomEnemyTextureLoaded = true;
     }
-    if (!randomEnemyBulletTextureLoaded)
+    if (!isRandomEnemyBulletTextureLoaded)
     {
         InitRandomEnemyBulletTexture();
     }
@@ -165,7 +165,7 @@ void Level_01::DrawRandomEnemies(Player &player)
         // Checking if enemy is hit
         if (randomEnemies[i].health > 0 && randomEnemies[i].active)
         {
-            randomEnemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
+            randomEnemies[i].isCircleHit(player.leftBullets, player.rightBullets, player.score);
         }
 
         // Enemy killed and removed, explosion
@@ -188,7 +188,7 @@ void Level_01::InitRandomEnemyBulletTexture()
     Image randomBulletImg = LoadImage("./media/randomSpawnBullet.png");
     ImageResize(&randomBulletImg, CalculateObjectSizeX(randomBulletImg.width), CalculateObjectSizeY(randomBulletImg.height));
     randomEnemyBulletTexture = LoadTextureFromImage(randomBulletImg);
-    randomEnemyBulletTextureLoaded = true;
+    isRandomEnemyBulletTextureLoaded = true;
     UnloadImage(randomBulletImg);
 }
 
@@ -270,7 +270,10 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
         // Checking if enemies is hit
         if (defaultEnemies[i].health > 0 && defaultEnemies[i].active)
         {
-            defaultEnemies[i].isHit(player.leftBullets, player.rightBullets, player.score);
+            if (defaultEnemies[i].position.y >= 150)
+            {
+                defaultEnemies[i].isTriangleHit(player.leftBullets, player.rightBullets, player.score);
+            }
         }
     }
 }
@@ -310,6 +313,10 @@ void Level_01::UnloadLevel1()
     UnloadTexture(defaultEnemyBulletTexture);
     UnloadTexture(defaultEnemyTexture);
     UnloadTexture(randomEnemyBulletTexture);
+
+    isRandomEnemyTextureLoaded = false;
+    isRandomEnemyBulletTextureLoaded = false;
+
     randomEnemies.clear();
     defaultEnemies.clear();
 }

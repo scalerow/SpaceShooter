@@ -20,8 +20,8 @@ private:
     Texture2D defaultEnemyTexture;
     Texture2D defaultEnemyBulletTexture;
 
-    bool randomEnemyBulletTextureLoaded = false;
-    bool randomEnemyTextureLoaded = false;
+    bool isRandomEnemyBulletTextureLoaded = false;
+    bool isRandomEnemyTextureLoaded = false;
 
     const int randomEnemySpawnCount[3] = {1, 2, 3};
     const int randomSpawnDelay = 40;
