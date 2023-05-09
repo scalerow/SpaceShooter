@@ -26,7 +26,7 @@ private:
     std::string configFileName = "config.xml";
     pt::ptree tree;
 
-    void LoadPlayerData(std::vector<PlayerData> &playerData);
+    void LoadPlayerData(std::vector<GameObjects::PlayerData> &playerData);
     void LoadHighscores(std::vector<int> &highscores);
 
 public:
@@ -37,9 +37,9 @@ public:
     ~Settings();
 
     // load/save settings to file
-    void loadSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData);
+    void loadSettings(const std::string &filename, std::vector<int> &highscores, std::vector<GameObjects::PlayerData> &playerData);
     void saveSettings(const std::string &filename);
-    void saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData);
+    void saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<GameObjects::PlayerData> &playerData);
 
     void InitSettings();
     void InitGameSettings();

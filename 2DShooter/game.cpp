@@ -17,7 +17,7 @@ void Game::InitGame()
     isGameSaved = false;
 
     Image background = LoadImage("./media/space_background.png");
-    ImageResize(&background, CalculateObjectSizeX(background.width), CalculateObjectSizeY(background.height));
+    ImageResize(&background, GameObjects::CalculateObjectSizeX(background.width), GameObjects::CalculateObjectSizeY(background.height));
     Texture2D backgroundTxr = LoadTextureFromImage(background);
     gameBackgroudPosition = {0, 0};
     UnloadImage(background);
@@ -44,17 +44,17 @@ void Game::DrawGameUI(int &currentHealth, int &totalHealth, int &score)
 {
     char stringPlayerHealth[3 + sizeof(char)] = "";
     sprintf(stringPlayerHealth, "%i", currentHealth);
-    int healthStringWidth = MeasureText(stringPlayerHealth, CalculateObjectSizeY(72.f));
+    int healthStringWidth = MeasureText(stringPlayerHealth, GameObjects::CalculateObjectSizeY(72.f));
     char stringPlayerScore[15 + sizeof(char)] = "";
     sprintf(stringPlayerScore, "Score: %d", score);
-    DrawText(stringPlayerScore, CalculateXCoord((100 / 4) * 3), CalculateYCoord(4.63f), CalculateObjectSizeY(72.f), GREEN);
+    DrawText(stringPlayerScore, GameObjects::CalculateXCoord((100 / 4) * 3), GameObjects::CalculateYCoord(4.63f), GameObjects::CalculateObjectSizeY(72.f), GREEN);
 
     // Healthbar
-    DrawRectangleLines(CalculateXCoord((100 / 4) * 3), CalculateYCoord(88.7f), CalculateObjectSizeX(400.f), CalculateObjectSizeY(72.f), GREEN);
+    DrawRectangleLines(GameObjects::CalculateXCoord((100 / 4) * 3), GameObjects::CalculateYCoord(88.7f), GameObjects::CalculateObjectSizeX(400.f), GameObjects::CalculateObjectSizeY(72.f), GREEN);
     // Healtbar filler
-    DrawRectangle(CalculateXCoord((100 / 4) * 3), CalculateYCoord(88.7f), CalculateObjectSizeX((400.f / totalHealth) * (float)currentHealth), CalculateObjectSizeY(72.f), GREEN);
+    DrawRectangle(GameObjects::CalculateXCoord((100 / 4) * 3), GameObjects::CalculateYCoord(88.7f), GameObjects::CalculateObjectSizeX((400.f / totalHealth) * (float)currentHealth), GameObjects::CalculateObjectSizeY(72.f), GREEN);
     // Health plain text
-    DrawText(stringPlayerHealth, (CalculateXCoord((100 / 4) * 3) + CalculateObjectSizeX(200.f)) - (healthStringWidth / 2), CalculateYCoord(88.7f), CalculateObjectSizeY(72.f), WHITE);
+    DrawText(stringPlayerHealth, (GameObjects::CalculateXCoord((100 / 4) * 3) + GameObjects::CalculateObjectSizeX(200.f)) - (healthStringWidth / 2), GameObjects::CalculateYCoord(88.7f), GameObjects::CalculateObjectSizeY(72.f), WHITE);
 }
 
 // For ARCADE MODE
@@ -63,8 +63,8 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     // Diffuse background
     RenderBackground(true);
     // Measuring the text GAME OVER to be able to position it correctly, than draw it
-    int textWidth = MeasureText("GAME OVER", CalculateObjectSizeY(120.f));
-    DrawText("GAME OVER", CalculateXCoord(100 / 2) - (textWidth / 2), CalculateYCoord(9.26f), CalculateObjectSizeY(120.f), RED);
+    int textWidth = MeasureText("GAME OVER", GameObjects::CalculateObjectSizeY(120.f));
+    DrawText("GAME OVER", GameObjects::CalculateXCoord(100 / 2) - (textWidth / 2), GameObjects::CalculateYCoord(9.26f), GameObjects::CalculateObjectSizeY(120.f), RED);
 
     // Check if highscore is updated for this round - if it isnt (which it shouldnt be), updates highscore and save it to config file
     if (!highscores.highscoreUpdated)
@@ -76,7 +76,7 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     if (!isGameSaved)
     {
         activePlayer.currentLevel = 1; // this wll be the current level when thats implemented, really not neccessary now.
-        std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
+        std::strcpy(activePlayer.lastSaved, GameObjects::GetDateTimeNow());
         UpdatePlayerDataList(playerData, activePlayer);
         settings.saveSettings("config.xml", highscores.highScores, playerData);
         isGameSaved = true;
@@ -89,45 +89,45 @@ void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
     // Creating char array of last score, measure the width of relevant text and draws it
     char stringPlayerScore[15 + sizeof(char)] = "";
     sprintf(stringPlayerScore, "Score: %d", score);
-    int scoreStringWidth = MeasureText(stringPlayerScore, CalculateObjectSizeY(100));
-    DrawText(stringPlayerScore, CalculateXCoord(100 / 2) - (scoreStringWidth / 2), CalculateYCoord(100 / 2) - CalculateYCoord(18.56f), CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
+    int scoreStringWidth = MeasureText(stringPlayerScore, GameObjects::CalculateObjectSizeY(100));
+    DrawText(stringPlayerScore, GameObjects::CalculateXCoord(100 / 2) - (scoreStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateYCoord(18.56f), GameObjects::CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
 
     // Header for highscore-table is measured for positioning, then drawn - along with a line to separate it from the actual list of highscores
-    int highscoreLabelWidth = MeasureText("Highscores", CalculateObjectSizeY(72.f));
-    DrawText("Highscores", CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2), CalculateYCoord(100 / 2) - CalculateYCoord(4.26f), CalculateObjectSizeY(72.f), RED);
-    DrawLineEx({CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), CalculateYCoord(100 / 2) + CalculateYCoord(3.f)}, {CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f), CalculateYCoord(100 / 2) + CalculateYCoord(3.f)}, 8.f, RED);
+    int highscoreLabelWidth = MeasureText("Highscores", GameObjects::CalculateObjectSizeY(72.f));
+    DrawText("Highscores", GameObjects::CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateYCoord(4.26f), GameObjects::CalculateObjectSizeY(72.f), RED);
+    DrawLineEx({GameObjects::CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - GameObjects::CalculateObjectSizeX(75.f), GameObjects::CalculateYCoord(100 / 2) + GameObjects::CalculateYCoord(3.f)}, {GameObjects::CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + GameObjects::CalculateObjectSizeX(75.f), GameObjects::CalculateYCoord(100 / 2) + GameObjects::CalculateYCoord(3.f)}, 8.f, RED);
 
     // Init an int for positioning of each line of highscore, is appended to.
-    int highscoresPosition = CalculateYCoord(100 / 2) + CalculateYCoord(3.f);
+    int highscoresPosition = GameObjects::CalculateYCoord(100 / 2) + GameObjects::CalculateYCoord(3.f);
     for (int i = 0; i < highscores.highScores.size(); i++)
     {
         // Appends to highscore position to make it ready for next line
-        highscoresPosition += CalculateYCoord(7.08f);
+        highscoresPosition += GameObjects::CalculateYCoord(7.08f);
 
         // Measuring highscore, highscore-position
         char scoreString[15 + sizeof(char)] = "";
         sprintf(scoreString, "%d", highscores.highScores[i]);
         char scorePosString[5 + sizeof(char)] = "";
         sprintf(scorePosString, "%d.", i + 1);
-        int scoreStringWidth = MeasureText(scoreString, CalculateObjectSizeY(48.f));
-        int scorePosStringWidth = MeasureText(scorePosString, CalculateObjectSizeY(48.f));
+        int scoreStringWidth = MeasureText(scoreString, GameObjects::CalculateObjectSizeY(48.f));
+        int scorePosStringWidth = MeasureText(scorePosString, GameObjects::CalculateObjectSizeY(48.f));
 
         // Checking if the new score is among the highscores, to color it differently (this soultion isnt that well thought through) Drawing the list of highscores
         if (highscores.highScores[i] == score)
         {
-            DrawText(scoreString, CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), highscoreAchievedTextColor);
-            DrawText(scorePosString, CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), highscoreAchievedTextColor);
+            DrawText(scoreString, GameObjects::CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + GameObjects::CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48), highscoreAchievedTextColor);
+            DrawText(scorePosString, GameObjects::CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - GameObjects::CalculateObjectSizeX(75.f), highscoresPosition - GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48), highscoreAchievedTextColor);
         }
         else
         {
-            DrawText(scoreString, CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), RED);
-            DrawText(scorePosString, CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - CalculateObjectSizeX(75.f), highscoresPosition - CalculateObjectSizeY(48), CalculateObjectSizeY(48), RED);
+            DrawText(scoreString, GameObjects::CalculateXCoord(100 / 2) + (highscoreLabelWidth / 2) + GameObjects::CalculateObjectSizeX(75.f) - (scoreStringWidth), highscoresPosition - GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48), RED);
+            DrawText(scorePosString, GameObjects::CalculateXCoord(100 / 2) - (highscoreLabelWidth / 2) - GameObjects::CalculateObjectSizeX(75.f), highscoresPosition - GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48), RED);
         }
     }
 
     // Measuring and drawing info text
-    int subTextWidth = MeasureText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", CalculateObjectSizeY(36.f));
-    DrawText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), CalculateYCoord(100 - 4.63f), CalculateObjectSizeY(36.f), RED);
+    int subTextWidth = MeasureText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", GameObjects::CalculateObjectSizeY(36.f));
+    DrawText("[ENTER OR SPACE: RESTART, ESC: MAIN MENU]", (screenWidth / 2) - (subTextWidth / 2), GameObjects::CalculateYCoord(100 - 4.63f), GameObjects::CalculateObjectSizeY(36.f), RED);
 }
 
 void Game::PauseGame()
@@ -141,20 +141,20 @@ void Game::DrawPauseGame()
 {
     RenderBackground(true);
 
-    Rectangle pauseMenuRec = {CalculateXCoord(100 / 2) - CalculateObjectSizeX(350.f),
-                              CalculateYCoord(100 / 2) - CalculateObjectSizeY(125.f),
-                              CalculateObjectSizeX(700.f),
-                              CalculateObjectSizeY(350.f)};
+    Rectangle pauseMenuRec = {GameObjects::CalculateXCoord(100 / 2) - GameObjects::CalculateObjectSizeX(350.f),
+                              GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateObjectSizeY(125.f),
+                              GameObjects::CalculateObjectSizeX(700.f),
+                              GameObjects::CalculateObjectSizeY(350.f)};
 
     DrawRectangleLinesEx(pauseMenuRec, 5, GREEN);
 
-    int resumeStringWidth = MeasureText("Resume", CalculateObjectSizeY(72.f));
-    resumeRec = {CalculateXCoord(100 / 2) - CalculateObjectSizeX(resumeStringWidth / 2), CalculateYCoord(100 / 2) - CalculateObjectSizeY(72.f / 2), CalculateObjectSizeX(resumeStringWidth), CalculateObjectSizeY(72.f)};
-    DrawText("Resume", CalculateXCoord(100 / 2) - CalculateObjectSizeX(resumeStringWidth / 2), CalculateYCoord(100 / 2) - CalculateObjectSizeY(72.f / 2), CalculateObjectSizeY(72.f), resumeColor);
+    int resumeStringWidth = MeasureText("Resume", GameObjects::CalculateObjectSizeY(72.f));
+    resumeRec = {GameObjects::CalculateXCoord(100 / 2) - GameObjects::CalculateObjectSizeX(resumeStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateObjectSizeY(72.f / 2), GameObjects::CalculateObjectSizeX(resumeStringWidth), GameObjects::CalculateObjectSizeY(72.f)};
+    DrawText("Resume", GameObjects::CalculateXCoord(100 / 2) - GameObjects::CalculateObjectSizeX(resumeStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateObjectSizeY(72.f / 2), GameObjects::CalculateObjectSizeY(72.f), resumeColor);
 
-    int backToMenuStringWidth = MeasureText("Exit to menu", CalculateObjectSizeY(72.f));
-    backRec = {CalculateXCoord(100 / 2) - CalculateObjectSizeX(backToMenuStringWidth / 2), CalculateYCoord(100 / 2) - CalculateObjectSizeY(72.f / 2) + CalculateObjectSizeY(100.f), CalculateObjectSizeX(backToMenuStringWidth), CalculateObjectSizeY(72.f)};
-    DrawText("Exit to menu", CalculateXCoord(100 / 2) - CalculateObjectSizeX(backToMenuStringWidth / 2), CalculateYCoord(100 / 2) - CalculateObjectSizeY(72.f / 2) + CalculateObjectSizeY(100.f), CalculateObjectSizeY(72.f), backColor);
+    int backToMenuStringWidth = MeasureText("Exit to menu", GameObjects::CalculateObjectSizeY(72.f));
+    backRec = {GameObjects::CalculateXCoord(100 / 2) - GameObjects::CalculateObjectSizeX(backToMenuStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateObjectSizeY(72.f / 2) + GameObjects::CalculateObjectSizeY(100.f), GameObjects::CalculateObjectSizeX(backToMenuStringWidth), GameObjects::CalculateObjectSizeY(72.f)};
+    DrawText("Exit to menu", GameObjects::CalculateXCoord(100 / 2) - GameObjects::CalculateObjectSizeX(backToMenuStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateObjectSizeY(72.f / 2) + GameObjects::CalculateObjectSizeY(100.f), GameObjects::CalculateObjectSizeY(72.f), backColor);
 }
 
 void Game::UpdatePauseGame()

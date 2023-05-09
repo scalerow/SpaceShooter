@@ -15,6 +15,7 @@ public:
     int speed;
     bool isBoss;
     int scoreValue;
+    int frameCount = 0;
     int frameCounter = 0;
     int currentFrame = 0;
     int defaultShotTimer;
@@ -25,7 +26,7 @@ public:
     Vector2 position;
     Vector2 outOufMap;
     std::vector<Bullet> enemyBullets;
-    std::vector<Debris> enemyDebris;
+    std::vector<GameObjects::Debris> enemyDebris;
 
     Enemy();
     ~Enemy();

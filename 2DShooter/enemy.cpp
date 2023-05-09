@@ -47,7 +47,7 @@ void Enemy::hover(int enemyPos)
 Texture2D Enemy::LoadEnemyTexture()
 {
     Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
-    ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));
+    ImageResize(&defaultEnemyImg, GameObjects::CalculateObjectSizeX(defaultEnemyImg.width), GameObjects::CalculateObjectSizeY(defaultEnemyImg.height));
     Texture2D text = LoadTextureFromImage(defaultEnemyImg);
     UnloadImage(defaultEnemyImg);
 
@@ -74,7 +74,6 @@ void Enemy::InitDefaultEnemyDefaults(int pos, Texture2D &texture)
 // Clear remenants of texture from memory
 void Enemy::UnloadEnemy()
 {
-
     UnloadTexture(enemyTexture);
     enemyBullets.clear();
     enemyDebris.clear();
@@ -82,14 +81,16 @@ void Enemy::UnloadEnemy()
 
 void Enemy::isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
 {
+    int enemyTextureWidth = frameCount == 0 ? enemyTexture.width : enemyTexture.width / frameCount;
+
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
         // Creating enemy hitbox
         Vector2 enemyPos = {(float)position.x, (float)position.y};
-        Vector2 enemySize = {(float)enemyTexture.width, (float)enemyTexture.height};
-        Vector2 enemyTrianglePointOne = {enemyPos.x + CalculateObjectSizeX(4), enemyPos.y + CalculateObjectSizeY(26)};
-        Vector2 enemyTrianglePointTwo = {enemyPos.x + CalculateObjectSizeX(49), enemyPos.y + CalculateObjectSizeY(106)};
-        Vector2 enemyTrianglePointThree = {enemyPos.x + CalculateObjectSizeX(95), enemyPos.y + CalculateObjectSizeY(26)};
+        Vector2 enemySize = {(float)enemyTextureWidth, (float)enemyTexture.height};
+        Vector2 enemyTrianglePointOne = {enemyPos.x + GameObjects::CalculateObjectSizeX(4), enemyPos.y + GameObjects::CalculateObjectSizeY(26)};
+        Vector2 enemyTrianglePointTwo = {enemyPos.x + GameObjects::CalculateObjectSizeX(49), enemyPos.y + GameObjects::CalculateObjectSizeY(106)};
+        Vector2 enemyTrianglePointThree = {enemyPos.x + GameObjects::CalculateObjectSizeX(95), enemyPos.y + GameObjects::CalculateObjectSizeY(26)};
 
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
@@ -115,13 +116,13 @@ void Enemy::isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> 
                     if (i == 0)
                     {
 
-                        DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                        DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        DrawCircleGradient(bulletRightPos.x + GameObjects::CalculateObjectSizeX(5), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10), GameObjects::CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletRightPos.x + GameObjects::CalculateObjectSizeX(5), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10.f)}, GameObjects::CalculateObjectSizeY(4.f), RED);
                     }
                     else
                     {
-                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + GameObjects::CalculateObjectSizeX(4.f), bulletRightPos.y + GameObjects::CalculateObjectSizeY(9.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + GameObjects::CalculateObjectSizeX(5.f), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
                     }
                 }
 
@@ -164,13 +165,13 @@ void Enemy::isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> 
                     if (i == 0)
                     {
 
-                        DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                        DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        DrawCircleGradient(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10), GameObjects::CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10.f)}, GameObjects::CalculateObjectSizeY(4.f), RED);
                     }
                     else
                     {
-                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(4.f), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(9.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5.f), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
                     }
                 }
 
@@ -196,11 +197,12 @@ void Enemy::isTriangleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> 
 
 void Enemy::isCircleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &rightBullets, int &playerScore)
 {
+    int enemyTextureWidth = frameCount == 0 ? enemyTexture.width : enemyTexture.width / frameCount;
     if (leftBullets.size() > 0 && rightBullets.size() > 0)
     {
         // Creating enemy hitbox
-        Vector2 enemyCenter = {position.x + (enemyTexture.width / 2), position.y + (enemyTexture.height / 2)};
-        float enemyRadius = enemyTexture.width / 2;
+        Vector2 enemyCenter = {position.x + (enemyTextureWidth / 2), position.y + (enemyTexture.height / 2)};
+        float enemyRadius = enemyTextureWidth / 2;
 
         // Determing collision between right playerbullet and enemy
         for (int x = 0; x < rightBullets.size(); x++)
@@ -227,13 +229,13 @@ void Enemy::isCircleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &r
                     if (i == 0)
                     {
 
-                        DrawCircleGradient(bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                        DrawCircleV({bulletRightPos.x + CalculateObjectSizeX(5), bulletRightPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        DrawCircleGradient(bulletRightPos.x + GameObjects::CalculateObjectSizeX(5), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10), GameObjects::CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletRightPos.x + GameObjects::CalculateObjectSizeX(5), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10.f)}, GameObjects::CalculateObjectSizeY(4.f), RED);
                     }
                     else
                     {
-                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(4.f), bulletRightPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                        DrawCircleLines(bulletRightPos.x + CalculateObjectSizeX(5.f), bulletRightPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + GameObjects::CalculateObjectSizeX(4.f), bulletRightPos.y + GameObjects::CalculateObjectSizeY(9.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletRightPos.x + GameObjects::CalculateObjectSizeX(5.f), bulletRightPos.y + GameObjects::CalculateObjectSizeY(10.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
                     }
                 }
 
@@ -276,13 +278,13 @@ void Enemy::isCircleHit(std::vector<Bullet> &leftBullets, std::vector<Bullet> &r
                     if (i == 0)
                     {
 
-                        DrawCircleGradient(bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                        DrawCircleV({bulletLeftPos.x + CalculateObjectSizeX(5), bulletLeftPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        DrawCircleGradient(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10), GameObjects::CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10.f)}, GameObjects::CalculateObjectSizeY(4.f), RED);
                     }
                     else
                     {
-                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(4.f), bulletLeftPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                        DrawCircleLines(bulletLeftPos.x + CalculateObjectSizeX(5.f), bulletLeftPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(4.f), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(9.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletLeftPos.x + GameObjects::CalculateObjectSizeX(5.f), bulletLeftPos.y + GameObjects::CalculateObjectSizeY(10.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
                     }
                 }
 
@@ -313,7 +315,7 @@ void Enemy::EnemyExplosion(float explosionArea, float debrisSize)
     float bloom = 8.f;
     for (int i = 0; i < enemyDebris.size(); i++)
     {
-        Debris &debri = enemyDebris[i];
+        GameObjects::Debris &debri = enemyDebris[i];
         DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242, 229, 170, 255}, 0.6f), Fade({242, 229, 170, 255}, 0.0f));
         DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242, 229, 170, 255});
         debri.Position.x += debri.Velocity.x * delta;
@@ -343,7 +345,7 @@ void Enemy::FillDebris(int particleAmount)
         float direction = dist(rng);
 
         enemyDebris.push_back(
-            Debris{
+            GameObjects::Debris{
                 Vector2{debriSpeed * std::cos(direction), debriSpeed * std::sin(direction)},
                 Vector2{position.x, position.y}});
     }
@@ -390,6 +392,7 @@ void Enemy::UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTime
         bullet.InitEnemyBullet(posX + 50, btxtr);
         bullet.y = posY + (enemyTexture.height);
         bullet.bulletSpeed = 500;
+        bullet.frameCount = frameCount;
         bullet.bulletDamage = 15;
         enemyBullets.push_back(bullet);
         defaultShotTimer = 0;
@@ -407,7 +410,7 @@ void Enemy::UpdateEnemyAttack(int posX, int posY, Texture2D &btxtr, int shotTime
             }
             else
             {
-                enemyBullets[i].UpdateAnimatedEnemyBullet(frameCount, frameCap);
+                enemyBullets[i].UpdateAnimatedEnemyBullet(frameCap);
             }
         }
         else

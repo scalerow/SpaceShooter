@@ -11,7 +11,7 @@ Tools::~Tools()
 void Tools::InitEnemyBulletTexture()
 {
     Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
-    ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
+    ImageResize(&defaultEnemyBulletImg, GameObjects::CalculateObjectSizeX(defaultEnemyBulletImg.width), GameObjects::CalculateObjectSizeY(defaultEnemyBulletImg.height));
     Texture2D defaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
     enemyBulletTexture = defaultenemyBulletTexture;
@@ -21,7 +21,7 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
 {
     if (enemies.size() <= 0)
     {
-        defaultEnemyTexture = LoadDefaultEnemyTexture();
+        defaultEnemyTexture = GameObjects::LoadDefaultEnemyTexture();
         InitEnemyBulletTexture();
     }
     for (int i = 0; i < 4; i++)
@@ -42,7 +42,7 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
         // Enemy killed and removed, explosion
         if (enemies[i].health <= 0 && !enemies[i].active)
         {
-            enemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+            enemies[i].EnemyExplosion(GameObjects::CalculateObjectSizeY(200.f), GameObjects::CalculateObjectSizeY(8.f));
         }
 
         // Hover and draw default enenmy movements
@@ -51,7 +51,7 @@ void Tools::CreateMultipleEnemies(std::vector<int> &xPositions)
             if (enemies[i].position.y <= 150)
                 enemies[i].position.y += enemies[i].speed;
             else
-                enemies[i].hover(CalculateByPixelsX(xPositions[i]));
+                enemies[i].hover(GameObjects::CalculateByPixelsX(xPositions[i]));
 
             DrawTexture(enemies[i].enemyTexture, enemies[i].position.x, enemies[i].position.y, WHITE);
         }

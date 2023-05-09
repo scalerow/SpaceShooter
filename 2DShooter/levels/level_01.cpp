@@ -14,7 +14,7 @@ void Level_01::SetRandomSpawnProps()
     int randomSpawnCountIndex = rand() % 3;
 
     currentRandomEnemySpawnPosition = randomEnemySpawnPositions[randomPositionIndex];
-    //{0, 0}, {CalculateXCoord(100), 0}, {0, CalculateYCoord(100)}, {CalculateXCoord(100), CalculateYCoord(100)}
+    //{0, 0}, { GameObjects::CalculateXCoord(100), 0}, {0,  GameObjects::CalculateYCoord(100)}, { GameObjects::CalculateXCoord(100),  GameObjects::CalculateYCoord(100)}
     currentRandomEnemySpawnCount = randomEnemySpawnCount[randomSpawnCountIndex];
 }
 
@@ -34,6 +34,7 @@ void Level_01::CreateRandomSpawn(Vector2 spawnPos, Vector2 mapEdge)
 
     Enemy randomEnemy;
     randomEnemy.outOufMap = mapEdge;
+    randomEnemy.frameCount = 3;
     randomEnemy.position = spawnPos;
     ResetRandomEnemy(randomEnemy);
 
@@ -60,19 +61,19 @@ void Level_01::RandomEnemySpawn()
 
         if (currentRandomEnemySpawnPosition.compare("top-left") == 0)
         {
-            CreateRandomSpawn({0, 0}, {CalculateXCoord(100), CalculateYCoord(100)});
+            CreateRandomSpawn({0, 0}, {GameObjects::CalculateXCoord(100), GameObjects::CalculateYCoord(100)});
         }
         else if (currentRandomEnemySpawnPosition.compare("top-right") == 0)
         {
-            CreateRandomSpawn({CalculateXCoord(100), 0}, {CalculateXCoord(0), CalculateYCoord(100)});
+            CreateRandomSpawn({GameObjects::CalculateXCoord(100), 0}, {GameObjects::CalculateXCoord(0), GameObjects::CalculateYCoord(100)});
         }
         else if (currentRandomEnemySpawnPosition.compare("bottom-left") == 0)
         {
-            CreateRandomSpawn({0, CalculateYCoord(100)}, {CalculateXCoord(100), CalculateYCoord(0)});
+            CreateRandomSpawn({0, GameObjects::CalculateYCoord(100)}, {GameObjects::CalculateXCoord(100), GameObjects::CalculateYCoord(0)});
         }
         else if (currentRandomEnemySpawnPosition.compare("bottom-right") == 0)
         {
-            CreateRandomSpawn({CalculateXCoord(100), CalculateYCoord(100)}, {0, 0});
+            CreateRandomSpawn({GameObjects::CalculateXCoord(100), GameObjects::CalculateYCoord(100)}, {0, 0});
         }
     }
 }
@@ -171,7 +172,7 @@ void Level_01::DrawRandomEnemies(Player &player)
         // Enemy killed and removed, explosion
         if (randomEnemies[i].health <= 0 && !randomEnemies[i].active)
         {
-            randomEnemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+            randomEnemies[i].EnemyExplosion(GameObjects::CalculateObjectSizeY(200.f), GameObjects::CalculateObjectSizeY(8.f));
         }
 
         // Remove random enemy from list when inactive/dead
@@ -186,7 +187,7 @@ void Level_01::DrawRandomEnemies(Player &player)
 void Level_01::InitRandomEnemyBulletTexture()
 {
     Image randomBulletImg = LoadImage("./media/randomSpawnBullet.png");
-    ImageResize(&randomBulletImg, CalculateObjectSizeX(randomBulletImg.width), CalculateObjectSizeY(randomBulletImg.height));
+    ImageResize(&randomBulletImg, GameObjects::CalculateObjectSizeX(randomBulletImg.width), GameObjects::CalculateObjectSizeY(randomBulletImg.height));
     randomEnemyBulletTexture = LoadTextureFromImage(randomBulletImg);
     isRandomEnemyBulletTextureLoaded = true;
     UnloadImage(randomBulletImg);
@@ -195,7 +196,7 @@ void Level_01::InitRandomEnemyBulletTexture()
 void Level_01::InitRandomEnemyTexture()
 {
     Image randomEnemyImg = LoadImage("./media/randomEnemy1.png");
-    ImageResize(&randomEnemyImg, CalculateObjectSizeX(randomEnemyImg.width), CalculateObjectSizeY(randomEnemyImg.height));
+    ImageResize(&randomEnemyImg, GameObjects::CalculateObjectSizeX(randomEnemyImg.width), GameObjects::CalculateObjectSizeY(randomEnemyImg.height));
     randomEnemyTexture = LoadTextureFromImage(randomEnemyImg);
     UnloadImage(randomEnemyImg);
 }
@@ -215,7 +216,7 @@ void Level_01::ResetRandomEnemy(Enemy &randomEnemy)
 void Level_01::InitDefaultEnemyBulletTexture()
 {
     Image defaultEnemyBulletImg = LoadImage("./media/bullet_enemy_0.png");
-    ImageResize(&defaultEnemyBulletImg, CalculateObjectSizeX(defaultEnemyBulletImg.width), CalculateObjectSizeY(defaultEnemyBulletImg.height));
+    ImageResize(&defaultEnemyBulletImg, GameObjects::CalculateObjectSizeX(defaultEnemyBulletImg.width), GameObjects::CalculateObjectSizeY(defaultEnemyBulletImg.height));
     Texture2D loadedDefaultenemyBulletTexture = LoadTextureFromImage(defaultEnemyBulletImg);
     UnloadImage(defaultEnemyBulletImg);
     defaultEnemyBulletTexture = loadedDefaultenemyBulletTexture;
@@ -225,7 +226,7 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
 {
     if (defaultEnemies.size() <= 0)
     {
-        defaultEnemyTexture = LoadDefaultEnemyTexture();
+        defaultEnemyTexture = GameObjects::LoadDefaultEnemyTexture();
         InitDefaultEnemyBulletTexture();
     }
     for (int i = 0; i < 4; i++)
@@ -246,7 +247,7 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
         // Enemy killed and removed, explosion
         if (defaultEnemies[i].health <= 0 && !defaultEnemies[i].active)
         {
-            defaultEnemies[i].EnemyExplosion(CalculateObjectSizeY(200.f), CalculateObjectSizeY(8.f));
+            defaultEnemies[i].EnemyExplosion(GameObjects::CalculateObjectSizeY(200.f), GameObjects::CalculateObjectSizeY(8.f));
             if (defaultEnemies[i].enemyDebris.empty())
             {
                 defaultEnemies[i].ResetDefaultEnenmy();
@@ -259,7 +260,7 @@ void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
             if (defaultEnemies[i].position.y <= 150)
                 defaultEnemies[i].position.y += defaultEnemies[i].speed;
             else
-                defaultEnemies[i].hover(CalculateByPixelsX(xPositions[i]));
+                defaultEnemies[i].hover(GameObjects::CalculateByPixelsX(xPositions[i]));
 
             DrawTexture(defaultEnemies[i].enemyTexture, defaultEnemies[i].position.x, defaultEnemies[i].position.y, WHITE);
         }
@@ -292,7 +293,7 @@ void Level_01::UnloadMultipleEnemies()
 // BOSS
 void Level_01::SpawnBoss()
 {
-    boss.InitBoss(CalculateXCoord(100 / 2), 500, 2);
+    boss.InitBoss(GameObjects::CalculateXCoord(100 / 2), 500, 2);
 }
 
 void Level_01::UpdateBoss()

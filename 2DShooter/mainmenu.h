@@ -15,8 +15,8 @@ class MainMenu : public Home
 {
 protected:
     // PlayerDataRelated
-    void OverwritePlayerDataInList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer, int &selectedEntry);
-    void UpdatePlayerDataList(std::vector<PlayerData> &playerData, PlayerData &currentPlayer);
+    void OverwritePlayerDataInList(std::vector<GameObjects::PlayerData> &playerData, GameObjects::PlayerData &currentPlayer, int &selectedEntry);
+    void UpdatePlayerDataList(std::vector<GameObjects::PlayerData> &playerData, GameObjects::PlayerData &currentPlayer);
 
 private:
     std::vector<Components::ListObject> savedGamesList = {};
@@ -48,12 +48,12 @@ public:
     bool isNewGameActive;
     bool isLoadSelectGameActive;
     // New game related
-    PlayerData activePlayer;
+    GameObjects::PlayerData activePlayer;
     int letterCount = 0;
     std::vector<Vector4> inputLines;
     // Game saves related
     bool isNewPlayerAllowed = false;
-    std::vector<PlayerData> playerData;
+    std::vector<GameObjects::PlayerData> playerData;
 
     MainMenu(float &width, float &height);
     ~MainMenu();

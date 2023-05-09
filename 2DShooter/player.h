@@ -31,7 +31,7 @@ public:
     int leftShotTimer;
     int rightShotTimer;
     int specialAttackBulletCount;
-    std::vector<Debris> playerDebris;
+    std::vector<GameObjects::Debris> playerDebris;
     char name[7] = "\0";
 
     bool gameOver;
@@ -40,7 +40,7 @@ public:
     Player();
     ~Player();
 
-    void InitPlayer(float screenHeight, float screenWidth, PlayerData &activePlayer);
+    void InitPlayer(float screenHeight, float screenWidth, GameObjects::PlayerData &activePlayer);
     void UpdatePlayer(float delta, Vector4 flightArea);
     void UpdateRightBullet();
     void UpdateLeftBullet();

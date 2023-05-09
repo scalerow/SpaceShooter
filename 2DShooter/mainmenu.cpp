@@ -1,6 +1,8 @@
 #include "mainmenu.h"
 #include <memory>
 
+using namespace GameObjects;
+
 MainMenu::MainMenu(float &width, float &height) : Home{width, height}
 {
     isMenuActive = false;
@@ -252,8 +254,8 @@ void MainMenu::DrawNewGameMenu()
         DrawText("ENTER NAME:", CalculateXCoord(100 / 2) - CalculateObjectSizeX(enterNameWidth / 2), CalculateYCoord(100 / 8), CalculateObjectSizeY(120.f), GREEN);
         int measureNameWidth = MeasureText(activePlayer.playerName, CalculateObjectSizeY(96));
 
-        DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x - 50), CalculateYCoord(100 / 2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);
-        DrawTextEx(GetFontDefault(), activePlayer.playerName, {CalculateObjectSizeX(inputLines[0].x + 15), CalculateYCoord(100 / 2)}, CalculateObjectSizeY(96.f), CalculateObjectSizeX(45.f), GREEN);
+        DrawRectangleLinesEx({CalculateObjectSizeX(inputLines[0].x) - CalculateObjectSizeX(50), CalculateYCoord(100 / 2) - CalculateObjectSizeY(50), CalculateObjectSizeX(700), CalculateObjectSizeY(196)}, 10, GREEN);
+        DrawTextEx(GetFontDefault(), activePlayer.playerName, {CalculateObjectSizeX(inputLines[0].x) + CalculateObjectSizeX(15), CalculateYCoord(100 / 2)}, CalculateObjectSizeY(96.f), CalculateObjectSizeX(45.f), GREEN);
         for (int i = 0; i < 6; i++)
         {
             if (inputLines.size() <= 6 && i != 0)

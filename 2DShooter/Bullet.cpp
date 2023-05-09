@@ -87,9 +87,9 @@ void Bullet::InitEnemyBullet(int positionX, Texture2D &bTxtr)
     currentFrame = 0;
 }
 
-void Bullet::UpdateAnimatedEnemyBullet(int &framesCount, int &frameCap)
+void Bullet::UpdateAnimatedEnemyBullet(int &frameCap)
 {
-    float frameWidth = (float)(bulletTexture.width / framesCount); // Sprite one frame rectangle width
+    float frameWidth = frameCount != 0 ? (float)(bulletTexture.width / frameCount) : (float)bulletTexture.width; // Sprite one frame rectangle width
     float frameHeight = (float)(bulletTexture.height);
 
     frameCounter++;

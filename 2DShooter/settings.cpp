@@ -92,10 +92,10 @@ void Settings::DrawSettings()
 
     // Fullscreen
 
-    int fullscreenStringWidth = MeasureText("FULLSCREEN", CalculateObjectSizeY(48));
-    Rectangle fullscreenButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + CalculateObjectSizeX(50), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), CalculateObjectSizeY(48)};
+    int fullscreenStringWidth = MeasureText("FULLSCREEN", GameObjects::CalculateObjectSizeY(48));
+    Rectangle fullscreenButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + GameObjects::CalculateObjectSizeX(50), (screenHeight / 2) - GameObjects::CalculateObjectSizeY(200), GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48)};
 
-    DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(200), CalculateObjectSizeY(48), GREEN);
+    DrawText("FULLSCREEN", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - GameObjects::CalculateObjectSizeY(200), GameObjects::CalculateObjectSizeY(48), GREEN);
     if (fullscreen)
     {
 #ifndef PLATFORM_WEB
@@ -109,8 +109,8 @@ void Settings::DrawSettings()
     }
 
     // Sound
-    Rectangle soundButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + CalculateObjectSizeX(50), (screenHeight / 2) - CalculateObjectSizeY(100), CalculateObjectSizeY(48), CalculateObjectSizeY(48)};
-    DrawText("SOUND", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - CalculateObjectSizeY(100), CalculateObjectSizeY(48), GREEN);
+    Rectangle soundButtonRect = {(screenWidth / 2) + (fullscreenStringWidth / 2) + GameObjects::CalculateObjectSizeX(50), (screenHeight / 2) - GameObjects::CalculateObjectSizeY(100), GameObjects::CalculateObjectSizeY(48), GameObjects::CalculateObjectSizeY(48)};
+    DrawText("SOUND", (screenWidth / 2) - (fullscreenStringWidth / 2), (screenHeight / 2) - GameObjects::CalculateObjectSizeY(100), GameObjects::CalculateObjectSizeY(48), GREEN);
 
     if (soundActive)
     {
@@ -125,8 +125,8 @@ void Settings::DrawSettings()
     }
 
     // Exit
-    float backStringWidth = MeasureText("BACK", CalculateObjectSizeY(72));
-    Rectangle backButtonRect = {(screenWidth / 2) - (backStringWidth / 2), screenHeight - CalculateObjectSizeY(100), backStringWidth, CalculateObjectSizeY(72)};
+    float backStringWidth = MeasureText("BACK", GameObjects::CalculateObjectSizeY(72));
+    Rectangle backButtonRect = {(screenWidth / 2) - (backStringWidth / 2), screenHeight - GameObjects::CalculateObjectSizeY(100), backStringWidth, GameObjects::CalculateObjectSizeY(72)};
     DrawText("BACK", backButtonRect.x, backButtonRect.y, backButtonRect.height, backButtonColor);
 
     toggleSound(soundButtonRect);
@@ -159,14 +159,14 @@ void Settings::BackToMenu(Rectangle bounds)
     }
 }
 
-void Settings::LoadPlayerData(std::vector<PlayerData> &playerData)
+void Settings::LoadPlayerData(std::vector<GameObjects::PlayerData> &playerData)
 {
     try
     {
         BOOST_FOREACH (pt::ptree::value_type &value, tree.get_child("settings.playerdata"))
         {
 
-            PlayerData player;
+            GameObjects::PlayerData player;
             std::string playerName = value.second.get<std::string>("playerName");
             std::strcpy(player.playerName, playerName.c_str());
             player.currentLevel = value.second.get<int>("currentLevel");
@@ -203,7 +203,7 @@ void Settings::LoadHighscores(std::vector<int> &highscores)
     }
 }
 
-void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData)
+void Settings::loadSettings(const std::string &filename, std::vector<int> &highscores, std::vector<GameObjects::PlayerData> &playerData)
 {
     // Parse the XML into the property tree.
     pt::read_xml(filename, tree);
@@ -249,7 +249,7 @@ void Settings::saveSettings(const std::string &filename)
     }
 }
 
-void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<PlayerData> &playerData)
+void Settings::saveSettings(const std::string &filename, std::vector<int> &highscores, std::vector<GameObjects::PlayerData> &playerData)
 {
     try
     {
@@ -272,7 +272,7 @@ void Settings::saveSettings(const std::string &filename, std::vector<int> &highs
         {
             tree.get_child("settings").erase("playerdata");
 
-            BOOST_FOREACH (PlayerData player, playerData)
+            BOOST_FOREACH (GameObjects::PlayerData player, playerData)
             {
                 char stringPlayerId[50 + sizeof(char)] = "";
                 sprintf(stringPlayerId, "settings.playerdata.%d.playerId", player.playerId);

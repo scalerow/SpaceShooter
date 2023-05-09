@@ -1,62 +1,69 @@
 #include "gameobjects.h"
 
-struct Debris debris;
-struct PlayerData playerData;
-// Both one percent and one pixel shouldnt be initialized everytime this runs
+struct GameObjects::Debris debris;
+struct GameObjects::PlayerData playerData;
+struct GameObjects::ScreenSize screenSize;
 
-// For calculating X positions based on percentage
-float CalculateXCoord(float x)
+void GameObjects::SetScreenSize(float width, float height)
 {
-    float onePercent = (float)GetScreenWidth() / 100.f;
+    screenSize.height = height;
+    screenSize.width = width;
+}
+
+// Both one percent and one pixel shouldnt be initialized everytime this runs
+// For calculating X positions based on percentage
+float GameObjects::CalculateXCoord(float x)
+{
+    float onePercent = screenSize.width / 100.f;
 
     return onePercent * x;
 }
 
 // For calculating Y positions based on percentage
-float CalculateYCoord(float y)
+float GameObjects::CalculateYCoord(float y)
 {
-    float onePercent = (float)GetScreenHeight() / 100.f;
+    float onePercent = screenSize.height / 100.f;
 
     return onePercent * y;
 }
 
 // For calculating X positions based on pixels
-float CalculateByPixelsX(float x)
+float GameObjects::CalculateByPixelsX(float x)
 {
-    float onePixel = 100.f / (float)GetScreenWidth();
+    float onePixel = 100.f / screenSize.width;
 
     return CalculateXCoord(onePixel * x);
 }
 
 // For calculating Y positions based on pixels
-float CalculateByPixelsY(float x)
+float GameObjects::CalculateByPixelsY(float x)
 {
-    float onePixel = 100.f / (float)GetScreenHeight();
+    float onePixel = 100.f / screenSize.height;
 
     return CalculateYCoord(onePixel * x);
 }
 
 // For calculating width of objects scaled to selected resolution
-float CalculateObjectSizeX(float x)
+float GameObjects::CalculateObjectSizeX(float x)
 {
     // Scaling of object stops at 1920x1080
     float maxSize = 100.f / 1920.f;
-    float scaling = maxSize * GetScreenWidth();
+    float scaling = maxSize * screenSize.width;
 
     return (x / 100) * scaling;
 }
 
 // For calculating height of objects scaled to selected resolution
-float CalculateObjectSizeY(float y)
+float GameObjects::CalculateObjectSizeY(float y)
 {
     // Scaling of object stops at 1920x1080
     float maxSize = 100.f / 1080.f;
-    float scaling = maxSize * GetScreenHeight();
+    float scaling = maxSize * screenSize.height;
 
     return (y / 100) * scaling;
 }
 
-char *GetDateTimeNow()
+char *GameObjects::GetDateTimeNow()
 {
     time_t rawtime;
     struct tm *timeinfo;
@@ -71,7 +78,7 @@ char *GetDateTimeNow()
     return buffer;
 }
 
-Texture2D LoadDefaultEnemyTexture()
+Texture2D GameObjects::LoadDefaultEnemyTexture()
 {
     Image defaultEnemyImg = LoadImage("./media/default_enemy_0.png");
     ImageResize(&defaultEnemyImg, CalculateObjectSizeX(defaultEnemyImg.width), CalculateObjectSizeY(defaultEnemyImg.height));

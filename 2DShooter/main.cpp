@@ -17,11 +17,11 @@
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
-float screenWidth = 1280.f;
-float screenHeight = 760.f;
+float initScreenWidth = 1280.f;
+float initScreenHeight = 768.f;
 #else
-float screenWidth = 1920.f;
-float screenHeight = 1080.f;
+float initScreenWidth = 1280.f;
+float initScreenHeight = 768.f;
 #endif
 
 using namespace std;
@@ -30,7 +30,7 @@ static Tools tools;
 static Vector2 maxResolution = {3840.f, 2160.f};
 static float resolutionNormalizer = 100.f;
 static vector<int> enemyPositions;
-static Game game = Game(screenWidth, screenHeight);
+static Game game = Game(initScreenWidth, initScreenHeight);
 static Player player;
 static HighScore highscores;
 static Settings settings;
@@ -40,13 +40,12 @@ static void DrawGame();
 
 int main(void)
 {
-
-    InitWindow(screenWidth, screenHeight, "Space Shooter");
-
-    enemyPositions.push_back(CalculateObjectSizeX(400.f + 204.f));
-    enemyPositions.push_back(CalculateObjectSizeX(400.f + 408.f));
-    enemyPositions.push_back(CalculateObjectSizeX(400.f + 612.f));
-    enemyPositions.push_back(CalculateObjectSizeX(400.f + 816.f));
+    InitWindow(initScreenWidth, initScreenHeight, "Space Shooter");
+    GameObjects::SetScreenSize(initScreenWidth, initScreenHeight);
+    enemyPositions.push_back(GameObjects::CalculateObjectSizeX(400.f + 204.f));
+    enemyPositions.push_back(GameObjects::CalculateObjectSizeX(400.f + 408.f));
+    enemyPositions.push_back(GameObjects::CalculateObjectSizeX(400.f + 612.f));
+    enemyPositions.push_back(GameObjects::CalculateObjectSizeX(400.f + 816.f));
     game.LoadMenu();
 
 #ifdef PLATFORM_WEB
@@ -105,8 +104,8 @@ void DrawGame()
         }
         if (IsWindowResized())
         {
-            screenHeight = GetScreenHeight();
-            screenWidth = GetScreenWidth();
+            initScreenHeight = GetScreenHeight();
+            initScreenWidth = GetScreenWidth();
             game.InitMenu();
         }
 
@@ -119,6 +118,14 @@ void DrawGame()
         {
             game.InitLoadSelectedGame();
         }
+
+        if (IsWindowResized())
+        {
+            initScreenHeight = GetScreenHeight();
+            initScreenWidth = GetScreenWidth();
+            game.InitLoadSelectedGame();
+        }
+
         game.RenderBackground(true);
         game.LoadSelectGameActions();
         game.DrawLoadSelectGameMenu();
@@ -127,6 +134,13 @@ void DrawGame()
     {
         if (!game.isNewGameActive)
         {
+            game.InitNewGame();
+        }
+
+        if (IsWindowResized())
+        {
+            initScreenHeight = GetScreenHeight();
+            initScreenWidth = GetScreenWidth();
             game.InitNewGame();
         }
 
@@ -148,15 +162,15 @@ void DrawGame()
             settings.saveSettings("config.xml", highscores.highScores, game.playerData);
 #endif
             game.InitGame();
-            player.InitPlayer(screenHeight, screenWidth, game.activePlayer);
+            player.InitPlayer(initScreenHeight, initScreenWidth, game.activePlayer);
         }
 
         if (IsWindowResized())
         {
-            screenHeight = GetScreenHeight();
-            screenWidth = GetScreenWidth();
+            initScreenHeight = GetScreenHeight();
+            initScreenWidth = GetScreenWidth();
             game.InitGame();
-            player.InitPlayer(screenHeight, screenWidth, game.activePlayer);
+            player.InitPlayer(initScreenHeight, initScreenWidth, game.activePlayer);
         }
         //////////////////////////////////
         ///       GAME IS ACTIVE       ///
@@ -205,7 +219,7 @@ void DrawGame()
             }
             default:
             {
-                DrawText("Playerdata error - no level found", CalculateXCoord(100 / 2), CalculateYCoord(100 / 2), CalculateObjectSizeY(120), RED);
+                DrawText("Playerdata error - no level found", GameObjects::CalculateXCoord(100 / 2), GameObjects::CalculateYCoord(100 / 2), GameObjects::CalculateObjectSizeY(120), RED);
                 break;
             }
             }

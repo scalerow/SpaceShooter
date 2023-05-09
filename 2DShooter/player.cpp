@@ -10,15 +10,15 @@ Player::~Player()
 }
 
 // Initialize the plane for the game
-void Player::InitPlayer(float screenHeight, float screenWidth, PlayerData &activePlayer)
+void Player::InitPlayer(float scrnHeight, float scrnWidth, GameObjects::PlayerData &activePlayer)
 {
 
     Image planeImg = LoadImage("./media/space_plane_1.png");
-    ImageResize(&planeImg, CalculateObjectSizeX(planeImg.width), CalculateObjectSizeY(planeImg.height));
-    Vector2 planePosition = {screenWidth / 2, CalculateYCoord(100 - 9.26f)};
+    ImageResize(&planeImg, GameObjects::CalculateObjectSizeX(planeImg.width), GameObjects::CalculateObjectSizeY(planeImg.height));
+    Vector2 planePosition = {scrnWidth / 2, GameObjects::CalculateYCoord(100 - 9.26f)};
 
     Image bulletImg = LoadImage("./media/bullet_0.png");
-    ImageResize(&bulletImg, CalculateObjectSizeX(bulletImg.width), CalculateObjectSizeY(bulletImg.height));
+    ImageResize(&bulletImg, GameObjects::CalculateObjectSizeX(bulletImg.width), GameObjects::CalculateObjectSizeY(bulletImg.height));
     Texture2D bulletTexture = LoadTextureFromImage(bulletImg);
 
     playerBulletTexture = LoadTextureFromImage(bulletImg);
@@ -77,7 +77,7 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
         else if (acceleration.x < 0)
             acceleration.x = 0.f;
     }
-    if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - CalculateObjectSizeY(100))
+    if (IsKeyDown(KEY_DOWN) && position.y <= flightArea.w - GameObjects::CalculateObjectSizeY(100))
     {
         if (acceleration.y < 2.f)
             acceleration.y += 0.02f;
@@ -128,26 +128,28 @@ void Player::EnemiesAttackingAction(std::vector<Enemy> &enemies)
 
 void Player::isHit(std::vector<Bullet> &bullets)
 {
+
     if (bullets.size() > 0 && playerActive)
     {
+        int bulletTextureWidth = bullets[0].frameCount == 0 ? bullets[0].bulletTexture.width : bullets[0].bulletTexture.width / bullets[0].frameCount;
         Vector2 playerSize = {(float)playerTexture.width, (float)playerTexture.height};
 
-        Vector2 playerMainTrianglePointOne = {position.x + CalculateObjectSizeX(4), position.y + CalculateObjectSizeY(61)};
-        Vector2 playerMainTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(15)};
-        Vector2 playerMainTrianglePointThree = {position.x + CalculateObjectSizeX(99), position.y + CalculateObjectSizeY(61)};
+        Vector2 playerMainTrianglePointOne = {position.x + GameObjects::CalculateObjectSizeX(4), position.y + GameObjects::CalculateObjectSizeY(61)};
+        Vector2 playerMainTrianglePointTwo = {position.x + GameObjects::CalculateObjectSizeX(51), position.y + GameObjects::CalculateObjectSizeY(15)};
+        Vector2 playerMainTrianglePointThree = {position.x + GameObjects::CalculateObjectSizeX(99), position.y + GameObjects::CalculateObjectSizeY(61)};
 
-        Vector2 playerTipTrianglePointOne = {position.x + CalculateObjectSizeX(30), position.y + CalculateObjectSizeY(33)};
-        Vector2 playerTipTrianglePointTwo = {position.x + CalculateObjectSizeX(51), position.y + CalculateObjectSizeY(0)};
-        Vector2 playerTipTrianglePointThree = {position.x + CalculateObjectSizeX(74), position.y + CalculateObjectSizeY(33)};
+        Vector2 playerTipTrianglePointOne = {position.x + GameObjects::CalculateObjectSizeX(30), position.y + GameObjects::CalculateObjectSizeY(33)};
+        Vector2 playerTipTrianglePointTwo = {position.x + GameObjects::CalculateObjectSizeX(51), position.y + GameObjects::CalculateObjectSizeY(0)};
+        Vector2 playerTipTrianglePointThree = {position.x + GameObjects::CalculateObjectSizeX(74), position.y + GameObjects::CalculateObjectSizeY(33)};
 
-        Rectangle playerLeftGun = {position.x, position.y + CalculateObjectSizeY(8), CalculateObjectSizeX(8), CalculateObjectSizeY(63)};
-        Rectangle playerRightGun = {position.x + CalculateObjectSizeX(96), position.y + CalculateObjectSizeY(8), CalculateObjectSizeX(8), CalculateObjectSizeY(63)};
+        Rectangle playerLeftGun = {position.x, position.y + GameObjects::CalculateObjectSizeY(8), GameObjects::CalculateObjectSizeX(8), GameObjects::CalculateObjectSizeY(63)};
+        Rectangle playerRightGun = {position.x + GameObjects::CalculateObjectSizeX(96), position.y + GameObjects::CalculateObjectSizeY(8), GameObjects::CalculateObjectSizeX(8), GameObjects::CalculateObjectSizeY(63)};
 
-        Rectangle playerRect = {position.x, position.y - CalculateObjectSizeY(75), playerSize.x, playerSize.y};
+        Rectangle playerRect = {position.x, position.y - GameObjects::CalculateObjectSizeY(75), playerSize.x, playerSize.y};
         for (int x = 0; x < bullets.size(); x++)
         {
             Vector2 bulletPos = {(float)bullets[x].x, (float)bullets[x].y};
-            Vector2 bulletSize = {(float)bullets[x].bulletTexture.width, (float)bullets[x].bulletTexture.height};
+            Vector2 bulletSize = {(float)bulletTextureWidth, (float)bullets[x].bulletTexture.height};
             Rectangle bulletRect = {bulletPos.x, bulletPos.y, bulletSize.x, bulletSize.y};
 
             bool gunleftCol = CheckCollisionRecs(playerLeftGun, bulletRect);
@@ -168,13 +170,13 @@ void Player::isHit(std::vector<Bullet> &bullets)
                     if (i == 0)
                     {
 
-                        DrawCircleGradient(bulletPos.x + CalculateObjectSizeX(5), bulletPos.y + CalculateObjectSizeY(10), CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
-                        DrawCircleV({bulletPos.x + CalculateObjectSizeX(5), bulletPos.y + CalculateObjectSizeY(10.f)}, CalculateObjectSizeY(4.f), RED);
+                        DrawCircleGradient(bulletPos.x + GameObjects::CalculateObjectSizeX(5), bulletPos.y + GameObjects::CalculateObjectSizeY(10), GameObjects::CalculateObjectSizeY(10.f), Fade(RED, 0.6f), Fade(RED, 0.0f));
+                        DrawCircleV({bulletPos.x + GameObjects::CalculateObjectSizeX(5), bulletPos.y + GameObjects::CalculateObjectSizeY(10.f)}, GameObjects::CalculateObjectSizeY(4.f), RED);
                     }
                     else
                     {
-                        DrawCircleLines(bulletPos.x + CalculateObjectSizeX(4.f), bulletPos.y + CalculateObjectSizeY(9.f), CalculateObjectSizeY(i * 15), RED);
-                        DrawCircleLines(bulletPos.x + CalculateObjectSizeX(5.f), bulletPos.y + CalculateObjectSizeY(10.f), CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletPos.x + GameObjects::CalculateObjectSizeX(4.f), bulletPos.y + GameObjects::CalculateObjectSizeY(9.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
+                        DrawCircleLines(bulletPos.x + GameObjects::CalculateObjectSizeX(5.f), bulletPos.y + GameObjects::CalculateObjectSizeY(10.f), GameObjects::CalculateObjectSizeY(i * 15), RED);
                     }
                 }
                 if (health <= 0)
@@ -186,7 +188,7 @@ void Player::isHit(std::vector<Bullet> &bullets)
         }
     }
     else if (health <= 0)
-        PlayerExplosion(CalculateObjectSizeY(700.f), CalculateObjectSizeY(8.f));
+        PlayerExplosion(GameObjects::CalculateObjectSizeY(700.f), GameObjects::CalculateObjectSizeY(8.f));
 }
 
 void Player::UpdateLeftBullet()
@@ -202,7 +204,7 @@ void Player::UpdateLeftBullet()
             Bullet bullet = {};
             bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + CalculateObjectSizeX(32.f);
+            bullet.x = position.x + GameObjects::CalculateObjectSizeX(32.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
             bullet.bulletDamage = 8;
@@ -239,7 +241,7 @@ void Player::UpdateRightBullet()
             Bullet bullet = {};
             bullet.bulletSpeed = 550.f;
             bullet.bulletTexture = playerBulletTexture;
-            bullet.x = position.x + CalculateObjectSizeX(62.f);
+            bullet.x = position.x + GameObjects::CalculateObjectSizeX(62.f);
             bullet.y = position.y;
             bullet.bulletActive = true;
             bullet.bulletDamage = 8;
@@ -268,7 +270,7 @@ void Player::PlayerExplosion(float explosionArea, float debrisSize)
     float bloom = 8.f;
     for (int i = 0; i < playerDebris.size(); i++)
     {
-        Debris &debri = playerDebris[i];
+        GameObjects::Debris &debri = playerDebris[i];
         DrawCircleGradient(debri.Position.x, debri.Position.y - 8.f, debrisSize, Fade({242, 229, 170, 255}, 0.6f), Fade({242, 229, 170, 255}, 0.0f));
         DrawCircle(debri.Position.x, debri.Position.y - 8.f, debrisSize / 4, {242, 229, 170, 255});
         debri.Position.x += debri.Velocity.x * GetFrameTime();
@@ -302,7 +304,7 @@ void Player::FillDebris(int particleAmount)
         float direction = dist(rng);
 
         playerDebris.push_back(
-            Debris{
+            GameObjects::Debris{
                 Vector2{debriSpeed * std::cos(direction), debriSpeed * std::sin(direction)},
                 Vector2{position.x + (playerTexture.width / 2), position.y + (playerTexture.height / 2)}});
     }
