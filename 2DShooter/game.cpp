@@ -57,6 +57,35 @@ void Game::DrawGameUI(int &currentHealth, int &totalHealth, int &score)
     DrawText(stringPlayerHealth, (GameObjects::CalculateXCoord((100 / 4) * 3) + GameObjects::CalculateObjectSizeX(200.f)) - (healthStringWidth / 2), GameObjects::CalculateYCoord(88.7f), GameObjects::CalculateObjectSizeY(72.f), WHITE);
 }
 
+void Game::DrawLevelComplete(HighScore &highscores, Settings &settings, int &score)
+{
+    int textWidth = MeasureText("VICTORY", GameObjects::CalculateObjectSizeY(120.f));
+    DrawText("VICTORY", GameObjects::CalculateXCoord(100 / 2) - (textWidth / 2), GameObjects::CalculateYCoord(9.26f), GameObjects::CalculateObjectSizeY(120.f), GREEN);
+
+    // Check if highscore is updated for this round - if it isnt (which it shouldnt be), updates highscore and save it to config file
+    if (!highscores.highscoreUpdated)
+    {
+        highscores.UpdateHighscores(score);
+    }
+
+    if (!isGameSaved)
+    {
+        activePlayer.currentLevel += 1; // this wll be the current level when thats implemented, really not neccessary now.
+        std::strcpy(activePlayer.lastSaved, GameObjects::GetDateTimeNow());
+        UpdatePlayerDataList(playerData, activePlayer);
+        settings.saveSettings("config.xml", highscores.highScores, playerData);
+        isGameSaved = true;
+    }
+    // Checking if theres a new highscore entry - if it is, change the color on highscore line
+    Color highscoreAchievedTextColor = highscores.newHighscoreEntry ? Color({110, 20, 143, 255}) : RED;
+
+    // Creating char array of last score, measure the width of relevant text and draws it
+    char stringPlayerScore[15 + sizeof(char)] = "";
+    sprintf(stringPlayerScore, "Score: %d", score);
+    int scoreStringWidth = MeasureText(stringPlayerScore, GameObjects::CalculateObjectSizeY(100));
+    DrawText(stringPlayerScore, GameObjects::CalculateXCoord(100 / 2) - (scoreStringWidth / 2), GameObjects::CalculateYCoord(100 / 2) - GameObjects::CalculateYCoord(18.56f), GameObjects::CalculateObjectSizeY(100.f), highscoreAchievedTextColor);
+}
+
 // For ARCADE MODE
 void Game::DrawGameOver(HighScore &highscores, Settings &settings, int &score)
 {

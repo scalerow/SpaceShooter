@@ -7,6 +7,15 @@ Level_01::~Level_01()
 {
 }
 
+void Level_01::LoadLevel1()
+{
+    levelComplete = false;
+    if (levelTimer == 0)
+    {
+        levelTimer = GetTime();
+    }
+}
+
 void Level_01::SetRandomSpawnProps()
 {
     srand(time(NULL));
@@ -43,13 +52,21 @@ void Level_01::CreateRandomSpawn(Vector2 spawnPos, Vector2 mapEdge)
 
 void Level_01::RandomEnemySpawn()
 {
+    if (bossActive)
+        return;
+
     double timeNow = GetTime();
+    if (randomEnemySpawnTimer == 0)
+    {
+        randomEnemySpawnTimer = GetTime();
+    }
 
     if (!isRandomEnemyTextureLoaded)
     {
         InitRandomEnemyTexture();
         isRandomEnemyTextureLoaded = true;
     }
+
     if (!isRandomEnemyBulletTextureLoaded)
     {
         InitRandomEnemyBulletTexture();
@@ -80,8 +97,9 @@ void Level_01::RandomEnemySpawn()
 
 void Level_01::UpdateRandomEnemies()
 {
-    if (randomEnemySpawnTimer == 0)
+    if (randomEnemySpawnTimer == 0 || bossActive)
         return;
+
     for (int i = 0; i < randomEnemies.size(); i++)
     {
         if (!randomEnemies[i].active)
@@ -136,7 +154,7 @@ void Level_01::UpdateRandomEnemies()
 
 void Level_01::DrawRandomEnemies(Player &player)
 {
-    if (randomEnemySpawnTimer == 0)
+    if (randomEnemySpawnTimer == 0 || bossActive)
     {
         return;
     }
@@ -212,6 +230,15 @@ void Level_01::ResetRandomEnemy(Enemy &randomEnemy)
     randomEnemy.currentFrame = 0;
 }
 
+void Level_01::UnloadRandomEnemy()
+{
+    for (int i = 0; i <= randomEnemies.size(); i++)
+    {
+        randomEnemies[i].UnloadEnemy();
+    }
+    randomEnemies.clear();
+}
+
 // DEFAULT ENEMY
 void Level_01::InitDefaultEnemyBulletTexture()
 {
@@ -224,6 +251,9 @@ void Level_01::InitDefaultEnemyBulletTexture()
 
 void Level_01::DrawMultipleEnemies(std::vector<int> &xPositions, Player &player)
 {
+    if (bossActive)
+        return;
+
     if (defaultEnemies.size() <= 0)
     {
         defaultEnemyTexture = GameObjects::LoadDefaultEnemyTexture();
@@ -287,17 +317,72 @@ void Level_01::UnloadMultipleEnemies()
         defaultEnemies[i].UnloadEnemy();
         defaultEnemies[i].ResetDefaultEnenmy();
     }
+
+    defaultEnemies.clear();
 }
 //
 
 // BOSS
 void Level_01::SpawnBoss()
 {
-    boss.InitBoss(GameObjects::CalculateXCoord(100 / 2), 500, 2);
+    if (levelTimer + 25 <= GetTime() && !bossActive)
+    {
+        bossActive = true;
+
+        boss.InitBoss(GameObjects::CalculateXCoord(100 / 2), 500, 2);
+
+        boss.defaultEnemyHoverRange = 100;
+        boss.health = 1000;
+        boss.active = true;
+        boss.position = {GameObjects::CalculateXCoord(100 / 2) - (boss.enemyTexture.width / 2), GameObjects::CalculateYCoord(100 / 4)};
+    }
 }
 
-void Level_01::UpdateBoss()
+void Level_01::UpdateBoss(Player &player)
 {
+    if (bossActive)
+    {
+        // Enemy killed and removed, explosion
+        if (boss.health <= 0 && !boss.active)
+        {
+            boss.EnemyExplosion(GameObjects::CalculateObjectSizeY(200.f), GameObjects::CalculateObjectSizeY(15.f));
+            if (boss.enemyDebris.empty())
+            {
+                levelComplete = true;
+            }
+        }
+
+        // Hover and draw default enenmy movements
+        if (boss.active && boss.health > 0)
+        {
+            if (boss.position.y <= 150)
+                boss.position.y += boss.speed;
+            else
+                boss.hover(GameObjects::CalculateByPixelsX(boss.position.x));
+
+            DrawTexture(boss.enemyTexture, boss.position.x, boss.position.y, WHITE);
+        }
+
+        // Update enemy attack (draw and update bullet status)
+        boss.UpdateEnemyDefaultAttack(boss.position.x, defaultEnemyBulletTexture);
+
+        // Checking if enemies is hit
+        if (boss.health > 0 && boss.active)
+        {
+            if (boss.position.y >= 0)
+            {
+                boss.isTriangleHit(player.leftBullets, player.rightBullets, player.score);
+            }
+        }
+    }
+}
+
+void Level_01::DrawBoss()
+{
+    if (bossActive)
+    {
+        DrawTexture(boss.enemyTexture, boss.position.x, boss.position.y, RAYWHITE);
+    }
 }
 
 void Level_01::isBossHit()
@@ -318,6 +403,7 @@ void Level_01::UnloadLevel1()
     isRandomEnemyTextureLoaded = false;
     isRandomEnemyBulletTextureLoaded = false;
 
+    randomEnemySpawnTimer = 0;
     randomEnemies.clear();
     defaultEnemies.clear();
 }

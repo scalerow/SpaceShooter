@@ -374,17 +374,23 @@ void MainMenu::NewGameActions()
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
         {
             newGameReadyButtonColor = ColorAlphaBlend(BLACK, WHITE, DARKGREEN);
-            // If more than 5 game saves exist, set isNewPlayerAllowed to false, to activate a popup instead of starting game
             if (playerData.size() == 5) // == 5
             {
                 isNewPlayerAllowed = false;
             }
             else
             {
-                // If there is less than 5 saved games, start game with the new "save"
                 std::strcpy(activePlayer.lastSaved, GetDateTimeNow());
-                playerData.push_back(activePlayer);
+                if (playerData.size() == 0)
+                {
+                    activePlayer.playerId = 0;
+                }
+                else
+                {
+                    activePlayer.playerId = IncrementPlayerId();
+                }
                 ClearListData();
+                playerData.push_back(activePlayer);
                 LoadGame();
             }
         }

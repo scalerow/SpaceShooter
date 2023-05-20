@@ -42,6 +42,7 @@ public:
 
     void InitPlayer(float screenHeight, float screenWidth, GameObjects::PlayerData &activePlayer);
     void UpdatePlayer(float delta, Vector4 flightArea);
+    void UpdateProgress(GameObjects::PlayerData currentPlayer);
     void UpdateRightBullet();
     void UpdateLeftBullet();
     void EnemiesAttackingAction(std::vector<Enemy> &enemies);

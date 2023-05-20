@@ -20,8 +20,8 @@
 float initScreenWidth = 1280.f;
 float initScreenHeight = 768.f;
 #else
-float initScreenWidth = 1280.f;
-float initScreenHeight = 768.f;
+float initScreenWidth = 1920.f;
+float initScreenHeight = 1080.f;
 #endif
 
 using namespace std;
@@ -185,17 +185,33 @@ void DrawGame()
             case 1:
             {
                 game.RenderBackground();
-                level1.DrawMultipleEnemies(enemyPositions, player);
+                level1.LoadLevel1();
+
+                if (!level1.bossActive)
+                {
+                    level1.DrawMultipleEnemies(enemyPositions, player);
+                    player.EnemiesAttackingAction(level1.defaultEnemies);
+                }
+
                 level1.RandomEnemySpawn();
                 level1.DrawRandomEnemies(player);
                 level1.UpdateRandomEnemies();
-                player.UpdatePlayer(deltaTime, game.flightArea);
-                player.UpdateLeftBullet();
-                player.UpdateRightBullet();
-                player.EnemiesAttackingAction(level1.defaultEnemies);
                 if (level1.randomEnemies.size() > 0)
                 {
                     player.EnemiesAttackingAction(level1.randomEnemies);
+                }
+
+                level1.SpawnBoss();
+                level1.UpdateBoss(player);
+                level1.DrawBoss();
+                player.UpdatePlayer(deltaTime, game.flightArea);
+                player.UpdateLeftBullet();
+                player.UpdateRightBullet();
+
+                if (level1.levelComplete)
+                {
+                    player.UpdateProgress(game.activePlayer);
+                    game.DrawLevelComplete(highscores, settings, player.score);
                 }
 
                 if (IsKeyReleased(KEY_K))

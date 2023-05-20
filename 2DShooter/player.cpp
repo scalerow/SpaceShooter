@@ -40,6 +40,11 @@ void Player::InitPlayer(float scrnHeight, float scrnWidth, GameObjects::PlayerDa
     UnloadImage(bulletImg);
 }
 
+void Player::UpdateProgress(GameObjects::PlayerData currentPlayer)
+{
+    currentLevel = currentPlayer.currentLevel;
+}
+
 // Update the planes position with keyboard keys
 void Player::UpdatePlayer(float delta, Vector4 flightArea)
 {
@@ -107,7 +112,6 @@ void Player::UpdatePlayer(float delta, Vector4 flightArea)
     }
 
     if (playerActive)
-
         DrawTextureV(playerTexture, position, WHITE);
 }
 

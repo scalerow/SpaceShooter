@@ -23,23 +23,29 @@ private:
     bool isRandomEnemyBulletTextureLoaded = false;
     bool isRandomEnemyTextureLoaded = false;
 
+    int levelTimer = 0;
+
     const int randomEnemySpawnCount[3] = {1, 2, 3};
-    const int randomSpawnDelay = 40;
+    const int randomSpawnDelay = 0;
     const std::string randomEnemySpawnPositions[4] = {"top-left", "top-right", "bottom-left", "bottom-right"};
     int currentRandomEnemySpawnCount;
     std::string currentRandomEnemySpawnPosition;
 
     void SetRandomSpawnProps();
     void CreateRandomSpawn(Vector2 spawnPos, Vector2 mapEdge);
+    void UnloadRandomEnemy();
 
 public:
     std::vector<Enemy> defaultEnemies;
     std::vector<Enemy> randomEnemies;
-
     Enemy boss;
+
+    bool levelComplete = false;
 
     Level_01();
     ~Level_01();
+
+    void LoadLevel1();
 
     double GetLastEnemySpawnedTime();
     void SetLastEnemySpawnedTime(double lastTime);
@@ -54,8 +60,10 @@ public:
     void UnloadMultipleEnemies();
 
     void SpawnBoss();
-    void UpdateBoss();
+    void UpdateBoss(Player &player);
+    void DrawBoss();
     void isBossHit();
+    bool bossActive = false;
 
     void LevelComplete();
     void UnloadLevel1();
